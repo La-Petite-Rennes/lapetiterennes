@@ -1,1 +1,2 @@
-# lapetiterennes
+README for membership
+==========================
