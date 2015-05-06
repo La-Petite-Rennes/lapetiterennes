@@ -16,7 +16,7 @@
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form name="editForm" role="form" novalidate ng-submit="create()" show-validation>
+                <form name="editForm" class="form-horizontal" role="form" novalidate ng-submit="create()" show-validation>
 
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
@@ -25,58 +25,68 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>ID</label>
-                            <input type="text" class="form-control" name="id"
-                                   ng-model="adherent.id" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label translate="membershipApp.adherent.prenom">Prenom</label>
-                            <input type="text" class="form-control" name="prenom"
-                                   ng-model="adherent.prenom" required>
-
-                            <div ng-show="editForm.prenom.$invalid">
-                                <p class="help-block"
-                                   ng-show="editForm.prenom.$error.required" translate="entity.validation.required">
-                                    This field is required.
-                                </p>
+                            <label class="control-label col-sm-2">ID</label>
+                            <div class="col-sm-10">
+                            	<input type="text" class="form-control" name="id"  ng-model="adherent.id" readonly>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label translate="membershipApp.adherent.nom">Nom</label>
-                            <input type="text" class="form-control" name="nom"
-                                   ng-model="adherent.nom" required>
 
-                            <div ng-show="editForm.nom.$invalid">
-                                <p class="help-block"
-                                   ng-show="editForm.nom.$error.required" translate="entity.validation.required">
-                                    This field is required.
-                                </p>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" translate="membershipApp.adherent.prenom">Prenom</label>
+                            <div class="col-sm-10">
+                            	<input type="text" class="form-control" name="prenom" ng-model="adherent.prenom" required>
+	                            <div ng-show="editForm.prenom.$invalid">
+	                                <p class="help-block"
+	                                   ng-show="editForm.prenom.$error.required" translate="entity.validation.required">
+	                                    This field is required.
+	                                </p>
+	                            </div>
                             </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label translate="membershipApp.adherent.benevole">Benevole</label>
-                            <input type="checkbox" class="form-control" name="benevole"
-                                   ng-model="adherent.benevole">
-
+                            <label class="control-label col-sm-2" translate="membershipApp.adherent.nom">Nom</label>
+                            <div class="col-sm-10">
+	                            <input type="text" class="form-control" name="nom" ng-model="adherent.nom" required>
+	                            <div ng-show="editForm.nom.$invalid">
+	                                <p class="help-block"
+	                                   ng-show="editForm.nom.$error.required" translate="entity.validation.required">
+	                                    This field is required.
+	                                </p>
+	                            </div>
+	                        </div>
                         </div>
-                        <div class="form-group">
-                            <label translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</label>
-                            <input type="text" class="form-control" name="remarqueBenevolat"
-                                   ng-model="adherent.remarqueBenevolat">
-
+                        
+                        <div class="checkbox">
+                            <label class="control-label col-sm-2" translate="membershipApp.adherent.benevole">
+                            	<input type="checkbox" name="benevole" ng-model="adherent.benevole">
+                            	Benevole
+                            </label>
                         </div>
-                        <div class="form-group">
-                            <label translate="membershipApp.adherent.genre">Genre</label>
-                            <input type="text" class="form-control" name="genre"
-                                   ng-model="adherent.genre">
 
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</label>
+                            <div class="col-sm-10">
+                            	<input type="text" class="form-control" name="remarqueBenevolat" ng-model="adherent.remarqueBenevolat">
+                            </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label translate="membershipApp.adherent.autreRemarque">AutreRemarque</label>
-                            <input type="text" class="form-control" name="autreRemarque"
-                                   ng-model="adherent.autreRemarque">
+                            <label class="control-label col-sm-2" translate="membershipApp.adherent.genre">Genre</label>
+                            <div class="col-sm-10">
+	                            <select class="form-control" name="genre" ng-model="adherent.genre">
+	                            	<option value="H">Homme</option>
+	                            	<option value="F">Femme</option>
+	                            	<option value="Autre">Autre</option>
+								</select>
+							</div>
+                        </div>
 
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" translate="membershipApp.adherent.autreRemarque">AutreRemarque</label>
+                            <div class="col-sm-10">
+                            	<input type="text" class="form-control" name="autreRemarque" ng-model="adherent.autreRemarque">
+                            </div>
                         </div>
 
                     </div>
