@@ -32,8 +32,11 @@
 
                         <div class="form-group">
                             <label translate="membershipApp.adhesion.typeAdhesion">TypeAdhesion</label>
-                            <input type="text" class="form-control" name="typeAdhesion"
-                                   ng-model="adhesion.typeAdhesion" required>
+                            <select class="form-control" name="typeAdhesion" ng-model="adhesion.typeAdhesion" required>
+                            	<option selected="selected" value="Simple">Simple</option>
+                            	<option value="Famille">Famille</option>
+                            	<option value="Soutien">Soutien</option>
+                            </select>
 
                             <div ng-show="editForm.typeAdhesion.$invalid">
                                 <p class="help-block"

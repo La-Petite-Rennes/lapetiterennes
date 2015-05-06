@@ -2,12 +2,15 @@ package fr.lpr.membership.web.rest;
 
 import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.Adhesion;
+import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.repository.AdhesionRepository;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import static org.hamcrest.Matchers.hasItem;
+
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -21,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,8 +44,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 public class AdhesionResourceTest {
 
-    private static final String DEFAULT_TYPE_ADHESION = "SAMPLE_TEXT";
-    private static final String UPDATED_TYPE_ADHESION = "UPDATED_TEXT";
+    private static final TypeAdhesion DEFAULT_TYPE_ADHESION = TypeAdhesion.Simple;
+    private static final TypeAdhesion UPDATED_TYPE_ADHESION = TypeAdhesion.Soutien;
 
     private static final LocalDate DEFAULT_DATE_ADHESION = new LocalDate(0L);
     private static final LocalDate UPDATED_DATE_ADHESION = new LocalDate();

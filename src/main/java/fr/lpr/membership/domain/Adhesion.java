@@ -30,8 +30,9 @@ public class Adhesion implements Serializable {
     private Long id;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "type_adhesion", nullable = false)
-    private String typeAdhesion;
+    private TypeAdhesion typeAdhesion;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @JsonSerialize(using = CustomLocalDateSerializer.class)
@@ -50,11 +51,11 @@ public class Adhesion implements Serializable {
         this.id = id;
     }
 
-    public String getTypeAdhesion() {
+    public TypeAdhesion getTypeAdhesion() {
         return typeAdhesion;
     }
 
-    public void setTypeAdhesion(String typeAdhesion) {
+    public void setTypeAdhesion(TypeAdhesion typeAdhesion) {
         this.typeAdhesion = typeAdhesion;
     }
 
