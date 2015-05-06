@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('membershipApp')
-    .controller('AdhesionController', function ($scope, Adhesion) {
+    .controller('AdhesionController', function ($scope, Adhesion, Adherent) {
         $scope.adhesions = [];
+        $scope.adherents = Adherent.query();
         $scope.loadAll = function() {
             Adhesion.query(function(result) {
                $scope.adhesions = result;

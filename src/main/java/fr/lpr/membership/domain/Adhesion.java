@@ -1,5 +1,6 @@
 package fr.lpr.membership.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
@@ -12,6 +13,8 @@ import org.joda.time.LocalDate;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -36,6 +39,9 @@ public class Adhesion implements Serializable {
     @Column(name = "date_adhesion", nullable = false)
     private LocalDate dateAdhesion;
 
+    @ManyToOne
+    private Adherent adherent;
+
     public Long getId() {
         return id;
     }
@@ -58,6 +64,14 @@ public class Adhesion implements Serializable {
 
     public void setDateAdhesion(LocalDate dateAdhesion) {
         this.dateAdhesion = dateAdhesion;
+    }
+
+    public Adherent getAdherent() {
+        return adherent;
+    }
+
+    public void setAdherent(Adherent adherent) {
+        this.adherent = adherent;
     }
 
     @Override

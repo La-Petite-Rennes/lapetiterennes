@@ -2,12 +2,15 @@ package fr.lpr.membership.web.rest;
 
 import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Genre;
 import fr.lpr.membership.repository.AdherentRepository;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import static org.hamcrest.Matchers.hasItem;
+
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,8 +51,8 @@ public class AdherentResourceTest {
     private static final Boolean UPDATED_BENEVOLE = true;
     private static final String DEFAULT_REMARQUE_BENEVOLAT = "SAMPLE_TEXT";
     private static final String UPDATED_REMARQUE_BENEVOLAT = "UPDATED_TEXT";
-    private static final String DEFAULT_GENRE = "SAMPLE_TEXT";
-    private static final String UPDATED_GENRE = "UPDATED_TEXT";
+    private static final Genre DEFAULT_GENRE = Genre.Autre;
+    private static final Genre UPDATED_GENRE = Genre.H;
     private static final String DEFAULT_AUTRE_REMARQUE = "SAMPLE_TEXT";
     private static final String UPDATED_AUTRE_REMARQUE = "UPDATED_TEXT";
 

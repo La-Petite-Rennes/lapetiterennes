@@ -1,5 +1,16 @@
 {
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "adherent",
+            "relationshipNameCapitalized": "Adherent",
+            "relationshipFieldName": "adherent",
+            "otherEntityName": "adherent",
+            "relationshipType": "many-to-one",
+            "otherEntityNameCapitalized": "Adherent",
+            "otherEntityField": "id"
+        }
+    ],
     "fields": [
         {
             "fieldId": 1,
@@ -30,7 +41,7 @@
     "fieldsContainBigDecimal": false,
     "fieldsContainDateTime": false,
     "fieldsContainDate": false,
-    "changelogDate": "20150506095235",
+    "changelogDate": "20150506122401",
     "pagination": "no",
     "validation": true
 }

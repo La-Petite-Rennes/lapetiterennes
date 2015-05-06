@@ -38,7 +38,8 @@ public class Adherent implements Serializable {
     private String remarqueBenevolat;
 
     @Column(name = "genre")
-    private String genre;
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
 
     @Column(name = "autre_remarque")
     private String autreRemarque;
@@ -91,11 +92,11 @@ public class Adherent implements Serializable {
         this.remarqueBenevolat = remarqueBenevolat;
     }
 
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 

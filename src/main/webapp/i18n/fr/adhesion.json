@@ -13,7 +13,8 @@
                 "title": "Adhesion"
             },
             "typeAdhesion": "TypeAdhesion",
-            "dateAdhesion": "DateAdhesion"
+            "dateAdhesion": "DateAdhesion",
+            "adherent": "adherent"
         }
     }
 }
