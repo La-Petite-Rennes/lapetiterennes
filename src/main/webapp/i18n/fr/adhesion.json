@@ -3,17 +3,17 @@
         "adhesion" : {
             "home": {
                 "title": "Adhesions",
-                "createLabel": "Créer un nouveau Adhesion",
-                "createOrEditLabel": "Créer ou éditer un Adhesion"
+                "createLabel": "Créer une nouvelle adhésion",
+                "createOrEditLabel": "Créer ou éditer une adhésion"
             },
             "delete": {
-                "question": "Etes-vous certain de vouloir supprimer le Adhesion {{ id }} ?"
+                "question": "Etes-vous certain de vouloir supprimer l'adhesion {{ id }} ?"
             },
             "detail": {
                 "title": "Adhesion"
             },
-            "typeAdhesion": "TypeAdhesion",
-            "dateAdhesion": "DateAdhesion",
+            "typeAdhesion": "Type d'adhesion",
+            "dateAdhesion": "Date d'adhesion",
             "adherent": "adherent"
         }
     }

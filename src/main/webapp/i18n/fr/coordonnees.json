@@ -2,22 +2,22 @@
     "membershipApp": {
         "coordonnees" : {
             "home": {
-                "title": "Coordonneess",
-                "createLabel": "Créer un nouveau Coordonnees",
-                "createOrEditLabel": "Créer ou éditer un Coordonnees"
+                "title": "Coordonnées",
+                "createLabel": "Créer de nouvelles Coordonnées",
+                "createOrEditLabel": "Créer ou éditer des Coordonnées"
             },
             "delete": {
-                "question": "Etes-vous certain de vouloir supprimer le Coordonnees {{ id }} ?"
+                "question": "Etes-vous certain de vouloir supprimer les Coordonnées {{ id }} ?"
             },
             "detail": {
-                "title": "Coordonnees"
+                "title": "Coordonnées"
             },
-            "adresse1": "Adresse1",
-            "adresse2": "Adresse2",
-            "codePostal": "CodePostal",
+            "adresse1": "Adresse 1",
+            "adresse2": "Adresse 2",
+            "codePostal": "Code postal",
             "ville": "Ville",
             "email": "Email",
-            "telephone": "Telephone"
+            "telephone": "Téléphone"
         }
     }
 }
