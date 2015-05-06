@@ -3,42 +3,42 @@
 angular.module('membershipApp')
     .config(function ($stateProvider) {
         $stateProvider
-            .state('adresse', {
+            .state('coordonnees', {
                 parent: 'entity',
-                url: '/adresse',
+                url: '/coordonnees',
                 data: {
                     roles: ['ROLE_USER'],
-                    pageTitle: 'membershipApp.adresse.home.title'
+                    pageTitle: 'membershipApp.coordonnees.home.title'
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/entities/adresse/adresses.html',
-                        controller: 'AdresseController'
+                        templateUrl: 'scripts/app/entities/coordonnees/coordonneess.html',
+                        controller: 'CoordonneesController'
                     }
                 },
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                        $translatePartialLoader.addPart('adresse');
+                        $translatePartialLoader.addPart('coordonnees');
                         return $translate.refresh();
                     }]
                 }
             })
-            .state('adresseDetail', {
+            .state('coordonneesDetail', {
                 parent: 'entity',
-                url: '/adresse/:id',
+                url: '/coordonnees/:id',
                 data: {
                     roles: ['ROLE_USER'],
-                    pageTitle: 'membershipApp.adresse.detail.title'
+                    pageTitle: 'membershipApp.coordonnees.detail.title'
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/entities/adresse/adresse-detail.html',
-                        controller: 'AdresseDetailController'
+                        templateUrl: 'scripts/app/entities/coordonnees/coordonnees-detail.html',
+                        controller: 'CoordonneesDetailController'
                     }
                 },
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                        $translatePartialLoader.addPart('adresse');
+                        $translatePartialLoader.addPart('coordonnees');
                         return $translate.refresh();
                     }]
                 }

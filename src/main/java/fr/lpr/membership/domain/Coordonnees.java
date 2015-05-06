@@ -4,16 +4,18 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A Adresse.
+ * A Coordonnees.
  */
 @Entity
-@Table(name = "ADRESSE")
+@Table(name = "COORDONNEES")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Adresse implements Serializable {
+public class Coordonnees implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,6 +33,7 @@ public class Adresse implements Serializable {
     @Column(name = "ville")
     private String ville;
 
+    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
     @Column(name = "email")
     private String email;
 
@@ -102,9 +105,9 @@ public class Adresse implements Serializable {
             return false;
         }
 
-        Adresse adresse = (Adresse) o;
+        Coordonnees coordonnees = (Coordonnees) o;
 
-        if ( ! Objects.equals(id, adresse.id)) return false;
+        if ( ! Objects.equals(id, coordonnees.id)) return false;
 
         return true;
     }
@@ -116,7 +119,7 @@ public class Adresse implements Serializable {
 
     @Override
     public String toString() {
-        return "Adresse{" +
+        return "Coordonnees{" +
                 "id=" + id +
                 ", adresse1='" + adresse1 + "'" +
                 ", adresse2='" + adresse2 + "'" +

@@ -44,7 +44,11 @@
         	"fieldNameCapitalized": "Email",
         	"fieldNameUnderscored": "email",
         	"fieldInJavaBeanMethod": "Email",
-            "fieldValidate": false
+            "fieldValidate": true,
+            "fieldValidateRules": [
+            	"pattern"
+            ],
+            "fieldValidateRulesPattern": "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
         },
         {
         	"fieldId": 6,

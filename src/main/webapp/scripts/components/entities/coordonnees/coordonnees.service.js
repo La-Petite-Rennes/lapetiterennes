@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('membershipApp')
-    .factory('Adresse', function ($resource) {
-        return $resource('api/adresses/:id', {}, {
+    .factory('Coordonnees', function ($resource) {
+        return $resource('api/coordonneess/:id', {}, {
             'query': { method: 'GET', isArray: true},
             'get': {
                 method: 'GET',

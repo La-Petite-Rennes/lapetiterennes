@@ -1,0 +1,24 @@
+{
+    "membershipApp": {
+        "coordonnees" : {
+            "home": {
+                "title": "Coordonneess",
+                "createLabel": "Créer un nouveau Coordonnees",
+                "createOrEditLabel": "Créer ou éditer un Coordonnees"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Coordonnees {{ id }} ?"
+            },
+            "detail": {
+                "title": "Coordonnees"
+            },
+            "adresse1": "Adresse1",
+            "adresse2": "Adresse2",
+            "codePostal": "CodePostal",
+            "ville": "Ville",
+            "email": "Email",
+            "telephone": "Telephone"
+        }
+    }
+}
+

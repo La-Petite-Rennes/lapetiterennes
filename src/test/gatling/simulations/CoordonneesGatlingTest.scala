@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 
 /**
- * Performance test for the Adresse entity.
+ * Performance test for the Coordonnees entity.
  */
-class AdresseGatlingTest extends Simulation {
+class CoordonneesGatlingTest extends Simulation {
 
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
     // Log all HTTP requests
@@ -37,7 +37,7 @@ class AdresseGatlingTest extends Simulation {
         "X-CSRF-TOKEN" -> "${csrf_token}"
     )
 
-    val scn = scenario("Test the Adresse entity")
+    val scn = scenario("Test the Coordonnees entity")
         .exec(http("First unauthenticated request")
         .get("/api/account")
         .headers(headers_http)
@@ -59,26 +59,26 @@ class AdresseGatlingTest extends Simulation {
         .check(headerRegex("Set-Cookie", "CSRF-TOKEN=(.*); [P,p]ath=/").saveAs("csrf_token")))
         .pause(10)
         .repeat(2) {
-            exec(http("Get all adresses")
-            .get("/api/adresses")
+            exec(http("Get all coordonneess")
+            .get("/api/coordonneess")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
-            .exec(http("Create new adresse")
-            .put("/api/adresses")
+            .exec(http("Create new coordonnees")
+            .put("/api/coordonneess")
             .headers(headers_http_authenticated)
             .body(StringBody("""{"id":null, "adresse1":"SAMPLE_TEXT", "adresse2":"SAMPLE_TEXT", "codePostal":"SAMPLE_TEXT", "ville":"SAMPLE_TEXT", "email":"SAMPLE_TEXT", "telephone":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
-            .check(headerRegex("Location", "(.*)").saveAs("new_adresse_url")))
+            .check(headerRegex("Location", "(.*)").saveAs("new_coordonnees_url")))
             .pause(10)
             .repeat(5) {
-                exec(http("Get created adresse")
-                .get("${new_adresse_url}")
+                exec(http("Get created coordonnees")
+                .get("${new_coordonnees_url}")
                 .headers(headers_http_authenticated))
                 .pause(10)
             }
-            .exec(http("Delete created adresse")
-            .delete("${new_adresse_url}")
+            .exec(http("Delete created coordonnees")
+            .delete("${new_coordonnees_url}")
             .headers(headers_http_authenticated))
             .pause(10)
         }
