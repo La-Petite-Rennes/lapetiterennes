@@ -1,0 +1,70 @@
+
+<div>
+    <h2><span translate="membershipApp.adresse.detail.title">Adresse</span> {{adresse.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th translate="entity.detail.field">Field</th>
+                    <th translate="entity.detail.value">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adresse.adresse1">Adresse1</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adresse.adresse1}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adresse.adresse2">Adresse2</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adresse.adresse2}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adresse.codePostal">CodePostal</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adresse.codePostal}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adresse.ville">Ville</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adresse.ville}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adresse.email">Email</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adresse.email}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adresse.telephone">Telephone</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adresse.telephone}}" readonly>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            ui-sref="adresse"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>
