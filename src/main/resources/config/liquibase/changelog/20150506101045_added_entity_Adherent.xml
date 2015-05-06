@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the entity Adherent.
+    -->
+    <changeSet id="20150506101045" author="jhipster">
+        <createTable tableName="ADHERENT">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="prenom" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="nom" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="benevole" type="bit"/>
+            <column name="remarque_benevolat" type="varchar(255)"/>
+            <column name="genre" type="varchar(255)"/>
+            <column name="autre_remarque" type="varchar(255)"/>
+            <column name="coordonnees_id" type="bigint"/>
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="coordonnees_id"
+                                 baseTableName="ADHERENT"
+                                 constraintName="fk_adherent_coordonnees_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="COORDONNEES"/>
+
+    </changeSet>
+</databaseChangeLog>

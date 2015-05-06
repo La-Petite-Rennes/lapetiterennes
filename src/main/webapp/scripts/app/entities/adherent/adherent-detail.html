@@ -1,0 +1,70 @@
+
+<div>
+    <h2><span translate="membershipApp.adherent.detail.title">Adherent</span> {{adherent.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th translate="entity.detail.field">Field</th>
+                    <th translate="entity.detail.value">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adherent.prenom">Prenom</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adherent.prenom}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adherent.nom">Nom</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adherent.nom}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adherent.benevole">Benevole</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adherent.benevole}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adherent.remarqueBenevolat}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adherent.genre">Genre</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adherent.genre}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="membershipApp.adherent.autreRemarque">AutreRemarque</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{adherent.autreRemarque}}" readonly>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            ui-sref="adherent"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

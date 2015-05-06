@@ -1,0 +1,20 @@
+{
+    "membershipApp": {
+        "adhesion" : {
+            "home": {
+                "title": "Adhesions",
+                "createLabel": "Créer un nouveau Adhesion",
+                "createOrEditLabel": "Créer ou éditer un Adhesion"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Adhesion {{ id }} ?"
+            },
+            "detail": {
+                "title": "Adhesion"
+            },
+            "typeAdhesion": "TypeAdhesion",
+            "dateAdhesion": "DateAdhesion"
+        }
+    }
+}
+

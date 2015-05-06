@@ -1,0 +1,36 @@
+{
+    "relationships": [],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "typeAdhesion",
+            "fieldType": "String",
+            "fieldNameCapitalized": "TypeAdhesion",
+            "fieldNameUnderscored": "type_adhesion",
+            "fieldInJavaBeanMethod": "TypeAdhesion",
+            "fieldValidate": true,
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "dateAdhesion",
+            "fieldType": "LocalDate",
+            "fieldNameCapitalized": "DateAdhesion",
+            "fieldNameUnderscored": "date_adhesion",
+            "fieldInJavaBeanMethod": "DateAdhesion",
+            "fieldValidate": false
+        }
+    ],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOneToMany": false,
+    "fieldsContainLocalDate": true,
+    "fieldsContainCustomTime": true,
+    "fieldsContainBigDecimal": false,
+    "fieldsContainDateTime": false,
+    "fieldsContainDate": false,
+    "changelogDate": "20150506095235",
+    "pagination": "no",
+    "validation": true
+}

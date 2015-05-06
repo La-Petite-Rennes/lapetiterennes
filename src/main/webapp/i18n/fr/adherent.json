@@ -1,0 +1,26 @@
+{
+    "membershipApp": {
+        "adherent" : {
+            "home": {
+                "title": "Adherents",
+                "createLabel": "Créer un nouveau Adherent",
+                "createOrEditLabel": "Créer ou éditer un Adherent"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Adherent {{ id }} ?"
+            },
+            "detail": {
+                "title": "Adherent"
+            },
+            "prenom": "Prenom",
+            "nom": "Nom",
+            "benevole": "Benevole",
+            "remarqueBenevolat": "RemarqueBenevolat",
+            "genre": "Genre",
+            "autreRemarque": "AutreRemarque",
+            "coordonnees": "coordonnees",
+            "adhesion": "adhesion"
+        }
+    }
+}
+
