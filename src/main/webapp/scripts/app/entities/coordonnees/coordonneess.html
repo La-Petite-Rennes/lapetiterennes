@@ -16,64 +16,61 @@
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form name="editForm" role="form" novalidate ng-submit="create()">
+                <form name="editForm" class="form-horizontal" role="form" novalidate ng-submit="create()">
 
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                ng-click="clear()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="clear()">&times;</button>
                         <h4 class="modal-title" id="myCoordonneesLabel" translate="membershipApp.coordonnees.home.createOrEditLabel">Create or edit a Coordonnees</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>ID</label>
-                            <input type="text" class="form-control" name="id"
-                                   ng-model="coordonnees.id" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label translate="membershipApp.coordonnees.adresse1">Adresse1</label>
-                            <input type="text" class="form-control" name="adresse1"
-                                   ng-model="coordonnees.adresse1">
-
-                        </div>
-                        <div class="form-group">
-                            <label translate="membershipApp.coordonnees.adresse2">Adresse2</label>
-                            <input type="text" class="form-control" name="adresse2"
-                                   ng-model="coordonnees.adresse2">
-
-                        </div>
-                        <div class="form-group">
-                            <label translate="membershipApp.coordonnees.codePostal">CodePostal</label>
-                            <input type="text" class="form-control" name="codePostal"
-                                   ng-model="coordonnees.codePostal">
-
-                        </div>
-                        <div class="form-group">
-                            <label translate="membershipApp.coordonnees.ville">Ville</label>
-                            <input type="text" class="form-control" name="ville"
-                                   ng-model="coordonnees.ville">
-
-                        </div>
-                        <div class="form-group">
-                            <label translate="membershipApp.coordonnees.email">Email</label>
-                            <input type="text" class="form-control" name="email"
-                                   ng-model="coordonnees.email" ng-pattern="/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/">
-
-                            <div ng-show="editForm.email.$invalid">
-                                <p class="help-block"
-                                   ng-show="editForm.email.$error.pattern" translate="entity.validation.pattern" translate-value-pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?">
-                                    This field should follow pattern "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?".
-                                </p>
+                            <label class="control-label col-sm-2">ID</label>
+                            <div class="col-sm-10">
+                            	<input type="text" class="form-control" name="id" ng-model="coordonnees.id" readonly>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label translate="membershipApp.coordonnees.telephone">Telephone</label>
-                            <input type="text" class="form-control" name="telephone"
-                                   ng-model="coordonnees.telephone">
 
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.adresse1">Adresse1</label>
+                            <div class="col-sm-10">
+                            	<input type="text" class="form-control" name="adresse1" ng-model="coordonnees.adresse1">
+                            </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.adresse2">Adresse2</label>
+                            <div class="col-sm-10">
+                            	<input type="text" class="form-control" name="adresse2" ng-model="coordonnees.adresse2">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.codePostal">CodePostal</label>
+                            <div class="col-sm-3">
+                            	<input type="text" class="form-control" name="codePostal" ng-model="coordonnees.codePostal">
+                            </div>
+                            
+                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.ville">Ville</label>
+                            <div class="col-sm-5">
+                            	<input type="text" class="form-control" name="ville" ng-model="coordonnees.ville">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.email">Email</label>
+                            <div class="col-sm-10">
+                            	<input type="text" class="form-control" name="email" ng-model="coordonnees.email">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.telephone">Telephone</label>
+                            <div class="col-sm-10">
+                            	<input type="text" class="form-control" name="telephone" ng-model="coordonnees.telephone">
+                            </div>
+                        </div>
                     </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
                             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
