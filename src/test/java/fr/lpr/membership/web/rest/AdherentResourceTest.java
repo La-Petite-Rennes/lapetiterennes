@@ -1,16 +1,23 @@
 package fr.lpr.membership.web.rest;
 
-import fr.lpr.membership.Application;
-import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.Genre;
-import fr.lpr.membership.repository.AdherentRepository;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.hamcrest.Matchers.hasItem;
-
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -22,14 +29,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import fr.lpr.membership.Application;
+import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Coordonnees;
+import fr.lpr.membership.domain.Genre;
+import fr.lpr.membership.repository.AdherentRepository;
 
 /**
  * Test class for the AdherentResource REST controller.
@@ -58,7 +62,7 @@ public class AdherentResourceTest {
 
     @Inject
     private AdherentRepository adherentRepository;
-
+    
     private MockMvc restAdherentMockMvc;
 
     private Adherent adherent;
@@ -103,6 +107,30 @@ public class AdherentResourceTest {
         assertThat(testAdherent.getRemarqueBenevolat()).isEqualTo(DEFAULT_REMARQUE_BENEVOLAT);
         assertThat(testAdherent.getGenre()).isEqualTo(DEFAULT_GENRE);
         assertThat(testAdherent.getAutreRemarque()).isEqualTo(DEFAULT_AUTRE_REMARQUE);
+    }
+    
+    @Test
+    @Transactional
+    public void createAdherentWithCoordinates() throws Exception {
+    	/// Given
+        int databaseSizeBeforeCreate = adherentRepository.findAll().size();
+    	Coordonnees coordonnees = new Coordonnees();
+    	coordonnees.setAdresse1("15 Rue de Paris");
+    	coordonnees.setCodePostal("35000");
+    	coordonnees.setVille("Rennes");
+    	adherent.setCoordonnees(coordonnees);
+    	
+    	// When
+    	 restAdherentMockMvc.perform(post("/api/adherents")
+                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                 .content(TestUtil.convertObjectToJsonBytes(adherent)))
+                 .andExpect(status().isCreated());
+    	
+    	// Then
+    	 List<Adherent> adherents = adherentRepository.findAll();
+         assertThat(adherents).hasSize(databaseSizeBeforeCreate + 1);
+         Adherent testAdherent = adherents.get(adherents.size() - 1);
+         assertThat(testAdherent.getCoordonnees()).isNotNull().isEqualToComparingOnlyGivenFields(coordonnees, "adresse1", "codePostal", "ville");
     }
 
     @Test

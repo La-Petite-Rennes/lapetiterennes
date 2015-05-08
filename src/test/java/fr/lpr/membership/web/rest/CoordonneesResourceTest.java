@@ -46,8 +46,8 @@ public class CoordonneesResourceTest {
     private static final String UPDATED_CODE_POSTAL = "UPDATED_TEXT";
     private static final String DEFAULT_VILLE = "SAMPLE_TEXT";
     private static final String UPDATED_VILLE = "UPDATED_TEXT";
-    private static final String DEFAULT_EMAIL = "SAMPLE_TEXT";
-    private static final String UPDATED_EMAIL = "UPDATED_TEXT";
+    private static final String DEFAULT_EMAIL = "sampleEmail@lpr.com";
+    private static final String UPDATED_EMAIL = "updatedEmail@lpr.com";
     private static final String DEFAULT_TELEPHONE = "SAMPLE_TEXT";
     private static final String UPDATED_TELEPHONE = "UPDATED_TEXT";
 

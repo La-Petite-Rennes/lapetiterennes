@@ -44,7 +44,7 @@ public class Adherent implements Serializable {
     @Column(name = "autre_remarque")
     private String autreRemarque;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
     private Coordonnees coordonnees;
 
     @OneToMany(mappedBy = "adherent")
