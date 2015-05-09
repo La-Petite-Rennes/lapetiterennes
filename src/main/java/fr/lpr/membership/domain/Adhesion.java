@@ -62,6 +62,10 @@ public class Adhesion implements Serializable {
     public LocalDate getDateAdhesion() {
         return dateAdhesion;
     }
+    
+    public LocalDate getDateFinAdhesion() {
+    	return dateAdhesion.plusYears(1);
+    }
 
     public void setDateAdhesion(LocalDate dateAdhesion) {
         this.dateAdhesion = dateAdhesion;

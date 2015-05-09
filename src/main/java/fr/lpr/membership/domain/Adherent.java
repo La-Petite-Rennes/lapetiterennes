@@ -1,15 +1,20 @@
 package fr.lpr.membership.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
+import java.util.TreeSet;
 
 /**
  * A Adherent.
@@ -50,7 +55,7 @@ public class Adherent implements Serializable {
     @OneToMany(mappedBy = "adherent")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Adhesion> adhesionss = new HashSet<>();
+    private Set<Adhesion> adhesionss = new TreeSet<>((a1, a2) -> a1.getDateAdhesion().compareTo(a2.getDateAdhesion()));
 
     public Long getId() {
         return id;
@@ -121,7 +126,22 @@ public class Adherent implements Serializable {
     }
 
     public void setAdhesions(Set<Adhesion> adhesions) {
-        this.adhesionss = adhesions;
+    	this.adhesionss.clear();
+        this.adhesionss.addAll(adhesions);
+    }
+    
+    @Transient
+    public StatutAdhesion getStatutAdhesion() {
+    	// Récupération de la dernière ashésion
+    	Adhesion lastAdhesion = this.adhesionss.iterator().next();
+
+    	if (lastAdhesion.getDateFinAdhesion().isBefore(LocalDate.now())) {
+    		return StatutAdhesion.RED;
+    	} else if (lastAdhesion.getDateFinAdhesion().isAfter(LocalDate.now().plusMonths(1))) {
+    		return StatutAdhesion.ORANGE;
+    	} else {
+    		return StatutAdhesion.GREEN;
+    	}
     }
 
     @Override
