@@ -19,6 +19,7 @@ angular.module('membershipApp')
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('adherent');
+                        $translatePartialLoader.addPart('adhesion');
                         $translatePartialLoader.addPart('coordonnees');
                         return $translate.refresh();
                     }]

@@ -39,17 +39,15 @@
                             </select>
 
                             <div ng-show="editForm.typeAdhesion.$invalid">
-                                <p class="help-block"
-                                   ng-show="editForm.typeAdhesion.$error.required" translate="entity.validation.required">
+                                <p class="help-block" ng-show="editForm.typeAdhesion.$error.required" translate="entity.validation.required">
                                     This field is required.
                                 </p>
                             </div>
                         </div>
+                        
                         <div class="form-group">
                             <label translate="membershipApp.adhesion.dateAdhesion">DateAdhesion</label>
-                            <input type="date" class="form-control" name="dateAdhesion"
-                                   ng-model="adhesion.dateAdhesion">
-
+                            <input type="date" class="form-control" name="dateAdhesion"  ng-model="adhesion.dateAdhesion">
                         </div>
 
                         <div class="form-group">

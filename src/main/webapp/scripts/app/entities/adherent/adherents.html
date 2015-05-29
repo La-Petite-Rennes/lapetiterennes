@@ -80,6 +80,28 @@
                         </fieldset>
                         
                         <fieldset>
+                        	<legend>Adhésion</legend>
+                        	
+	                        <div class="form-group required">
+	                            <label class="control-label col-sm-2" translate="membershipApp.adhesion.typeAdhesion">TypeAdhesion</label>
+	                            <div class="col-sm-10">
+		                            <select class="form-control" name="typeAdhesion" ng-model="nouvelleAdhesion.typeAdhesion" required>
+		                            	<option selected="selected" value="Simple">Simple</option>
+		                            	<option value="Famille">Famille</option>
+		                            	<option value="Soutien">Soutien</option>
+		                            </select>
+		                        </div>
+	                        </div>
+	                        
+	                        <div class="form-group">
+	                            <label class="control-label col-sm-2" translate="membershipApp.adhesion.dateAdhesion">DateAdhesion</label>
+	                            <div class="col-sm-10">
+	                            	<input type="date" class="form-control" name="dateAdhesion" ng-model="nouvelleAdhesion.dateAdhesion">
+	                            </div>
+	                        </div>
+                        </fieldset>
+                        
+                        <fieldset>
                         	<legend>Bénévolat</legend>
 	                        <div class="form-group">
 	                        	<div class="col-sm-offset-2 col-sm-10">

@@ -6,6 +6,9 @@ angular.module('membershipApp')
         $scope.coordonneess = Coordonnees.query();
         $scope.adhesions = Adhesion.query();
         $scope.page = 1;
+        $scope.nouvelleAdhesion = {
+        		dateAdhesion : new Date()
+        }
         $scope.loadAll = function() {
             Adherent.query({page: $scope.page, per_page: 20}, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
@@ -26,6 +29,7 @@ angular.module('membershipApp')
         $scope.loadAll();
 
         $scope.create = function () {
+        	$scope.adherent.adhesions = ($scope.adherent.adhesions||[]).concat($scope.nouvelleAdhesion)
             Adherent.update($scope.adherent,
                 function () {
                     $scope.reset();
