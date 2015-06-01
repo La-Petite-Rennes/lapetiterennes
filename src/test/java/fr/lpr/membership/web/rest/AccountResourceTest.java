@@ -152,7 +152,7 @@ public class AccountResourceTest {
             "Joe",                  // firstName
             "Shmoe",                // lastName
             "joe@example.com",      // e-mail
-            "en",                   // langKey
+            "fr",                   // langKey
             Arrays.asList(AuthoritiesConstants.USER)
         );
 
@@ -175,7 +175,7 @@ public class AccountResourceTest {
             "Funky",                // firstName
             "One",                  // lastName
             "funky@example.com",    // e-mail
-            "en",                   // langKey
+            "fr",                   // langKey
             Arrays.asList(AuthoritiesConstants.USER)
         );
 
@@ -198,7 +198,7 @@ public class AccountResourceTest {
             "Bob",              // firstName
             "Green",            // lastName
             "invalid",          // e-mail <-- invalid
-            "en",               // langKey
+            "fr",               // langKey
             Arrays.asList(AuthoritiesConstants.USER)
         );
 
@@ -222,7 +222,7 @@ public class AccountResourceTest {
             "Alice",                // firstName
             "Something",            // lastName
             "alice@example.com",    // e-mail
-            "en",                   // langKey
+            "fr",                   // langKey
             Arrays.asList(AuthoritiesConstants.USER)
         );
 
@@ -258,7 +258,7 @@ public class AccountResourceTest {
             "John",                 // firstName
             "Doe",                  // lastName
             "john@example.com",     // e-mail
-            "en",                   // langKey
+            "fr",                   // langKey
             Arrays.asList(AuthoritiesConstants.USER)
         );
 
@@ -293,7 +293,7 @@ public class AccountResourceTest {
             "Bad",                  // firstName
             "Guy",                  // lastName
             "badguy@example.com",   // e-mail
-            "en",                   // langKey
+            "fr",                   // langKey
             Arrays.asList(AuthoritiesConstants.ADMIN) // <-- only admin should be able to do that
         );
 

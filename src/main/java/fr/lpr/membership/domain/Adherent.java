@@ -1,26 +1,32 @@
 package fr.lpr.membership.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.joda.time.LocalDate;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
-import java.util.TreeSet;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A Adherent.
@@ -28,6 +34,7 @@ import java.util.TreeSet;
 @Entity
 @Table(name = "ADHERENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@JsonAutoDetect(getterVisibility=Visibility.PUBLIC_ONLY)
 public class Adherent implements Serializable {
 
     @Id
@@ -61,7 +68,7 @@ public class Adherent implements Serializable {
     @OneToMany(mappedBy = "adherent", cascade=CascadeType.ALL)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Adhesion> adhesionss = new TreeSet<>((a1, a2) -> a1.getDateAdhesion().compareTo(a2.getDateAdhesion()));
+    private Set<Adhesion> adhesions = new TreeSet<>((a1, a2) -> a1.getDateAdhesion().compareTo(a2.getDateAdhesion()));
 
     public Long getId() {
         return id;
@@ -128,20 +135,24 @@ public class Adherent implements Serializable {
     }
 
     public Set<Adhesion> getAdhesions() {
-        return adhesionss;
+        return adhesions;
     }
 
     public void setAdhesions(Set<Adhesion> adhesions) {
-    	this.adhesionss.clear();
-        this.adhesionss.addAll(adhesions);
-        this.adhesionss.forEach(a -> a.setAdherent(this));
+    	this.adhesions.clear();
+        this.adhesions.addAll(adhesions);
+        this.adhesions.forEach(a -> a.setAdherent(this));
     }
     
     @JsonProperty
     @Transient
     public StatutAdhesion getStatutAdhesion() {
+    	if (this.adhesions.isEmpty()) {
+    		return StatutAdhesion.NONE;
+    	}
+    	
     	// Récupération de la dernière adhésion
-    	Adhesion lastAdhesion = this.adhesionss.iterator().next();
+    	Adhesion lastAdhesion =  this.adhesions.iterator().next();
 
     	if (lastAdhesion.getDateFinAdhesion().isBefore(LocalDate.now())) {
     		return StatutAdhesion.RED;
@@ -152,15 +163,6 @@ public class Adherent implements Serializable {
     	}
     }
     
-    public static void main(String[] args) throws JsonGenerationException, JsonMappingException, IOException {
-		Adherent adherent = new Adherent();
-		Adhesion adhesion = new Adhesion();
-		adhesion.setDateAdhesion(LocalDate.now());
-		adherent.adhesionss.add(adhesion);
-		
-		Jackson2ObjectMapperBuilder.json().build().writeValue(System.out, adherent);
-	}
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

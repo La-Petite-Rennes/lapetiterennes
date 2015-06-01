@@ -4,7 +4,6 @@ import fr.lpr.membership.domain.User;
 
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -19,10 +18,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByActivatedIsFalseAndCreatedDateBefore(DateTime dateTime);
 
+    Optional<User> findOneByResetKey(String resetKey);
+
     Optional<User> findOneByEmail(String email);
 
     Optional<User> findOneByLogin(String login);
 
+    @Override
     void delete(User t);
 
 }

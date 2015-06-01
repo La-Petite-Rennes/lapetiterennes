@@ -1,5 +1,6 @@
 package fr.lpr.membership.web.rest;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.repository.AdherentRepository;
@@ -72,6 +74,9 @@ public class AdherentResource {
         return ResponseEntity.ok().build();
     }
 
+    @Inject
+    ObjectMapper objectMapper;
+    
     /**
      * GET  /adherents -> get all the adherents.
      */
@@ -84,6 +89,14 @@ public class AdherentResource {
         throws URISyntaxException {
         Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
+        
+//        try {
+//        	objectMapper.writeValueAsString(page.getContent());
+//			objectMapper.writeValue(System.out, page.getContent());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+        
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

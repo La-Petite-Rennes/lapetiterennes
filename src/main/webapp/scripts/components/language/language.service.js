@@ -28,6 +28,7 @@ angular.module('membershipApp')
  */
     .constant('LANGUAGES', [
         'fr'
+        //JHipster will add new languages here
     ]
 );
 

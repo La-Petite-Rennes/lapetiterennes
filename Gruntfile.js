@@ -1,4 +1,4 @@
-// Generated on 2015-05-05 using generator-jhipster 2.9.2
+// Generated on 2015-06-01 using generator-jhipster 2.14.2
 'use strict';
 var fs = require('fs');
 
@@ -16,7 +16,13 @@ var parseVersionFromPomXml = function() {
 // usemin custom step
 var useminAutoprefixer = {
     name: 'autoprefixer',
-    createConfig: require('grunt-usemin/lib/config/cssmin').createConfig // Reuse cssmins createConfig
+    createConfig: function(context, block) {
+        if(block.src.length === 0) {
+            return {};
+        } else {
+            return require('grunt-usemin/lib/config/cssmin').createConfig(context, block) // Reuse cssmins createConfig
+        }
+    }
 };
 
 module.exports = function (grunt) {
@@ -37,22 +43,10 @@ module.exports = function (grunt) {
             ngconstant: {
                 files: ['Gruntfile.js', 'pom.xml'],
                 tasks: ['ngconstant:dev']
-            },
-            styles: {
-                files: ['src/main/webapp/assets/styles/**/*.css']
             }
         },
         autoprefixer: {
-        // not used since Uglify task does autoprefixer,
-        //    options: ['last 1 version'],
-        //    dist: {
-        //        files: [{
-        //            expand: true,
-        //            cwd: '.tmp/styles/',
-        //            src: '**/*.css',
-        //            dest: '.tmp/styles/'
-        //        }]
-        //    }
+            // src and dest is configured in a subtask called "generated" by usemin
         },
         wiredep: {
             app: {
@@ -122,34 +116,11 @@ module.exports = function (grunt) {
                 'src/main/webapp/scripts/components/**/*.js'
             ]
         },
-        coffee: {
-            options: {
-                sourceMap: true,
-                sourceRoot: ''
-            },
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: 'src/main/webapp/scripts',
-                    src: ['scripts/app/**/*.coffee', 'scripts/components/**/*.coffee'],
-                    dest: '.tmp/scripts',
-                    ext: '.js'
-                }]
-            },
-            test: {
-                files: [{
-                    expand: true,
-                    cwd: 'test/spec',
-                    src: '**/*.coffee',
-                    dest: '.tmp/spec',
-                    ext: '.js'
-                }]
-            }
-        },
         concat: {
-        // not used since Uglify task does concat,
-        // but still available if needed
-        //    dist: {}
+            // src and dest is configured in a subtask called "generated" by usemin
+        },
+        uglifyjs: {
+            // src and dest is configured in a subtask called "generated" by usemin
         },
         rev: {
             dist: {
@@ -213,20 +184,10 @@ module.exports = function (grunt) {
             }
         },
         cssmin: {
-            // By default, your `index.html` <!-- Usemin Block --> will take care of
-            // minification. This option is pre-configured if you do not wish to use
-            // Usemin blocks.
-            // dist: {
-            //     files: {
-            //         '<%= yeoman.dist %>/styles/main.css': [
-            //             '.tmp/styles/**/*.css',
-            //             'styles/**/*.css'
-            //         ]
-            //     }
-            // }
             options: {
                 root: 'src/main/webapp' // Replace relative paths for static resources with absolute path
             }
+            // src and dest is configured in a subtask called "generated" by usemin
         },
         ngtemplates:    {
             dist: {
@@ -295,18 +256,6 @@ module.exports = function (grunt) {
                     ]
                 }]
             },
-            generateHerokuDirectory: {
-                    expand: true,
-                    dest: 'deploy/heroku',
-                    src: [
-                        'pom.xml',
-                        'gradlew',
-                        '*.gradle',
-                        'gradle.properties',
-                        'gradle/**',
-                        'src/main/**'
-                ]
-            },
             generateOpenshiftDirectory: {
                     expand: true,
                     dest: 'deploy/openshift',
@@ -332,11 +281,6 @@ module.exports = function (grunt) {
                 singleRun: true
             }
         },
-        cdnify: {
-            dist: {
-                html: ['<%= yeoman.dist %>/*.html']
-            }
-        },
         ngAnnotate: {
             dist: {
                 files: [{
@@ -353,13 +297,6 @@ module.exports = function (grunt) {
                 push: false,
                 connectCommits: false,
                 message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
-            },
-            heroku: {
-                options: {
-                    dir: 'deploy/heroku',
-                    remote: 'heroku',
-                    branch: 'master'
-                }
             },
             openshift: {
                 options: {
@@ -437,7 +374,6 @@ module.exports = function (grunt) {
     ]);
 
 	grunt.registerTask('appendSkipBower', 'Force skip of bower for Gradle', function () {
-		var filepath = 'deploy/heroku/gradle.properties';
 
 		if (!grunt.file.exists(filepath)) {
 			// Assume this is a maven project
@@ -453,21 +389,6 @@ module.exports = function (grunt) {
 
 		grunt.file.write(filepath, fileContent + "\nskipBower=true\n");
 	});
-
-    grunt.registerTask('buildHeroku', [
-        'test',
-        'build',
-        'copy:generateHerokuDirectory',
-        'appendSkipBower'
-    ]);
-
-    grunt.registerTask('deployHeroku', [
-        'test',
-        'build',
-        'copy:generateHerokuDirectory',
-        'appendSkipBower',
-        'buildcontrol:heroku'
-    ]);
 
     grunt.registerTask('buildOpenshift', [
         'test',

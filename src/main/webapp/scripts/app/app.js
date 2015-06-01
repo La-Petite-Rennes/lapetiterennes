@@ -45,7 +45,6 @@ angular.module('membershipApp', ['LocalStorageModule', 'tmh.dynamicLocale',
             }
         };
     })
-    
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider) {
 
         //enable CSRF
@@ -73,7 +72,6 @@ angular.module('membershipApp', ['LocalStorageModule', 'tmh.dynamicLocale',
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('global');
                     $translatePartialLoader.addPart('language');
-                    return $translate.refresh();
                 }]
             }
         });
@@ -86,7 +84,9 @@ angular.module('membershipApp', ['LocalStorageModule', 'tmh.dynamicLocale',
 
         $translateProvider.preferredLanguage('fr');
         $translateProvider.useCookieStorage();
+        $translateProvider.useSanitizeValueStrategy('escaped');
 
         tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
-        tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
+        tmhDynamicLocaleProvider.useCookieStorage();
+        tmhDynamicLocaleProvider.storageKey('NG_TRANSLATE_LANG_KEY');
     });
