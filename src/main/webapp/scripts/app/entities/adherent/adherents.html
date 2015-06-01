@@ -198,8 +198,8 @@
             <tbody infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page">
                 <tr ng-repeat="adherent in adherents">
                     <td><a ui-sref="adherentDetail({id:adherent.id})">{{adherent.id}}</a></td>
-                    <td>{{adherent.prenom}}</td>
-                    <td>{{adherent.nom}}</td>
+                    <td class="statut-{{adherent.statutAdhesion}}">{{adherent.prenom}}</td>
+                    <td class="statut-{{adherent.statutAdhesion}}">{{adherent.nom}}</td>
                     <td>{{adherent.benevole}}</td>
                     <td>{{adherent.remarqueBenevolat}}</td>
                     <td>{{adherent.genre}}</td>
