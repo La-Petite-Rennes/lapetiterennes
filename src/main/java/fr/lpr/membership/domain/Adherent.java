@@ -67,7 +67,6 @@ public class Adherent implements Serializable {
     private Coordonnees coordonnees;
 
     @OneToMany(mappedBy = "adherent", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Adhesion> adhesions = new TreeSet<>((a1, a2) -> a1.getDateAdhesion().compareTo(a2.getDateAdhesion()));
 
@@ -135,10 +134,12 @@ public class Adherent implements Serializable {
         this.coordonnees = coordonnees;
     }
 
+    @JsonIgnore
     public Set<Adhesion> getAdhesions() {
         return adhesions;
     }
 
+    @JsonProperty
     public void setAdhesions(Set<Adhesion> adhesions) {
     	this.adhesions.clear();
         this.adhesions.addAll(adhesions);
