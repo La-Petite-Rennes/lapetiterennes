@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -65,7 +66,7 @@ public class Adherent implements Serializable {
     @OneToOne(cascade=CascadeType.ALL)
     private Coordonnees coordonnees;
 
-    @OneToMany(mappedBy = "adherent", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "adherent", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Adhesion> adhesions = new TreeSet<>((a1, a2) -> a1.getDateAdhesion().compareTo(a2.getDateAdhesion()));
@@ -145,7 +146,6 @@ public class Adherent implements Serializable {
     }
     
     @JsonProperty
-    @Transient
     public StatutAdhesion getStatutAdhesion() {
     	if (this.adhesions.isEmpty()) {
     		return StatutAdhesion.NONE;

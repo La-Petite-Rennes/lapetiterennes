@@ -187,6 +187,7 @@ public class AdherentResourceTest {
                 .andExpect(jsonPath("$.[*].benevole").value(hasItem(DEFAULT_BENEVOLE.booleanValue())))
                 .andExpect(jsonPath("$.[*].remarqueBenevolat").value(hasItem(DEFAULT_REMARQUE_BENEVOLAT.toString())))
                 .andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE.toString())))
+                .andExpect(jsonPath("$.[*].statutAdhesion").value("NONE"))
                 .andExpect(jsonPath("$.[*].autreRemarque").value(hasItem(DEFAULT_AUTRE_REMARQUE.toString())));
     }
 
@@ -206,6 +207,7 @@ public class AdherentResourceTest {
             .andExpect(jsonPath("$.benevole").value(DEFAULT_BENEVOLE.booleanValue()))
             .andExpect(jsonPath("$.remarqueBenevolat").value(DEFAULT_REMARQUE_BENEVOLAT.toString()))
             .andExpect(jsonPath("$.genre").value(DEFAULT_GENRE.toString()))
+            .andExpect(jsonPath("$.statutAdhesion").value("NONE"))
             .andExpect(jsonPath("$.autreRemarque").value(DEFAULT_AUTRE_REMARQUE.toString()));
     }
 
