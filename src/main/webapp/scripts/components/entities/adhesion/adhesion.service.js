@@ -13,6 +13,11 @@ angular.module('membershipApp')
                     return data;
                 }
             },
+            'adherent': {
+            	method: 'GET',
+            	url: 'api/adhesions/adherent/:adherentId',
+            	isArray: true
+            },
             'update': { method:'PUT' }
         });
     });

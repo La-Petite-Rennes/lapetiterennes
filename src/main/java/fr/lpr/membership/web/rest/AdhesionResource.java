@@ -1,8 +1,11 @@
 package fr.lpr.membership.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+
 import fr.lpr.membership.domain.Adhesion;
+import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.AdhesionRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,10 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing Adhesion.
@@ -28,6 +33,9 @@ public class AdhesionResource {
 
     @Inject
     private AdhesionRepository adhesionRepository;
+
+    @Inject
+    private AdherentRepository adherentRepository;
 
     /**
      * POST  /adhesions -> Create a new adhesion.
@@ -71,6 +79,18 @@ public class AdhesionResource {
     public List<Adhesion> getAll() {
         log.debug("REST request to get all Adhesions");
         return adhesionRepository.findAll();
+    }
+    
+    /**
+     * GET  /adhesions/adherent/:adherentId -> get adhesions of the "adherentId" adherent
+     */
+    @RequestMapping(value = "/adhesions/adherent/{adherentId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Set<Adhesion>> getAdherentAdhesions(@PathVariable Long adherentId) {
+    	log.debug("REST request to get adhesions of Adherent : {}", adherentId);
+    	return Optional.ofNullable(adherentRepository.findOne(adherentId))
+    			.map(adherent -> new ResponseEntity<>(adherent.getAdhesions(), HttpStatus.OK))
+    			.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

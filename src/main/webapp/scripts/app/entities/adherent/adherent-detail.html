@@ -61,6 +61,23 @@
             </tbody>
         </table>
     </div>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date d'adhésion</th>
+                    <th>Type d'adhésion</th>
+                </tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="adhesion in adherent.adhesions">
+                    <td>{{adhesion.dateAdhesion}}</td>
+					<td>{{adhesion.typeAdhesion}}</td>
+				</tr>
+			</tbody>
+        </table>
+   	</div>
 
     <button type="submit"
             ui-sref="adherent"
