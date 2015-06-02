@@ -1,13 +1,16 @@
 package fr.lpr.membership.repository;
 
-import fr.lpr.membership.domain.Adherent;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import fr.lpr.membership.domain.Adherent;
 
 /**
  * Spring Data JPA repository for the Adherent entity.
  */
 public interface AdherentRepository extends JpaRepository<Adherent,Long> {
 
+	Page<Adherent> findByNomLikeOrPrenomLike(String nom, String prenom, Pageable pageable);
+	
 }

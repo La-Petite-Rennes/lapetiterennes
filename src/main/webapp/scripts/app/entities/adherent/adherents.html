@@ -10,6 +10,15 @@
                 </button>
             </div>
         </div>
+        
+        <div class="row"> 
+        	<form class="form-inline">
+	            <div class="form-group col-md-6">
+	            	<label for="searchCriteria" class="control-label">Rechercher</label>
+            	 	<input type="text" class="form-control" id="searchCriteria" ng-model="searchCriteria" ng-change="search()" placeholder="Rechercher">
+	            </div>
+            </form>
+		</div>
     </div>
 
     <div class="modal fade" id="saveAdherentModal" tabindex="-1" role="dialog" aria-labelledby="myAdherentLabel"
@@ -185,9 +194,9 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th translate="membershipApp.adherent.prenom">Prenom</th>
-                    <th translate="membershipApp.adherent.nom">Nom</th>
+                    <th><a href="" ng-click="search('id')">ID</a></th>
+                    <th><a href="" ng-click="search('prenom')"><span translate="membershipApp.adherent.prenom">Prénom</span></a></th>
+                    <th><a href="" ng-click="search('nom')"><span translate="membershipApp.adherent.nom">Nom</span></a></th>
                     <th translate="membershipApp.adherent.benevole">Benevole</th>
                     <th translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</th>
                     <th translate="membershipApp.adherent.genre">Genre</th>

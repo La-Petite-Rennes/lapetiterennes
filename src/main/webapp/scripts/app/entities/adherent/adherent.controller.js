@@ -5,23 +5,56 @@ angular.module('membershipApp')
         $scope.adherents = [];
         $scope.coordonneess = Coordonnees.query();
         $scope.adhesions = Adhesion.query();
+        
         $scope.page = 1;
+        $scope.searchCriteria;
+        $scope.sort = 'id';
+        $scope.sortOrder = 'ASC';
+        
         $scope.nouvelleAdhesion = {
         		dateAdhesion : new Date()
         }
+        
+        $scope.search = function(sort) {
+        	// Sort property
+        	if (sort !== undefined) {
+        		$scope.sort = sort;
+        	}
+        	
+        	// Sort order
+        	if (sort === $scope.sort) {
+        		$scope.sortOrder = $scope.sortOrder === 'ASC' ? 'DESC' : 'ASC';
+        	} else {
+        		$scope.sortOrder = 'ASC';
+        	}
+        	
+        	// Reload
+        	$scope.reset();
+        }
+        
         $scope.loadAll = function() {
-            Adherent.query({page: $scope.page, per_page: 20}, function(result, headers) {
+        	var query = {
+    			page: $scope.page,
+    			per_page: 20,
+    			criteria: $scope.searchCriteria,
+    			sort: $scope.sort,
+    			sortOrder: $scope.sortOrder
+        	};
+        	
+            Adherent.search(query, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
                 for (var i = 0; i < result.length; i++) {
                     $scope.adherents.push(result[i]);
                 }
             });
         };
+        
         $scope.reset = function() {
             $scope.page = 1;
             $scope.adherents = [];
             $scope.loadAll();
         };
+        
         $scope.loadPage = function(page) {
             $scope.page = page;
             $scope.loadAll();

@@ -12,6 +12,9 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -90,16 +93,37 @@ public class AdherentResource {
         Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
         
-//        try {
-//        	objectMapper.writeValueAsString(page.getContent());
-//			objectMapper.writeValue(System.out, page.getContent());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+    
+    /**
+     * Search /adherents -> get the adherents filtered by name and sorted
+     */
+    @RequestMapping(value = "/adherents/search",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page" , required = false) Integer offset,
+    		@RequestParam(value = "per_page", required = false) Integer limit,
+    		@RequestParam(value = "criteria", required = false) String criteria,
+    		@RequestParam(value = "sort", defaultValue="id") String sortProperty,
+    		@RequestParam(value = "sortOrder", defaultValue="ASC") String sortOrder) throws URISyntaxException 
+    {
+    	Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
+    	Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
+    	
+        Page<Adherent> page = null;
+        if (criteria == null || criteria.isEmpty()) {
+        	page = adherentRepository.findAll(pageRequest);
+        } else {
+        	page = adherentRepository.findByNomLikeOrPrenomLike(criteria, criteria, pageRequest);
+        }
+        
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
         
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
-
+    
     /**
      * GET  /adherents/:id -> get the "id" adherent.
      */
