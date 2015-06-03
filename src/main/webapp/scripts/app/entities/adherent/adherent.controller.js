@@ -12,7 +12,7 @@ angular.module('membershipApp')
         $scope.sortOrder = 'ASC';
         
         $scope.nouvelleAdhesion = {
-        		dateAdhesion : new Date()
+        	dateAdhesion : new Date()
         }
         
         $scope.search = function(sort) {
@@ -96,6 +96,7 @@ angular.module('membershipApp')
 
         $scope.clear = function () {
             $scope.adherent = {prenom: null, nom: null, benevole: null, remarqueBenevolat: null, genre: null, autreRemarque: null, id: null};
+            $scope.nouvelleAdhesion = { dateAdhesion : new Date() };
             $scope.editForm.$setPristine();
             $scope.editForm.$setUntouched();
         };
