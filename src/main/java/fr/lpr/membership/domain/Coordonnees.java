@@ -13,6 +13,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Joiner;
+
 /**
  * A Coordonnees.
  */
@@ -21,115 +24,117 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Coordonnees implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	private static final long serialVersionUID = 1L;
 
-    @Column(name = "adresse1")
-    private String adresse1;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @Column(name = "adresse2")
-    private String adresse2;
+	@Column(name = "adresse1")
+	private String adresse1;
 
-    @Column(name = "code_postal")
-    private String codePostal;
+	@Column(name = "adresse2")
+	private String adresse2;
 
-    @Column(name = "ville")
-    private String ville;
+	@Column(name = "code_postal")
+	private String codePostal;
 
-    @Column(name = "email")
-    private String email;
+	@Column(name = "ville")
+	private String ville;
 
-    @Column(name = "telephone")
-    private String telephone;
+	@Column(name = "email")
+	private String email;
 
-    public Long getId() {
-        return id;
-    }
+	@Column(name = "telephone")
+	private String telephone;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getAdresse1() {
-        return adresse1;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setAdresse1(String adresse1) {
-        this.adresse1 = adresse1;
-    }
+	public String getAdresse1() {
+		return adresse1;
+	}
 
-    public String getAdresse2() {
-        return adresse2;
-    }
+	public void setAdresse1(String adresse1) {
+		this.adresse1 = adresse1;
+	}
 
-    public void setAdresse2(String adresse2) {
-        this.adresse2 = adresse2;
-    }
+	public String getAdresse2() {
+		return adresse2;
+	}
 
-    public String getCodePostal() {
-        return codePostal;
-    }
+	public void setAdresse2(String adresse2) {
+		this.adresse2 = adresse2;
+	}
 
-    public void setCodePostal(String codePostal) {
-        this.codePostal = codePostal;
-    }
+	@JsonIgnore
+	public String getAdresseComplete() {
+		return Joiner.on(' ').skipNulls().join(adresse1, adresse2);
+	}
 
-    public String getVille() {
-        return ville;
-    }
+	public String getCodePostal() {
+		return codePostal;
+	}
 
-    public void setVille(String ville) {
-        this.ville = ville;
-    }
+	public void setCodePostal(String codePostal) {
+		this.codePostal = codePostal;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getVille() {
+		return ville;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setVille(String ville) {
+		this.ville = ville;
+	}
 
-    public String getTelephone() {
-        return telephone;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	public String getTelephone() {
+		return telephone;
+	}
 
-        Coordonnees coordonnees = (Coordonnees) o;
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
 
-        if ( ! Objects.equals(id, coordonnees.id)) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        return true;
-    }
+		final Coordonnees coordonnees = (Coordonnees) o;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+		if (!Objects.equals(id, coordonnees.id)) {
+			return false;
+		}
 
-    @Override
-    public String toString() {
-        return "Coordonnees{" +
-                "id=" + id +
-                ", adresse1='" + adresse1 + "'" +
-                ", adresse2='" + adresse2 + "'" +
-                ", codePostal='" + codePostal + "'" +
-                ", ville='" + ville + "'" +
-                ", email='" + email + "'" +
-                ", telephone='" + telephone + "'" +
-                '}';
-    }
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public String toString() {
+		return "Coordonnees{" + "id=" + id + ", adresse1='" + adresse1 + "'" + ", adresse2='" + adresse2 + "'" + ", codePostal='" + codePostal + "'"
+				+ ", ville='" + ville + "'" + ", email='" + email + "'" + ", telephone='" + telephone + "'" + '}';
+	}
 }

@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
@@ -35,166 +34,169 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 @Table(name = "ADHERENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@JsonAutoDetect(getterVisibility=Visibility.PUBLIC_ONLY)
+@JsonAutoDetect(getterVisibility = Visibility.PUBLIC_ONLY)
 public class Adherent implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	private static final long serialVersionUID = 1L;
 
-    @NotNull
-    @Column(name = "prenom", nullable = false)
-    private String prenom;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @NotNull
-    @Column(name = "nom", nullable = false)
-    private String nom;
+	@NotNull
+	@Column(name = "prenom", nullable = false)
+	private String prenom;
 
-    @Column(name = "benevole")
-    private Boolean benevole;
+	@NotNull
+	@Column(name = "nom", nullable = false)
+	private String nom;
 
-    @Column(name = "remarque_benevolat")
-    private String remarqueBenevolat;
+	@Column(name = "benevole")
+	private Boolean benevole;
 
-    @Column(name = "genre")
-    @Enumerated(EnumType.STRING)
-    private Genre genre;
+	@Column(name = "remarque_benevolat")
+	private String remarqueBenevolat;
 
-    @Column(name = "autre_remarque")
-    private String autreRemarque;
+	@Column(name = "genre")
+	@Enumerated(EnumType.STRING)
+	private Genre genre;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    private Coordonnees coordonnees;
+	@Column(name = "autre_remarque")
+	private String autreRemarque;
 
-    @OneToMany(mappedBy = "adherent", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-//    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Adhesion> adhesions = new TreeSet<>((a1, a2) -> a1.getDateAdhesion().compareTo(a2.getDateAdhesion()));
+	@OneToOne(cascade = CascadeType.ALL)
+	private Coordonnees coordonnees;
 
-    public Long getId() {
-        return id;
-    }
+	@OneToMany(mappedBy = "adherent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	// @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	private final Set<Adhesion> adhesions = new TreeSet<>((a1, a2) -> a1.getDateAdhesion().compareTo(a2.getDateAdhesion()));
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getPrenom() {
-        return prenom;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
+	public String getPrenom() {
+		return prenom;
+	}
 
-    public String getNom() {
-        return nom;
-    }
+	public void setPrenom(String prenom) {
+		this.prenom = prenom;
+	}
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+	public String getNom() {
+		return nom;
+	}
 
-    public Boolean getBenevole() {
-        return benevole;
-    }
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
 
-    public void setBenevole(Boolean benevole) {
-        this.benevole = benevole;
-    }
+	public Boolean getBenevole() {
+		return benevole;
+	}
 
-    public String getRemarqueBenevolat() {
-        return remarqueBenevolat;
-    }
+	public void setBenevole(Boolean benevole) {
+		this.benevole = benevole;
+	}
 
-    public void setRemarqueBenevolat(String remarqueBenevolat) {
-        this.remarqueBenevolat = remarqueBenevolat;
-    }
+	public String getRemarqueBenevolat() {
+		return remarqueBenevolat;
+	}
 
-    public Genre getGenre() {
-        return genre;
-    }
+	public void setRemarqueBenevolat(String remarqueBenevolat) {
+		this.remarqueBenevolat = remarqueBenevolat;
+	}
 
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
+	public Genre getGenre() {
+		return genre;
+	}
 
-    public String getAutreRemarque() {
-        return autreRemarque;
-    }
+	public void setGenre(Genre genre) {
+		this.genre = genre;
+	}
 
-    public void setAutreRemarque(String autreRemarque) {
-        this.autreRemarque = autreRemarque;
-    }
+	public String getAutreRemarque() {
+		return autreRemarque;
+	}
 
-    public Coordonnees getCoordonnees() {
-        return coordonnees;
-    }
+	public void setAutreRemarque(String autreRemarque) {
+		this.autreRemarque = autreRemarque;
+	}
 
-    public void setCoordonnees(Coordonnees coordonnees) {
-        this.coordonnees = coordonnees;
-    }
+	public Coordonnees getCoordonnees() {
+		return coordonnees;
+	}
 
-    @JsonIgnore
-    public Set<Adhesion> getAdhesions() {
-        return adhesions;
-    }
+	public void setCoordonnees(Coordonnees coordonnees) {
+		this.coordonnees = coordonnees;
+	}
 
-    @JsonProperty
-    public void setAdhesions(Set<Adhesion> adhesions) {
-    	this.adhesions.clear();
-        this.adhesions.addAll(adhesions);
-        this.adhesions.forEach(a -> a.setAdherent(this));
-    }
-    
-    @JsonProperty
-    public StatutAdhesion getStatutAdhesion() {
-    	if (this.adhesions.isEmpty()) {
-    		return StatutAdhesion.NONE;
-    	}
-    	
-    	// Récupération de la dernière adhésion
-    	Adhesion lastAdhesion =  this.adhesions.iterator().next();
+	@JsonIgnore
+	public Set<Adhesion> getAdhesions() {
+		return adhesions;
+	}
 
-    	if (lastAdhesion.getDateFinAdhesion().isBefore(LocalDate.now())) {
-    		return StatutAdhesion.RED;
-    	} else if (lastAdhesion.getDateFinAdhesion().isBefore(LocalDate.now().plusMonths(1))) {
-    		return StatutAdhesion.ORANGE;
-    	} else {
-    		return StatutAdhesion.GREEN;
-    	}
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	@JsonProperty
+	public void setAdhesions(Set<Adhesion> adhesions) {
+		this.adhesions.clear();
+		this.adhesions.addAll(adhesions);
+		this.adhesions.forEach(a -> a.setAdherent(this));
+	}
 
-        Adherent adherent = (Adherent) o;
+	@JsonIgnore
+	public Adhesion lastAdhesion() {
+		if (this.adhesions.isEmpty()) {
+			return null;
+		} else {
+			return this.adhesions.iterator().next();
+		}
+	}
 
-        if ( ! Objects.equals(id, adherent.id)) return false;
+	@JsonProperty
+	public StatutAdhesion getStatutAdhesion() {
+		final Adhesion lastAdhesion = lastAdhesion();
 
-        return true;
-    }
+		if (lastAdhesion == null) {
+			return StatutAdhesion.NONE;
+		} else if (lastAdhesion.getDateFinAdhesion().isBefore(LocalDate.now())) {
+			return StatutAdhesion.RED;
+		} else if (lastAdhesion.getDateFinAdhesion().isBefore(LocalDate.now().plusMonths(1))) {
+			return StatutAdhesion.ORANGE;
+		} else {
+			return StatutAdhesion.GREEN;
+		}
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-    @Override
-    public String toString() {
-        return "Adherent{" +
-                "id=" + id +
-                ", prenom='" + prenom + "'" +
-                ", nom='" + nom + "'" +
-                ", benevole='" + benevole + "'" +
-                ", remarqueBenevolat='" + remarqueBenevolat + "'" +
-                ", genre='" + genre + "'" +
-                ", autreRemarque='" + autreRemarque + "'" +
-                '}';
-    }
+		final Adherent adherent = (Adherent) o;
+
+		if (!Objects.equals(id, adherent.id)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public String toString() {
+		return "Adherent{" + "id=" + id + ", prenom='" + prenom + "'" + ", nom='" + nom + "'" + ", benevole='" + benevole + "'" + ", remarqueBenevolat='"
+				+ remarqueBenevolat + "'" + ", genre='" + genre + "'" + ", autreRemarque='" + autreRemarque + "'" + '}';
+	}
 }

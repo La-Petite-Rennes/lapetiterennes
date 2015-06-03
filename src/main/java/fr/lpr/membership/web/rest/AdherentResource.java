@@ -1,12 +1,15 @@
 package fr.lpr.membership.web.rest;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -28,9 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.opencsv.CSVWriter;
 
 import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Adhesion;
+import fr.lpr.membership.domain.Coordonnees;
 import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.security.AuthoritiesConstants;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
 /**
@@ -40,115 +47,126 @@ import fr.lpr.membership.web.rest.util.PaginationUtil;
 @RequestMapping("/api")
 public class AdherentResource {
 
-    private final Logger log = LoggerFactory.getLogger(AdherentResource.class);
+	private final Logger log = LoggerFactory.getLogger(AdherentResource.class);
 
-    @Inject
-    private AdherentRepository adherentRepository;
-    
-    /**
-     * POST  /adherents -> Create a new adherent.
-     */
-    @RequestMapping(value = "/adherents",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<Void> create(@Valid @RequestBody Adherent adherent) throws URISyntaxException {
-        log.debug("REST request to save Adherent : {}", adherent);
-        if (adherent.getId() != null) {
-            return ResponseEntity.badRequest().header("Failure", "A new adherent cannot already have an ID").build();
-        }
-        adherentRepository.save(adherent);
-        return ResponseEntity.created(new URI("/api/adherents/" + adherent.getId())).build();
-    }
+	@Inject
+	private AdherentRepository adherentRepository;
 
-    /**
-     * PUT  /adherents -> Updates an existing adherent.
-     */
-    @RequestMapping(value = "/adherents",
-        method = RequestMethod.PUT,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<Void> update(@Valid @RequestBody Adherent adherent) throws URISyntaxException {
-        log.debug("REST request to update Adherent : {}", adherent);
-        if (adherent.getId() == null) {
-            return create(adherent);
-        }
-        adherentRepository.save(adherent);
-        return ResponseEntity.ok().build();
-    }
+	/**
+	 * POST /adherents -> Create a new adherent.
+	 */
+	@RequestMapping(value = "/adherents", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Timed
+	public ResponseEntity<Void> create(@Valid @RequestBody Adherent adherent) throws URISyntaxException {
+		log.debug("REST request to save Adherent : {}", adherent);
+		if (adherent.getId() != null) {
+			return ResponseEntity.badRequest().header("Failure", "A new adherent cannot already have an ID").build();
+		}
+		adherentRepository.save(adherent);
+		return ResponseEntity.created(new URI("/api/adherents/" + adherent.getId())).build();
+	}
 
-    @Inject
-    ObjectMapper objectMapper;
-    
-    /**
-     * GET  /adherents -> get all the adherents.
-     */
-    @RequestMapping(value = "/adherents",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<List<Adherent>> getAll(@RequestParam(value = "page" , required = false) Integer offset,
-                                  @RequestParam(value = "per_page", required = false) Integer limit)
-        throws URISyntaxException {
-        Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
-        
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-    
-    /**
-     * Search /adherents -> get the adherents filtered by name and sorted
-     */
-    @RequestMapping(value = "/adherents/search",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page" , required = false) Integer offset,
-    		@RequestParam(value = "per_page", required = false) Integer limit,
-    		@RequestParam(value = "criteria", required = false) String criteria,
-    		@RequestParam(value = "sort", defaultValue="id") String sortProperty,
-    		@RequestParam(value = "sortOrder", defaultValue="ASC") String sortOrder) throws URISyntaxException 
-    {
-    	Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
-    	Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
-    	
-        Page<Adherent> page = null;
-        if (criteria == null || criteria.isEmpty()) {
-        	page = adherentRepository.findAll(pageRequest);
-        } else {
-        	page = adherentRepository.findByNomLikeOrPrenomLike(criteria, criteria, pageRequest);
-        }
-        
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
-        
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
-    
-    /**
-     * GET  /adherents/:id -> get the "id" adherent.
-     */
-    @RequestMapping(value = "/adherents/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<Adherent> get(@PathVariable Long id) {
-        log.debug("REST request to get Adherent : {}", id);
-        return Optional.ofNullable(adherentRepository.findOne(id))
-            .map(adherent -> new ResponseEntity<>(
-                adherent,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+	/**
+	 * PUT /adherents -> Updates an existing adherent.
+	 */
+	@RequestMapping(value = "/adherents", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Timed
+	public ResponseEntity<Void> update(@Valid @RequestBody Adherent adherent) throws URISyntaxException {
+		log.debug("REST request to update Adherent : {}", adherent);
+		if (adherent.getId() == null) {
+			return create(adherent);
+		}
+		adherentRepository.save(adherent);
+		return ResponseEntity.ok().build();
+	}
 
-    /**
-     * DELETE  /adherents/:id -> delete the "id" adherent.
-     */
-    @RequestMapping(value = "/adherents/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public void delete(@PathVariable Long id) {
-        log.debug("REST request to delete Adherent : {}", id);
-        adherentRepository.delete(id);
-    }
+	@Inject
+	ObjectMapper objectMapper;
+
+	/**
+	 * GET /adherents -> get all the adherents.
+	 */
+	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Timed
+	public ResponseEntity<List<Adherent>> getAll(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
+			required = false) Integer limit) throws URISyntaxException {
+		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
+		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
+
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * Search /adherents -> get the adherents filtered by name and sorted
+	 */
+	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Timed
+	public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
+			required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
+			defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
+		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
+		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
+
+		Page<Adherent> page = null;
+		if (criteria == null || criteria.isEmpty()) {
+			page = adherentRepository.findAll(pageRequest);
+		} else {
+			page = adherentRepository.findByNomLikeOrPrenomLike(criteria, criteria, pageRequest);
+		}
+
+		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
+
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /adherents/:id -> get the "id" adherent.
+	 */
+	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Timed
+	public ResponseEntity<Adherent> get(@PathVariable Long id) {
+		log.debug("REST request to get Adherent : {}", id);
+		return Optional.ofNullable(adherentRepository.findOne(id)).map(adherent -> new ResponseEntity<>(adherent, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	/**
+	 * DELETE /adherents/:id -> delete the "id" adherent.
+	 */
+	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Timed
+	public void delete(@PathVariable Long id) {
+		log.debug("REST request to delete Adherent : {}", id);
+		adherentRepository.delete(id);
+	}
+
+	/**
+	 * GET /adherent/export -> Export the adherent
+	 */
+	@RequestMapping(value = "/adherents/export", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Timed
+	@RolesAllowed(AuthoritiesConstants.ADMIN)
+	public void exportAll(HttpServletResponse response) throws IOException {
+		final CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(response.getOutputStream()), ';');
+		csvWriter.writeNext(new String[] { "ID", "Nom", "Prénom", "Adresse", "Code Postal", "Ville", "Date de dernière adhésion", "Email", "Téléphone" });
+
+		Page<Adherent> page = null;
+		do {
+			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
+			page.getContent()
+					.forEach(
+							ad -> {
+								final Optional<Adhesion> lastAdhesion = Optional.ofNullable(ad.lastAdhesion());
+								final Coordonnees coords = Optional.ofNullable(ad.getCoordonnees()).orElse(new Coordonnees());
+
+								csvWriter.writeNext(new String[] { ad.getId().toString(), ad.getNom(), ad.getPrenom(), coords.getAdresseComplete(),
+										coords.getCodePostal(), coords.getVille(),
+										lastAdhesion.map(adh -> adh.getDateAdhesion().toString("dd/MM/yyyy")).orElseGet(null), coords.getEmail(),
+										coords.getTelephone() });
+							});
+		} while (page.hasNext());
+
+		csvWriter.flush();
+		csvWriter.close();
+	}
 }
