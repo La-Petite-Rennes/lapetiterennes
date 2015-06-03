@@ -2,6 +2,7 @@ package fr.lpr.membership.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -27,6 +28,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
 
 /**
  * A Adherent.
@@ -147,24 +151,30 @@ public class Adherent implements Serializable {
 		this.adhesions.forEach(a -> a.setAdherent(this));
 	}
 
+	@JsonSerialize(using = CustomLocalDateSerializer.class)
+	@JsonProperty
+	public LocalDate getLastAdhesion() {
+		return lastAdhesion().map(ad -> ad.getDateAdhesion()).orElse(null);
+	}
+
 	@JsonIgnore
-	public Adhesion lastAdhesion() {
+	private Optional<Adhesion> lastAdhesion() {
 		if (this.adhesions.isEmpty()) {
-			return null;
+			return Optional.empty();
 		} else {
-			return this.adhesions.iterator().next();
+			return Optional.of(this.adhesions.iterator().next());
 		}
 	}
 
 	@JsonProperty
 	public StatutAdhesion getStatutAdhesion() {
-		final Adhesion lastAdhesion = lastAdhesion();
+		final Optional<Adhesion> lastAdhesion = lastAdhesion();
 
-		if (lastAdhesion == null) {
+		if (!lastAdhesion.isPresent()) {
 			return StatutAdhesion.NONE;
-		} else if (lastAdhesion.getDateFinAdhesion().isBefore(LocalDate.now())) {
+		} else if (lastAdhesion.get().getDateFinAdhesion().isBefore(LocalDate.now())) {
 			return StatutAdhesion.RED;
-		} else if (lastAdhesion.getDateFinAdhesion().isBefore(LocalDate.now().plusMonths(1))) {
+		} else if (lastAdhesion.get().getDateFinAdhesion().isBefore(LocalDate.now().plusMonths(1))) {
 			return StatutAdhesion.ORANGE;
 		} else {
 			return StatutAdhesion.GREEN;

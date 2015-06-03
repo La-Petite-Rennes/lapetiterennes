@@ -13,6 +13,8 @@ angular.module('membershipApp')
                 method: 'GET',
                 transformResponse: function (data) {
                     data = angular.fromJson(data);
+                    var lastAdhesionFrom = data.lastAdhesion.split("-");
+                    data.lastAdhesion = new Date(new Date(lastAdhesionFrom[0], lastAdhesionFrom[1] - 1, lastAdhesionFrom[2]));
                     return data;
                 }
             },

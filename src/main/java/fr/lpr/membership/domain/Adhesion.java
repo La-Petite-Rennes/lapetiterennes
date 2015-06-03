@@ -1,21 +1,29 @@
 package fr.lpr.membership.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
-import fr.lpr.membership.domain.util.ISO8601LocalDateDeserializer;
+import java.io.Serializable;
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
+import fr.lpr.membership.domain.util.ISO8601LocalDateDeserializer;
 
 /**
  * A Adhesion.
@@ -25,87 +33,86 @@ import java.util.Objects;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Adhesion implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type_adhesion", nullable = false)
-    private TypeAdhesion typeAdhesion;
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	@Column(name = "type_adhesion", nullable = false)
+	private TypeAdhesion typeAdhesion;
 
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    @JsonSerialize(using = CustomLocalDateSerializer.class)
-    @JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
-    @Column(name = "date_adhesion", nullable = false)
-    private LocalDate dateAdhesion;
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	@JsonSerialize(using = CustomLocalDateSerializer.class)
+	@JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
+	@Column(name = "date_adhesion", nullable = false)
+	private LocalDate dateAdhesion;
 
-    @ManyToOne
-    private Adherent adherent;
+	@ManyToOne
+	private Adherent adherent;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public TypeAdhesion getTypeAdhesion() {
-        return typeAdhesion;
-    }
+	public TypeAdhesion getTypeAdhesion() {
+		return typeAdhesion;
+	}
 
-    public void setTypeAdhesion(TypeAdhesion typeAdhesion) {
-        this.typeAdhesion = typeAdhesion;
-    }
+	public void setTypeAdhesion(TypeAdhesion typeAdhesion) {
+		this.typeAdhesion = typeAdhesion;
+	}
 
-    public LocalDate getDateAdhesion() {
-        return dateAdhesion;
-    }
-    
-    public LocalDate getDateFinAdhesion() {
-    	return dateAdhesion.plusYears(1);
-    }
+	public LocalDate getDateAdhesion() {
+		return dateAdhesion;
+	}
 
-    public void setDateAdhesion(LocalDate dateAdhesion) {
-        this.dateAdhesion = dateAdhesion;
-    }
+	@JsonSerialize(using = CustomLocalDateSerializer.class)
+	public LocalDate getDateFinAdhesion() {
+		return dateAdhesion.plusYears(1);
+	}
 
-    public Adherent getAdherent() {
-        return adherent;
-    }
+	public void setDateAdhesion(LocalDate dateAdhesion) {
+		this.dateAdhesion = dateAdhesion;
+	}
 
-    public void setAdherent(Adherent adherent) {
-        this.adherent = adherent;
-    }
+	public Adherent getAdherent() {
+		return adherent;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+	public void setAdherent(Adherent adherent) {
+		this.adherent = adherent;
+	}
 
-        Adhesion adhesion = (Adhesion) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-        if ( ! Objects.equals(id, adhesion.id)) return false;
+		final Adhesion adhesion = (Adhesion) o;
 
-        return true;
-    }
+		if (!Objects.equals(id, adhesion.id)) {
+			return false;
+		}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "Adhesion{" +
-                "id=" + id +
-                ", typeAdhesion='" + typeAdhesion + "'" +
-                ", dateAdhesion='" + dateAdhesion + "'" +
-                '}';
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	@Override
+	public String toString() {
+		return "Adhesion{" + "id=" + id + ", typeAdhesion='" + typeAdhesion + "'" + ", dateAdhesion='" + dateAdhesion + "'" + '}';
+	}
 }

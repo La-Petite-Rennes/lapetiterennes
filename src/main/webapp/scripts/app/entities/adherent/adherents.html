@@ -197,6 +197,7 @@
                     <th><a href="" ng-click="search('id')">ID</a></th>
                     <th><a href="" ng-click="search('prenom')"><span translate="membershipApp.adherent.prenom">Prénom</span></a></th>
                     <th><a href="" ng-click="search('nom')"><span translate="membershipApp.adherent.nom">Nom</span></a></th>
+                    <th>Date d'adhésion</th>
                     <th translate="membershipApp.adherent.benevole">Benevole</th>
                     <th translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</th>
                     <th translate="membershipApp.adherent.genre">Genre</th>
@@ -209,6 +210,7 @@
                     <td><a ui-sref="adherentDetail({id:adherent.id})">{{adherent.id}}</a></td>
                     <td class="statut-{{adherent.statutAdhesion}}">{{adherent.prenom}}</td>
                     <td class="statut-{{adherent.statutAdhesion}}">{{adherent.nom}}</td>
+                    <td>{{adherent.lastAdhesion}}</td>
                     <td>{{adherent.benevole}}</td>
                     <td>{{adherent.remarqueBenevolat}}</td>
                     <td>{{adherent.genre}}</td>
