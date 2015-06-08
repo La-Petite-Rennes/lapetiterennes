@@ -38,6 +38,7 @@ import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Coordonnees;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.security.AuthoritiesConstants;
+import fr.lpr.membership.service.ExportService;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
 /**
@@ -89,7 +90,7 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> getAll(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-	required = false) Integer limit) throws URISyntaxException {
+			required = false) Integer limit) throws URISyntaxException {
 		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
 		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
 
@@ -102,8 +103,8 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-	required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
-	defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
+			required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
+			defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
 		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
@@ -146,7 +147,7 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/export", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
-	public void exportAll(HttpServletResponse response) throws IOException {
+	public void exportAll(@RequestParam(value = "format", defaultValue = ExportService.CSV) String format, HttpServletResponse response) throws IOException {
 		final CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(response.getOutputStream()), ';');
 		csvWriter.writeNext(new String[] { "ID", "Nom", "Prénom", "Adresse", "Code Postal", "Ville", "Date de dernière adhésion", "Email", "Téléphone" });
 
