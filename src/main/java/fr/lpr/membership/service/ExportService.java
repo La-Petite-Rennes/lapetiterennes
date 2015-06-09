@@ -1,5 +1,6 @@
 package fr.lpr.membership.service;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
@@ -8,10 +9,13 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.BeanToCsv;
@@ -28,6 +32,8 @@ public class ExportService {
 	public static final String XML = "xml";
 	public static final String JSON = "json";
 
+	private static final String CONTENT_TYPE_HEADER = "Content-Type";
+
 	private static final Map<String, BiConsumer<Adherent, AdherentDto>> DTO_MAPPER = ImmutableMap.<String, BiConsumer<Adherent, AdherentDto>> builder()
 			.put("id", (a, dto) -> dto.id = a.getId()).put("nom", (a, dto) -> dto.nom = a.getNom()).put("prenom", (a, dto) -> dto.prenom = a.getPrenom())
 			.put("estBenevole", (a, dto) -> dto.estBenevole = a.getBenevole())
@@ -39,7 +45,10 @@ public class ExportService {
 	@Autowired
 	private AdherentRepository adherentRepository;
 
-	public void export(String format, List<String> properties, OutputStream outputStream) {
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	public void export(String format, List<String> properties, HttpServletResponse response) throws IOException {
 		Page<Adherent> page = null;
 		do {
 			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
@@ -49,17 +58,45 @@ public class ExportService {
 				return adherentDto;
 			}).collect(Collectors.toList());
 
-			final CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(outputStream), ';');
-			csvWriter.writeNext(new String[] { "ID", "Nom", "Prénom", "Adresse", "Code Postal", "Ville", "Date de dernière adhésion", "Email", "Téléphone" });
-
-			final ColumnPositionMappingStrategy<AdherentDto> strat = new ColumnPositionMappingStrategy<>();
-			strat.setType(AdherentDto.class);
-			final String[] columns = properties.stream().toArray(size -> new String[size]);
-			strat.setColumnMapping(columns);
-
-			final BeanToCsv<AdherentDto> csv = new BeanToCsv<>();
-			csv.write(strat, csvWriter, dtos);
+			switch (format) {
+			case CSV:
+				exportCsv(dtos, properties, response);
+				break;
+			case XML:
+				exportXml(dtos, response);
+				break;
+			case JSON:
+				exportJson(dtos, response);
+				break;
+			default:
+				exportCsv(dtos, properties, response);
+			}
 		} while (page.hasNext());
+	}
+
+	private void exportCsv(List<AdherentDto> dtos, List<String> properties, HttpServletResponse response) throws IOException {
+		response.setHeader(CONTENT_TYPE_HEADER, "text/csv");
+
+		final CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(response.getOutputStream()), ';');
+		csvWriter.writeNext(new String[] { "ID", "Nom", "Prénom", "Adresse", "Code Postal", "Ville", "Date de dernière adhésion", "Email", "Téléphone" });
+
+		final ColumnPositionMappingStrategy<AdherentDto> strat = new ColumnPositionMappingStrategy<>();
+		strat.setType(AdherentDto.class);
+		final String[] columns = properties.stream().toArray(size -> new String[size]);
+		strat.setColumnMapping(columns);
+
+		final BeanToCsv<AdherentDto> csv = new BeanToCsv<>();
+		csv.write(strat, csvWriter, dtos);
+	}
+
+	private void exportXml(List<AdherentDto> dtos, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void exportJson(List<AdherentDto> dtos, HttpServletResponse response) throws IOException {
+		response.setHeader(CONTENT_TYPE_HEADER, "application/json");
+		objectMapper.writeValue(response.getOutputStream(), dtos);
 	}
 
 	private static class AdherentDto {
