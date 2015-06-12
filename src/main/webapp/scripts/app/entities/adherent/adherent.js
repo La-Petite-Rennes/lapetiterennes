@@ -44,5 +44,25 @@ angular.module('membershipApp')
                         return $translate.refresh();
                     }]
                 }
+            })
+            .state('adherentExport', {
+            	parent: 'entity',
+            	url: '/adherents/export',
+            	data: {
+            		roles: ['ROLE_ADMIN'],
+            		pageTitle: 'membershipApp.adherent.export.title'
+            	},
+            	views: {
+            		'content@': {
+            			 templateUrl: 'scripts/app/entities/adherent/adherent-export.html',
+                         controller: 'AdherentExportController'
+            		}
+            	},
+                resolve: {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                        $translatePartialLoader.addPart('adherent');
+                        return $translate.refresh();
+                    }]
+                }
             });
     });

@@ -12,6 +12,9 @@
             "detail": {
                 "title": "Adhérent"
             },
+            "export": {
+            	"title": "Exporter les adhérents"
+            },
             "prenom": "Prénom",
             "nom": "Nom",
             "benevole": "Bénévole",

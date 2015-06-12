@@ -1,0 +1,60 @@
+
+<div>
+	<div class="container">
+
+        <div class="row">
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-primary active">
+					<input type="radio" ng-model="format" autocomplete="off" value="csv"> CSV
+				</label>
+				<label class="btn btn-primary">
+					<input type="radio" ng-model="format" autocomplete="off" value="xml"> XML
+				</label>
+				<label class="btn btn-primary">
+					<input type="radio" ng-model="format" autocomplete="off" value="json"> JSON
+				</label>
+			</div>
+		</div>
+			
+        <div class="row">
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-primary active">
+					<input type="checkbox" ng-model="properties.id" autocomplete="off"> Identifiant
+				</label>
+				<label class="btn btn-primary">
+					<input type="checkbox" ng-model="properties.nom" autocomplete="off"> Nom
+				</label>
+				<label class="btn btn-primary">
+					<input type="checkbox" ng-model="properties.prenom" autocomplete="off"> Prénom
+				</label>
+				<label class="btn btn-primary">
+					<input type="checkbox" ng-model="properties.estBenevole" autocomplete="off"> Bénévole ?
+				</label>
+				<label class="btn btn-primary">
+					<input type="checkbox" ng-model="properties.adresse" autocomplete="off"> Adresse
+				</label>
+				<label class="btn btn-primary">
+					<input type="checkbox" ng-model="properties.codePostal" autocomplete="off"> Code Postal
+				</label>
+				<label class="btn btn-primary">
+					<input type="checkbox" ng-model="properties.ville" autocomplete="off"> Ville
+				</label>
+				<label class="btn btn-primary">
+					<input type="checkbox" ng-model="properties.telephone" autocomplete="off"> Téléphone
+				</label>
+				<label class="btn btn-primary">
+					<input type="checkbox" ng-model="properties.email" autocomplete="off"> Email
+				</label>
+				<label class="btn btn-primary">
+					<input type="checkbox" ng-model="properties.adhesions" autocomplete="off"> Adhésions
+				</label>
+			</div>
+		</div>
+		
+		<button type="button" class="btn" ng-click="export()">Télécharger</button>
+		
+	    <button type="submit" ui-sref="adherent" class="btn btn-info">
+	        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+	    </button>
+	</div>
+</div>
