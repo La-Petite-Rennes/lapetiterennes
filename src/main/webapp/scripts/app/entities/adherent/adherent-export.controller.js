@@ -1,15 +1,17 @@
 'use strict';
 
 angular.module('membershipApp')
-    .controller('AdherentExportController', function ($scope, $stateParams, Adherent, Coordonnees, Adhesion) {
+    .controller('AdherentExportController', function ($scope, $http, $stateParams, Adherent, Coordonnees, Adhesion) {
     	// View Model
         $scope.format = 'json';
         
         // View functions
         $scope.export = function () {
-            Adherent.export({format: $scope.format}, function(result, headers) {
-            	downloadFile(result, headers);
-            });
+        	$http.get('api/adherents/export', {params : {format: $scope.format}})
+        		.success(function(result, status, headers) {
+        			downloadFile(result, headers);
+        		}
+        	);
         };
         
         // Functions
@@ -18,6 +20,9 @@ angular.module('membershipApp')
             var fileName = "Adherents";
             
             //Initialize file format you want csv or xls
+            if (headers('Content-Type').startsWith('application/json')) {
+            	data = JSON.stringify(data);
+            }
             var uri = 'data:' + headers('Content-Type') + ';charset=utf-8,' + escape(data);
             
             // Now the little tricky part.
@@ -30,7 +35,7 @@ angular.module('membershipApp')
             link.href = uri;
             
             //set the visibility hidden so it will not effect on your web-layout
-            link.style = "visibility:hidden";
+            link.style.visibility = "hidden";
             link.download = fileName + "." + $scope.format;
             
             //this part will append the anchor tag and remove it after automatic click

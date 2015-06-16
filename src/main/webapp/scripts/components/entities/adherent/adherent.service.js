@@ -9,10 +9,6 @@ angular.module('membershipApp')
             	url: 'api/adherents/search',
             	isArray: true
             },
-            'export': {
-            	method: 'GET',
-            	url: 'api/adherents/export'
-            },
             'get': {
                 method: 'GET',
                 transformResponse: function (data) {

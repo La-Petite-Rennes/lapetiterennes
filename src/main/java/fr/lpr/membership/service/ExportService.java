@@ -1,20 +1,26 @@
 package fr.lpr.membership.service;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Collection;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVWriter;
@@ -22,6 +28,7 @@ import com.opencsv.bean.BeanToCsv;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
@@ -40,7 +47,8 @@ public class ExportService {
 			.put("adresse", (a, dto) -> dto.adresse = a.getCoordonnees().getAdresseComplete())
 			.put("codePostal", (a, dto) -> dto.codePostal = a.getCoordonnees().getCodePostal())
 			.put("ville", (a, dto) -> dto.ville = a.getCoordonnees().getVille()).put("email", (a, dto) -> dto.email = a.getCoordonnees().getEmail())
-			.put("telephone", (a, dto) -> dto.telephone = a.getCoordonnees().getTelephone()).put("adhesions", (a, dto) -> a.getAdhesions()).build();
+			.put("telephone", (a, dto) -> dto.telephone = a.getCoordonnees().getTelephone()).put("adhesions", (a, dto) -> dto.adhesions = a.getAdhesions())
+			.build();
 
 	@Autowired
 	private AdherentRepository adherentRepository;
@@ -48,7 +56,7 @@ public class ExportService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public void export(String format, List<String> properties, HttpServletResponse response) throws IOException {
+	public void export(String format, List<String> properties, HttpServletResponse response) throws Exception {
 		Page<Adherent> page = null;
 		do {
 			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
@@ -89,9 +97,14 @@ public class ExportService {
 		csv.write(strat, csvWriter, dtos);
 	}
 
-	private void exportXml(List<AdherentDto> dtos, HttpServletResponse response) {
-		// TODO Auto-generated method stub
+	private void exportXml(List<AdherentDto> dtos, HttpServletResponse response) throws JAXBException, IOException {
+		response.setHeader(CONTENT_TYPE_HEADER, "text/xml");
 
+		final JAXBContext context = JAXBContext.newInstance(Adherents.class);
+		final Marshaller m = context.createMarshaller();
+		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+		m.marshal(new Adherents(dtos), response.getOutputStream());
 	}
 
 	private void exportJson(List<AdherentDto> dtos, HttpServletResponse response) throws IOException {
@@ -99,30 +112,43 @@ public class ExportService {
 		objectMapper.writeValue(response.getOutputStream(), dtos);
 	}
 
-	private static class AdherentDto {
+	@JsonInclude(Include.NON_NULL)
+	static class AdherentDto {
 
 		public Long id;
 		public String nom;
 		public String prenom;
-		public boolean estBenevole;
+		public Boolean estBenevole;
 		public String adresse;
 		public String codePostal;
 		public String ville;
 		public String email;
 		public String telephone;
+		public Set<Adhesion> adhesions;
 
 	}
 
-	private static interface Writer {
-		void write(Collection<AdherentDto> adherents, OutputStream output);
-	}
+	@XmlRootElement
+	static class Adherents implements Serializable {
 
-	private static class CsvWriter implements Writer {
+		private static final long serialVersionUID = 1L;
 
-		@Override
-		public void write(Collection<AdherentDto> adherents, OutputStream output) {
-			// TODO Auto-generated method stub
+		private List<AdherentDto> adherent;
 
+		public Adherents() {
+		}
+
+		public Adherents(List<AdherentDto> adherent) {
+			super();
+			this.adherent = adherent;
+		}
+
+		public List<AdherentDto> getAdherent() {
+			return adherent;
+		}
+
+		public void setAdherents(List<AdherentDto> adherent) {
+			this.adherent = adherent;
 		}
 
 	}

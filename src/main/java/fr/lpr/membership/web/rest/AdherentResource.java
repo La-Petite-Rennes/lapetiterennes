@@ -1,6 +1,5 @@
 package fr.lpr.membership.web.rest;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -147,7 +146,8 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/export", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
-	public void exportAll(@RequestParam(value = "format", defaultValue = ExportService.CSV) String format, HttpServletResponse response) throws IOException {
-		exportService.export(format, ImmutableList.of("id", "nom", "prenom"), response);
+	public void exportAll(@RequestParam(value = "format", defaultValue = ExportService.CSV) String format, HttpServletResponse response) throws Exception {
+		exportService.export(format,
+				ImmutableList.of("id", "nom", "prenom", "estBenevole", "adresse", "codePostal", "ville", "email", "telephone", "adhesions"), response);
 	}
 }
