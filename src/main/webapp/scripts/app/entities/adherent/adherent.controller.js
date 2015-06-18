@@ -93,10 +93,31 @@ angular.module('membershipApp')
                     $scope.clear();
                 });
         };
+        
+        $scope.renouvelerAdherent = function (id) {
+        	$scope.clear();
+        	Adherent.get({id: id}, function(result) {
+                $scope.adherent = result;
+            	$scope.nouvelleAdhesion.adherent = $scope.adherent;
+            	$('#renouvelerAdhesionModal').modal('show');
+            });
+        };
+        
+        $scope.ajouterAdhesion = function() {
+        	Adhesion.update($scope.nouvelleAdhesion, function() {
+            	$scope.reset();
+        		$('#renouvelerAdhesionModal').modal('hide');
+        		$scope.clear();
+        	});
+        };
 
         $scope.clear = function () {
             $scope.adherent = {prenom: null, nom: null, benevole: null, remarqueBenevolat: null, genre: null, autreRemarque: null, id: null};
             $scope.nouvelleAdhesion = { dateAdhesion : new Date() };
+            
+            $scope.renouvelerAdhesionForm.$setPristine();
+            $scope.renouvelerAdhesionForm.$setUntouched();
+            
             $scope.editForm.$setPristine();
             $scope.editForm.$setUntouched();
         };

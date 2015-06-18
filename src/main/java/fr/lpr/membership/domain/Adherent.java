@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
@@ -73,7 +74,7 @@ public class Adherent implements Serializable {
 
 	@OneToMany(mappedBy = "adherent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	// @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-	private final Set<Adhesion> adhesions = new TreeSet<>((a1, a2) -> a1.getDateAdhesion().compareTo(a2.getDateAdhesion()));
+	private Set<Adhesion> adhesions;
 
 	public Long getId() {
 		return id;
@@ -146,8 +147,7 @@ public class Adherent implements Serializable {
 
 	@JsonProperty
 	public void setAdhesions(Set<Adhesion> adhesions) {
-		this.adhesions.clear();
-		this.adhesions.addAll(adhesions);
+		this.adhesions = adhesions;
 		this.adhesions.forEach(a -> a.setAdherent(this));
 	}
 
@@ -162,7 +162,9 @@ public class Adherent implements Serializable {
 		if (this.adhesions.isEmpty()) {
 			return Optional.empty();
 		} else {
-			return Optional.of(this.adhesions.iterator().next());
+			final SortedSet<Adhesion> orderedAdhesions = new TreeSet<>((a1, a2) -> a2.getDateAdhesion().compareTo(a1.getDateAdhesion()));
+			orderedAdhesions.addAll(adhesions);
+			return Optional.of(orderedAdhesions.first());
 		}
 	}
 

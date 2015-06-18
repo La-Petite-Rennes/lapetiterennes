@@ -4,7 +4,8 @@
             "home": {
                 "title": "Adhérents",
                 "createLabel": "Créer un nouvel adhérent",
-                "createOrEditLabel": "Créer ou éditer un adhérent"
+                "createOrEditLabel": "Créer ou éditer un adhérent",
+                "renewAdhesion": "Renouveler une adhésion"
             },
             "delete": {
                 "question": "Etes-vous certain de vouloir supprimer l'adherent {{ id }} ?"
