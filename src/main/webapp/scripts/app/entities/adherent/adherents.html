@@ -2,32 +2,28 @@
 
     <h2 translate="membershipApp.adherent.home.title">Adherent</h2>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#saveAdherentModal" ng-click="clear()">
-                    <span class="glyphicon glyphicon-flash"></span> <span translate="membershipApp.adherent.home.createLabel">Create a new Adherent</span>
-                </button>
-            </div>
-        </div>
+	<form class="form-horizontal">
+		<div class="form-group" style="margin-left: 0">
+			<button class="btn btn-primary" data-toggle="modal" data-target="#saveAdherentModal" ng-click="clear()">
+				<span class="glyphicon glyphicon-flash"></span> <span translate="membershipApp.adherent.home.createLabel">Create a new Adherent</span>
+			</button>
+		      
+			<button ui-sref="adherentImport()" class="btn btn-info">
+				<span class="glyphicon glyphicon-import"></span>&nbsp;<span>Importer</span>
+			</button>
+		      
+			<button ui-sref="adherentExport()" class="btn btn-info">
+				<span class="glyphicon glyphicon-export"></span>&nbsp;<span>Exporter</span>
+			</button>
+		</div>
         
-        <div class="row">
-            <div class="col-md-4">
-		        <button type="submit" ui-sref="adherentExport()" class="btn btn-info btn-sm">
-					<span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span>Exporter</span>
-		        </button>
+		<div class="form-group">
+			<label for="searchCriteria" class="control-label col-sm-1">Rechercher</label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" id="searchCriteria" ng-model="searchCriteria" ng-change="search()" placeholder="Rechercher">
 			</div>
 		</div>
-        
-        <div class="row"> 
-        	<form class="form-inline">
-	            <div class="form-group col-md-6">
-	            	<label for="searchCriteria" class="control-label">Rechercher</label>
-            	 	<input type="text" class="form-control" id="searchCriteria" ng-model="searchCriteria" ng-change="search()" placeholder="Rechercher">
-	            </div>
-            </form>
-		</div>
-    </div>
+	</form>
 
     <div class="modal fade" id="saveAdherentModal" tabindex="-1" role="dialog" aria-labelledby="myAdherentLabel"
          aria-hidden="true">
