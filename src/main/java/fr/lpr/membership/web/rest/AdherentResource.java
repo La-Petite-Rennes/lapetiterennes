@@ -2,7 +2,9 @@ package fr.lpr.membership.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.annotation.security.RolesAllowed;
@@ -29,12 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.security.AuthoritiesConstants;
 import fr.lpr.membership.service.ExportService;
+import fr.lpr.membership.web.rest.dto.ExportRequest;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
 /**
@@ -89,7 +91,7 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> getAll(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-	required = false) Integer limit) throws URISyntaxException {
+			required = false) Integer limit) throws URISyntaxException {
 		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
 		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
 
@@ -102,8 +104,8 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-	required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
-	defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
+			required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
+			defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
 		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
@@ -143,11 +145,18 @@ public class AdherentResource {
 	/**
 	 * GET /adherent/export -> Export the adherent
 	 */
-	@RequestMapping(value = "/adherents/export", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/adherents/export", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
-	public void exportAll(@RequestParam(value = "format", defaultValue = ExportService.CSV) String format, HttpServletResponse response) throws Exception {
-		exportService.export(format,
-				ImmutableList.of("id", "nom", "prenom", "estBenevole", "adresse", "codePostal", "ville", "email", "telephone", "adhesions"), response);
+	public void exportAll(@RequestBody ExportRequest request, HttpServletResponse response) throws Exception {
+		final List<String> properties = new ArrayList<>();
+		for (final Entry<String, Boolean> entry : request.getProperties().entrySet()) {
+			if (entry.getValue()) {
+				properties.add(entry.getKey());
+			}
+		}
+
+		exportService.export(request.getFormat(), properties, response);
 	}
+
 }

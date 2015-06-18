@@ -4,10 +4,22 @@ angular.module('membershipApp')
     .controller('AdherentExportController', function ($scope, $http, $stateParams, Adherent, Coordonnees, Adhesion) {
     	// View Model
         $scope.format = 'json';
+        $scope.properties = {
+    		'id': true,
+    		'nom': true,
+    		'prenom': true,
+    		'estBenevole': true,
+    		'adresse': true,
+    		'codePostal': true,
+    		'ville': true,
+    		'telephone': true,
+    		'email': true,
+    		'adhesions': true
+        }
         
         // View functions
         $scope.export = function () {
-        	$http.get('api/adherents/export', {params : {format: $scope.format}})
+        	$http.post('api/adherents/export', {format: $scope.format, properties: $scope.properties})
         		.success(function(result, status, headers) {
         			downloadFile(result, headers);
         		}

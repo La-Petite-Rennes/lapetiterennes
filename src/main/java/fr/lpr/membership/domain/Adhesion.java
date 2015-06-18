@@ -33,6 +33,8 @@ import fr.lpr.membership.domain.util.ISO8601LocalDateDeserializer;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Adhesion implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;

@@ -5,7 +5,6 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -14,21 +13,26 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVWriter;
-import com.opencsv.bean.BeanToCsv;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.Adhesion;
+import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
+import fr.lpr.membership.domain.util.LocalDateAdapter;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
@@ -47,8 +51,10 @@ public class ExportService {
 			.put("adresse", (a, dto) -> dto.adresse = a.getCoordonnees().getAdresseComplete())
 			.put("codePostal", (a, dto) -> dto.codePostal = a.getCoordonnees().getCodePostal())
 			.put("ville", (a, dto) -> dto.ville = a.getCoordonnees().getVille()).put("email", (a, dto) -> dto.email = a.getCoordonnees().getEmail())
-			.put("telephone", (a, dto) -> dto.telephone = a.getCoordonnees().getTelephone()).put("adhesions", (a, dto) -> dto.adhesions = a.getAdhesions())
-			.build();
+			.put("telephone", (a, dto) -> dto.telephone = a.getCoordonnees().getTelephone()).put("adhesions", (a, dto) -> {
+				dto.adhesions = a.getAdhesions().stream().map(ad -> new AdhesionDto(ad.getTypeAdhesion(), ad.getDateAdhesion())).collect(Collectors.toList());
+				dto.lastAdhesion = a.getLastAdhesion();
+			}).build();
 
 	@Autowired
 	private AdherentRepository adherentRepository;
@@ -85,16 +91,12 @@ public class ExportService {
 	private void exportCsv(List<AdherentDto> dtos, List<String> properties, HttpServletResponse response) throws IOException {
 		response.setHeader(CONTENT_TYPE_HEADER, "text/csv");
 
-		final CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(response.getOutputStream()), ';');
-		csvWriter.writeNext(new String[] { "ID", "Nom", "Prénom", "Adresse", "Code Postal", "Ville", "Date de dernière adhésion", "Email", "Téléphone" });
+		try (CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(response.getOutputStream()), ';')) {
+			csvWriter.writeNext(new String[] { "ID", "Nom", "Prénom", "Adresse", "Code Postal", "Ville", "Date de dernière adhésion", "Email", "Téléphone" });
 
-		final ColumnPositionMappingStrategy<AdherentDto> strat = new ColumnPositionMappingStrategy<>();
-		strat.setType(AdherentDto.class);
-		final String[] columns = properties.stream().toArray(size -> new String[size]);
-		strat.setColumnMapping(columns);
-
-		final BeanToCsv<AdherentDto> csv = new BeanToCsv<>();
-		csv.write(strat, csvWriter, dtos);
+			dtos.forEach(a -> csvWriter.writeNext(new String[] { a.id.toString(), a.nom, a.prenom, a.adresse, a.codePostal, a.ville,
+					a.lastAdhesion.toString("dd/MM/yyyy"), a.email, a.telephone }));
+		}
 	}
 
 	private void exportXml(List<AdherentDto> dtos, HttpServletResponse response) throws JAXBException, IOException {
@@ -124,7 +126,26 @@ public class ExportService {
 		public String ville;
 		public String email;
 		public String telephone;
-		public Set<Adhesion> adhesions;
+		public List<AdhesionDto> adhesions;
+		@JsonIgnore
+		@XmlTransient
+		public LocalDate lastAdhesion;
+
+	}
+
+	static class AdhesionDto {
+
+		public TypeAdhesion typeAdhesion;
+
+		@JsonSerialize(using = CustomLocalDateSerializer.class)
+		@XmlJavaTypeAdapter(LocalDateAdapter.class)
+		public LocalDate dateAdhesion;
+
+		public AdhesionDto(TypeAdhesion typeAdhesion, LocalDate dateAdhesion) {
+			super();
+			this.typeAdhesion = typeAdhesion;
+			this.dateAdhesion = dateAdhesion;
+		}
 
 	}
 
@@ -147,7 +168,7 @@ public class ExportService {
 			return adherent;
 		}
 
-		public void setAdherents(List<AdherentDto> adherent) {
+		public void setAdherent(List<AdherentDto> adherent) {
 			this.adherent = adherent;
 		}
 
