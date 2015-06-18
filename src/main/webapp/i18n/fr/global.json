@@ -79,7 +79,8 @@
             "edit": "Editer",
             "delete": "Supprimer",
             "save": "Sauvegarder",
-            "view": "Voir"
+            "view": "Voir",
+            "renew": "Renouveler"
         },
         "detail": {
             "field": "Champs",

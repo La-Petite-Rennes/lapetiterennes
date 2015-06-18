@@ -1,18 +1,18 @@
 <div>
 
-    <h2 translate="membershipApp.adherent.home.title">Adherent</h2>
+    <h2 data-translate="membershipApp.adherent.home.title">Adherent</h2>
 
 	<form class="form-horizontal">
 		<div class="form-group" style="margin-left: 0">
-			<button class="btn btn-primary" data-toggle="modal" data-target="#saveAdherentModal" ng-click="clear()">
-				<span class="glyphicon glyphicon-flash"></span> <span translate="membershipApp.adherent.home.createLabel">Create a new Adherent</span>
+			<button class="btn btn-primary" data-toggle="modal" data-target="#saveAdherentModal" data-ng-click="clear()">
+				<span class="glyphicon glyphicon-flash"></span> <span data-translate="membershipApp.adherent.home.createLabel">Create a new Adherent</span>
 			</button>
 		      
-			<button ui-sref="adherentImport()" class="btn btn-info">
+			<button data-ui-sref="adherentImport()" class="btn btn-info">
 				<span class="glyphicon glyphicon-import"></span>&nbsp;<span>Importer</span>
 			</button>
 		      
-			<button ui-sref="adherentExport()" class="btn btn-info">
+			<button data-ui-sref="adherentExport()" class="btn btn-info">
 				<span class="glyphicon glyphicon-export"></span>&nbsp;<span>Exporter</span>
 			</button>
 		</div>
@@ -20,7 +20,7 @@
 		<div class="form-group">
 			<label for="searchCriteria" class="control-label col-sm-1">Rechercher</label>
 			<div class="col-sm-3">
-				<input type="text" class="form-control" id="searchCriteria" ng-model="searchCriteria" ng-change="search()" placeholder="Rechercher">
+				<input type="text" class="form-control" id="searchCriteria" data-ng-model="searchCriteria" data-ng-change="search()" placeholder="Rechercher">
 			</div>
 		</div>
 	</form>
@@ -29,65 +29,65 @@
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form name="editForm" class="form-horizontal" role="form" novalidate ng-submit="create()" show-validation>
+                <form name="editForm" class="form-horizontal" role="form" novalidate data-ng-submit="create()" data-show-validation>
 
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                ng-click="clear()">&times;</button>
-                        <h4 class="modal-title" id="myAdherentLabel" translate="membershipApp.adherent.home.createOrEditLabel">Create or edit a Adherent</h4>
+                                data-ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" id="myAdherentLabel" data-translate="membershipApp.adherent.home.createOrEditLabel">Create or edit a Adherent</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group required">
-                            <label class="control-label col-sm-2" translate="membershipApp.adherent.prenom">Prenom</label>
+                            <label class="control-label col-sm-2" data-translate="membershipApp.adherent.prenom">Prenom</label>
                             <div class="col-sm-4">
-                            	<input type="text" class="form-control" name="prenom" ng-model="adherent.prenom" required>
+                            	<input type="text" class="form-control" name="prenom" data-ng-model="adherent.prenom" required>
                             </div>
                             
-                            <label class="control-label col-sm-2" translate="membershipApp.adherent.nom">Nom</label>
+                            <label class="control-label col-sm-2" data-translate="membershipApp.adherent.nom">Nom</label>
                             <div class="col-sm-4">
-	                            <input type="text" class="form-control" name="nom" ng-model="adherent.nom" required>
+	                            <input type="text" class="form-control" name="nom" data-ng-model="adherent.nom" required>
 	                        </div>
                         </div>
                         
                         <fieldset>
                         	<legend>Coordonnées</legend>
                         	<div class="form-group">
-	                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.adresse1">Adresse1</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.coordonnees.adresse1">Adresse1</label>
 	                            <div class="col-sm-10">
-	                            	<input type="text" class="form-control" name="adresse1" ng-model="adherent.coordonnees.adresse1">
+	                            	<input type="text" class="form-control" name="adresse1" data-ng-model="adherent.coordonnees.adresse1">
 	                            </div>
 	                        </div>
 	
 	                        <div class="form-group">
-	                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.adresse2">Adresse2</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.coordonnees.adresse2">Adresse2</label>
 	                            <div class="col-sm-10">
-	                            	<input type="text" class="form-control" name="adresse2" ng-model="adherent.coordonnees.adresse2">
+	                            	<input type="text" class="form-control" name="adresse2" data-ng-model="adherent.coordonnees.adresse2">
 	                            </div>
 	                        </div>
 	
 	                        <div class="form-group">
-	                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.codePostal">CodePostal</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.coordonnees.codePostal">CodePostal</label>
 	                            <div class="col-sm-3">
-	                            	<input type="text" class="form-control" name="codePostal" ng-model="adherent.coordonnees.codePostal">
+	                            	<input type="text" class="form-control" name="codePostal" data-ng-model="adherent.coordonnees.codePostal">
 	                            </div>
 	                            
-	                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.ville">Ville</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.coordonnees.ville">Ville</label>
 	                            <div class="col-sm-5">
-	                            	<input type="text" class="form-control" name="ville" ng-model="adherent.coordonnees.ville">
+	                            	<input type="text" class="form-control" name="ville" data-ng-model="adherent.coordonnees.ville">
 	                            </div>
 	                        </div>
 	
 	                        <div class="form-group">
-	                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.email">Email</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.coordonnees.email">Email</label>
 	                            <div class="col-sm-10">
-	                            	<input type="text" class="form-control" name="email" ng-model="adherent.coordonnees.email">
+	                            	<input type="text" class="form-control" name="email" data-ng-model="adherent.coordonnees.email">
 	                            </div>
 	                        </div>
 	
 	                        <div class="form-group">
-	                            <label class="control-label col-sm-2" translate="membershipApp.coordonnees.telephone">Telephone</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.coordonnees.telephone">Telephone</label>
 	                            <div class="col-sm-10">
-	                            	<input type="text" class="form-control" name="telephone" ng-model="adherent.coordonnees.telephone">
+	                            	<input type="text" class="form-control" name="telephone" data-ng-model="adherent.coordonnees.telephone">
 	                            </div>
 	                        </div>
                         </fieldset>
@@ -96,9 +96,9 @@
                         	<legend>Adhésion</legend>
                         	
 	                        <div class="form-group required">
-	                            <label class="control-label col-sm-2" translate="membershipApp.adhesion.typeAdhesion">TypeAdhesion</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.adhesion.typeAdhesion">TypeAdhesion</label>
 	                            <div class="col-sm-10">
-		                            <select class="form-control" name="typeAdhesion" ng-model="nouvelleAdhesion.typeAdhesion" required>
+		                            <select class="form-control" name="typeAdhesion" data-ng-model="nouvelleAdhesion.typeAdhesion" required>
 		                            	<option selected="selected" value="Simple">Simple</option>
 		                            	<option value="Famille">Famille</option>
 		                            	<option value="Soutien">Soutien</option>
@@ -107,9 +107,9 @@
 	                        </div>
 	                        
 	                        <div class="form-group">
-	                            <label class="control-label col-sm-2" translate="membershipApp.adhesion.dateAdhesion">DateAdhesion</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.adhesion.dateAdhesion">DateAdhesion</label>
 	                            <div class="col-sm-10">
-	                            	<input type="date" class="form-control" name="dateAdhesion" ng-model="nouvelleAdhesion.dateAdhesion">
+	                            	<input type="date" class="form-control" name="dateAdhesion" data-ng-model="nouvelleAdhesion.dateAdhesion">
 	                            </div>
 	                        </div>
                         </fieldset>
@@ -120,17 +120,17 @@
 	                        	<div class="col-sm-offset-2 col-sm-10">
 			                        <div class="checkbox">
 			                            <label>
-			                            	<input type="checkbox" name="benevole" ng-model="adherent.benevole">
+			                            	<input type="checkbox" name="benevole" data-ng-model="adherent.benevole">
 			                            	Bénévole
 			                            </label>
 			                        </div>
 	                        	</div>
 	                        </div>
 	
-	                        <div class="form-group" ng-show="adherent.benevole">
-	                            <label class="control-label col-sm-2" translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</label>
+	                        <div class="form-group" data-ng-show="adherent.benevole">
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</label>
 	                            <div class="col-sm-10">
-	                            	<input type="text" class="form-control" name="remarqueBenevolat" ng-model="adherent.remarqueBenevolat">
+	                            	<input type="text" class="form-control" name="remarqueBenevolat" data-ng-model="adherent.remarqueBenevolat">
 	                            </div>
 	                        </div>
 	                    </fieldset>
@@ -138,9 +138,9 @@
                         <fieldset>
                         	<legend>Autres</legend>
 	                        <div class="form-group">
-	                            <label class="control-label col-sm-2" translate="membershipApp.adherent.genre">Genre</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.adherent.genre">Genre</label>
 	                            <div class="col-sm-10">
-		                            <select class="form-control" name="genre" ng-model="adherent.genre">
+		                            <select class="form-control" name="genre" data-ng-model="adherent.genre">
 		                            	<option value="H">Homme</option>
 		                            	<option value="F">Femme</option>
 		                            	<option value="Autre">Autre</option>
@@ -149,19 +149,19 @@
 	                        </div>
 	
 	                        <div class="form-group">
-	                            <label class="control-label col-sm-2" translate="membershipApp.adherent.autreRemarque">AutreRemarque</label>
+	                            <label class="control-label col-sm-2" data-translate="membershipApp.adherent.autreRemarque">AutreRemarque</label>
 	                            <div class="col-sm-10">
-	                            	<input type="text" class="form-control" name="autreRemarque" ng-model="adherent.autreRemarque">
+	                            	<input type="text" class="form-control" name="autreRemarque" data-ng-model="adherent.autreRemarque">
 	                            </div>
 	                        </div>
 						</fieldset>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
-                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
                         </button>
-                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary">
-                            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+                        <button type="submit" data-ng-disabled="editForm.$invalid" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
                         </button>
                     </div>
                 </form>
@@ -172,21 +172,21 @@
     <div class="modal fade" id="deleteAdherentConfirmation">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form name="deleteForm" ng-submit="confirmDelete(adherent.id)">
+                <form name="deleteForm" data-ng-submit="confirmDelete(adherent.id)">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                ng-click="clear()">&times;</button>
-                        <h4 class="modal-title" translate="entity.delete.title">Confirm delete operation</h4>
+                                data-ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" data-translate="entity.delete.title">Confirm delete operation</h4>
                     </div>
                     <div class="modal-body">
-                        <p translate="membershipApp.adherent.delete.question" translate-values="{id: '{{adherent.id}}'}">Are you sure you want to delete this Adherent?</p>
+                        <p data-translate="membershipApp.adherent.delete.question" data-translate-values="{id: '{{adherent.id}}'}">Are you sure you want to delete this Adherent?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
-                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
                         </button>
-                        <button type="submit" ng-disabled="deleteForm.$invalid" class="btn btn-danger">
-                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete">Delete</span>
+                        <button type="submit" data-ng-disabled="deleteForm.$invalid" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span data-translate="entity.action.delete">Delete</span>
                         </button>
                     </div>
                 </form>
@@ -198,20 +198,20 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th><a href="" ng-click="search('id')">ID</a></th>
-                    <th><a href="" ng-click="search('prenom')"><span translate="membershipApp.adherent.prenom">Prénom</span></a></th>
-                    <th><a href="" ng-click="search('nom')"><span translate="membershipApp.adherent.nom">Nom</span></a></th>
+                    <th><a href="" data-ng-click="search('id')">ID</a></th>
+                    <th><a href="" data-ng-click="search('prenom')"><span data-translate="membershipApp.adherent.prenom">Prénom</span></a></th>
+                    <th><a href="" data-ng-click="search('nom')"><span data-translate="membershipApp.adherent.nom">Nom</span></a></th>
                     <th>Date d'adhésion</th>
-                    <th translate="membershipApp.adherent.benevole">Benevole</th>
-                    <th translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</th>
-                    <th translate="membershipApp.adherent.genre">Genre</th>
-                    <th translate="membershipApp.adherent.autreRemarque">AutreRemarque</th>
+                    <th data-translate="membershipApp.adherent.benevole">Benevole</th>
+                    <th data-translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</th>
+                    <th data-translate="membershipApp.adherent.genre">Genre</th>
+                    <th data-translate="membershipApp.adherent.autreRemarque">AutreRemarque</th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page">
-                <tr ng-repeat="adherent in adherents">
-                    <td><a ui-sref="adherentDetail({id:adherent.id})">{{adherent.id}}</a></td>
+            <tbody data-infinite-scroll="loadPage(page + 1)" data-infinite-scroll-disabled="links['last'] == page">
+                <tr data-ng-repeat="adherent in adherents">
+                    <td><a data-ui-sref="adherentDetail({id:adherent.id})">{{adherent.id}}</a></td>
                     <td class="statut-{{adherent.statutAdhesion}}">{{adherent.prenom}}</td>
                     <td class="statut-{{adherent.statutAdhesion}}">{{adherent.nom}}</td>
                     <td>{{adherent.lastAdhesion}}</td>
@@ -220,20 +220,17 @@
                     <td>{{adherent.genre}}</td>
                     <td>{{adherent.autreRemarque}}</td>
                     <td>
-                        <button type="submit"
-                                ui-sref="adherentDetail({id:adherent.id})"
-                                class="btn btn-info btn-sm">
-                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span translate="entity.action.view"> View</span>
+                        <button type="submit" data-ui-sref="adherentDetail({id:adherent.id})" class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span data-translate="entity.action.view"> View</span>
                         </button>
-                        <button type="submit"
-                                ng-click="update(adherent.id)"
-                                class="btn btn-primary btn-sm">
-                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span translate="entity.action.edit"> Edit</span>
+                        <button type="submit" data-ng-click="renouvelerAdherent({id:adherent.id})" class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-refresh"></span>&nbsp;<span data-translate="entity.action.renew"> Renouveler</span>
                         </button>
-                        <button type="submit"
-                                ng-click="delete(adherent.id)"
-                                class="btn btn-danger btn-sm">
-                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete"> Delete</span>
+                        <button type="submit" data-ng-click="update(adherent.id)" class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span data-translate="entity.action.edit"> Edit</span>
+                        </button>
+                        <button type="submit" data-ng-click="delete(adherent.id)" class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span data-translate="entity.action.delete"> Delete</span>
                         </button>
                     </td>
                 </tr>
