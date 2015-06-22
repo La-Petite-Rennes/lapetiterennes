@@ -6,17 +6,17 @@
 			<label>Format</label>
 			<div class="radio">
 				<label>
-					<input type="radio" ng-model="format" autocomplete="off" value="csv"> CSV
+					<input type="radio" data-ng-model="format" autocomplete="off" value="csv"> CSV
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<input type="radio" ng-model="format" autocomplete="off" value="xml"> XML
+					<input type="radio" data-ng-model="format" autocomplete="off" value="xml"> XML
 				</label>
 			</div>
 			<div class="radio">
 				<label>
-					<input type="radio" ng-model="format" autocomplete="off" value="json"> JSON
+					<input type="radio" data-ng-model="format" autocomplete="off" value="json"> JSON
 				</label>
 			</div>
 		</div>
@@ -26,61 +26,61 @@
         	<div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.id" autocomplete="off"> Identifiant
+						<input type="checkbox" data-ng-model="properties.id" autocomplete="off"> Identifiant
 					</label>
 				</div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.nom" autocomplete="off"> Nom
+						<input type="checkbox" data-ng-model="properties.nom" autocomplete="off"> Nom
 					</label>
 				</div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.prenom" autocomplete="off"> Prénom
+						<input type="checkbox" data-ng-model="properties.prenom" autocomplete="off"> Prénom
 					</label>
 				</div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.estBenevole" autocomplete="off"> Bénévole ?
+						<input type="checkbox" data-ng-model="properties.estBenevole" autocomplete="off"> Bénévole ?
 					</label>
 				</div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.adresse" autocomplete="off"> Adresse
+						<input type="checkbox" data-ng-model="properties.adresse" autocomplete="off"> Adresse
 					</label>
 				</div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.codePostal" autocomplete="off"> Code Postal
+						<input type="checkbox" data-ng-model="properties.codePostal" autocomplete="off"> Code Postal
 					</label>
 				</div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.ville" autocomplete="off"> Ville
+						<input type="checkbox" data-ng-model="properties.ville" autocomplete="off"> Ville
 					</label>
 				</div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.telephone" autocomplete="off"> Téléphone
+						<input type="checkbox" data-ng-model="properties.telephone" autocomplete="off"> Téléphone
 					</label>
 				</div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.email" autocomplete="off"> Email
+						<input type="checkbox" data-ng-model="properties.email" autocomplete="off"> Email
 					</label>
 				</div>
 				<div class="checkbox-inline">
 					<label>
-						<input type="checkbox" ng-model="properties.adhesions" autocomplete="off"> Adhésions
+						<input type="checkbox" data-ng-model="properties.adhesions" autocomplete="off"> Adhésions
 					</label>
 				</div>
 			</div>
 		</div>
 		
-		<button type="button" class="btn btn-primary" ng-click="export()">Télécharger</button>
+		<button type="button" class="btn btn-primary" data-ng-click="export()">Télécharger</button>
 		
-	    <button type="submit" ui-sref="adherent" class="btn btn-info">
-	        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+	    <button type="submit" data-ui-sref="adherent" class="btn btn-info">
+	        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
 	    </button>
 	</form>
 </div>
