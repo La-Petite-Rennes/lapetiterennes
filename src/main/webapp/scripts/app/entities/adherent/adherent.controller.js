@@ -112,7 +112,7 @@ angular.module('membershipApp')
         };
 
         $scope.clear = function () {
-            $scope.adherent = {prenom: null, nom: null, benevole: null, remarqueBenevolat: null, genre: null, autreRemarque: null, id: null};
+            $scope.adherent = {prenom: null, nom: null, benevole: null, remarqueBenevolat: null, genre: null, autreRemarque: null, id: null, coordonnees: {}};
             $scope.nouvelleAdhesion = { dateAdhesion : new Date() };
             
             $scope.renouvelerAdhesionForm.$setPristine();
