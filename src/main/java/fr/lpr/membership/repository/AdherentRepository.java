@@ -9,8 +9,8 @@ import fr.lpr.membership.domain.Adherent;
 /**
  * Spring Data JPA repository for the Adherent entity.
  */
-public interface AdherentRepository extends JpaRepository<Adherent,Long> {
+public interface AdherentRepository extends JpaRepository<Adherent, Long> {
 
-	Page<Adherent> findByNomLikeOrPrenomLike(String nom, String prenom, Pageable pageable);
-	
+	Page<Adherent> findByNomContainingOrPrenomContainingAllIgnoreCase(String nom, String prenom, Pageable pageable);
+
 }

@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.repository.AdherentRepository;
@@ -82,9 +81,6 @@ public class AdherentResource {
 		return ResponseEntity.ok().build();
 	}
 
-	@Inject
-	ObjectMapper objectMapper;
-
 	/**
 	 * GET /adherents -> get all the adherents.
 	 */
@@ -113,7 +109,7 @@ public class AdherentResource {
 		if (criteria == null || criteria.isEmpty()) {
 			page = adherentRepository.findAll(pageRequest);
 		} else {
-			page = adherentRepository.findByNomLikeOrPrenomLike(criteria, criteria, pageRequest);
+			page = adherentRepository.findByNomContainingOrPrenomContainingAllIgnoreCase(criteria, criteria, pageRequest);
 		}
 
 		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
