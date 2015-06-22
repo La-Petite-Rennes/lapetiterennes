@@ -35,7 +35,7 @@ angular.module('membershipApp')
             if (headers('Content-Type').startsWith('application/json')) {
             	data = JSON.stringify(data);
             }
-            var uri = 'data:' + headers('Content-Type') + ';charset=utf-8,' + escape(data);
+            var uri = 'data:' + headers('Content-Type') + ';charset=UTF-8,' + escape(data);
             
             // Now the little tricky part.
             // you can use either>> window.open(uri);
