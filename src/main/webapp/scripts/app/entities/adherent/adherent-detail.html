@@ -1,18 +1,18 @@
 
 <div>
-    <h2><span translate="membershipApp.adherent.detail.title">Adherent</span> {{adherent.id}}</h2>
+    <h2><span data-translate="membershipApp.adherent.detail.title">Adherent</span> {{adherent.id}}</h2>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th translate="entity.detail.field">Field</th>
-                    <th translate="entity.detail.value">Value</th>
+                    <th data-translate="entity.detail.field">Field</th>
+                    <th data-translate="entity.detail.value">Value</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <span translate="membershipApp.adherent.prenom">Prenom</span>
+                        <span data-translate="membershipApp.adherent.prenom">Prenom</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control statut-{{adherent.statutAdhesion}}" value="{{adherent.prenom}}" readonly>
@@ -20,7 +20,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.adherent.nom">Nom</span>
+                        <span data-translate="membershipApp.adherent.nom">Nom</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control statut-{{adherent.statutAdhesion}}" value="{{adherent.nom}}" readonly>
@@ -68,7 +68,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.adherent.benevole">Benevole</span>
+                        <span data-translate="membershipApp.adherent.benevole">Benevole</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{adherent.benevole}}" readonly>
@@ -76,7 +76,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</span>
+                        <span data-translate="membershipApp.adherent.remarqueBenevolat">RemarqueBenevolat</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{adherent.remarqueBenevolat}}" readonly>
@@ -84,7 +84,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.adherent.genre">Genre</span>
+                        <span data-translate="membershipApp.adherent.genre">Genre</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{adherent.genre}}" readonly>
@@ -92,7 +92,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.adherent.autreRemarque">AutreRemarque</span>
+                        <span data-translate="membershipApp.adherent.autreRemarque">AutreRemarque</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{adherent.autreRemarque}}" readonly>
@@ -111,7 +111,7 @@
                 </tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="adhesion in adherent.adhesions">
+				<tr data-ng-repeat="adhesion in adherent.adhesions">
                     <td>{{adhesion.dateAdhesion}}</td>
 					<td>{{adhesion.typeAdhesion}}</td>
 				</tr>
@@ -119,9 +119,7 @@
         </table>
    	</div>
 
-    <button type="submit"
-            ui-sref="adherent"
-            class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    <button type="submit" data-ui-sref="adherent" class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
     </button>
 </div>
