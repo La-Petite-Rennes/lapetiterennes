@@ -28,12 +28,12 @@
                     	</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li data-ui-sref-active="active">
+                        <li data-ui-sref-active="active" data-ng-show="false">
                         	<a data-ui-sref="coordonnees">
                         		<span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span data-translate="global.menu.entities.coordonnees">coordonnees</span>
                         	</a>
                         </li>
-                        <li data-ui-sref-active="active">
+                        <li data-ui-sref-active="active" data-ng-show="false">
                         	<a data-ui-sref="adhesion">
                         		<span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span data-translate="global.menu.entities.adhesion">adhesion</span>
                         	</a>
@@ -82,7 +82,7 @@
                         	</a>
                         </li>
 
-                        <li data-ui-sref-active="active" data-ng-switch-when="false">
+                        <li data-ui-sref-active="active" data-has-role="ROLE_ADMIN">
                         	<a data-ui-sref="register">
                         		<span class="glyphicon glyphicon-plus-sign"></span>&#xA0;<span data-translate="global.menu.account.register">Register</span>
                         	</a>
@@ -137,7 +137,7 @@
                     </ul>
                 </li>
                 
-                <li data-ui-sref-active="active" class="dropdown pointer" data-ng-controller="LanguageController">
+                <li data-ui-sref-active="active" class="dropdown pointer" data-ng-controller="LanguageController" data-ng-show="false">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">
                     	<span>
                     	<span class="glyphicon glyphicon-flag"></span>

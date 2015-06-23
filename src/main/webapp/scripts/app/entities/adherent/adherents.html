@@ -8,11 +8,11 @@
 				<span class="glyphicon glyphicon-flash"></span> <span data-translate="membershipApp.adherent.home.createLabel">Create a new Adherent</span>
 			</button>
 		      
-			<button data-ui-sref="adherentImport()" class="btn btn-info">
+			<button data-ui-sref="adherentImport()" data-has-role="ROLE_ADMIN" class="btn btn-info">
 				<span class="glyphicon glyphicon-import"></span>&nbsp;<span>Importer</span>
 			</button>
 		      
-			<button data-ui-sref="adherentExport()" class="btn btn-info">
+			<button data-ui-sref="adherentExport()" data-has-role="ROLE_ADMIN" class="btn btn-info">
 				<span class="glyphicon glyphicon-export"></span>&nbsp;<span>Exporter</span>
 			</button>
 		</div>
@@ -276,7 +276,7 @@
                         <button type="submit" data-ng-click="update(adherent.id)" class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span data-translate="entity.action.edit"> Edit</span>
                         </button>
-                        <button type="submit" data-ng-click="delete(adherent.id)" class="btn btn-danger btn-sm">
+                        <button type="submit" data-ng-click="delete(adherent.id)" data-has-role="ROLE_ADMIN" class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span data-translate="entity.action.delete"> Delete</span>
                         </button>
                     </td>

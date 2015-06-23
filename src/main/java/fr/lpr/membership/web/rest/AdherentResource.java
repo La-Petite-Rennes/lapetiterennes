@@ -87,7 +87,7 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> getAll(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-			required = false) Integer limit) throws URISyntaxException {
+	required = false) Integer limit) throws URISyntaxException {
 		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
 		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
 
@@ -100,8 +100,8 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-			required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
-			defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
+	required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
+	defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
 		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
@@ -133,6 +133,7 @@ public class AdherentResource {
 	 */
 	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
+	@RolesAllowed(AuthoritiesConstants.ADMIN)
 	public void delete(@PathVariable Long id) {
 		log.debug("REST request to delete Adherent : {}", id);
 		adherentRepository.delete(id);
