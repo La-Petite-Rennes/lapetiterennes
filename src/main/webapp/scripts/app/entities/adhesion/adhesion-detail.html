@@ -1,18 +1,18 @@
 
 <div>
-    <h2><span translate="membershipApp.adhesion.detail.title">Adhesion</span> {{adhesion.id}}</h2>
+    <h2><span data-translate="membershipApp.adhesion.detail.title">Adhesion</span> {{adhesion.id}}</h2>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th translate="entity.detail.field">Field</th>
-                    <th translate="entity.detail.value">Value</th>
+                    <th data-translate="entity.detail.field">Field</th>
+                    <th data-translate="entity.detail.value">Value</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <span translate="membershipApp.adhesion.typeAdhesion">TypeAdhesion</span>
+                        <span data-translate="membershipApp.adhesion.typeAdhesion">TypeAdhesion</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{adhesion.typeAdhesion}}" readonly>
@@ -20,7 +20,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.adhesion.dateAdhesion">DateAdhesion</span>
+                        <span data-translate="membershipApp.adhesion.dateAdhesion">DateAdhesion</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{adhesion.dateAdhesion}}" readonly>
@@ -28,7 +28,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.adhesion.adherent">adherent</span>
+                        <span data-translate="membershipApp.adhesion.adherent">adherent</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{adhesion.adherent.id}}" readonly>
@@ -38,9 +38,7 @@
         </table>
     </div>
 
-    <button type="submit"
-            ui-sref="adhesion"
-            class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    <button type="submit" data-ui-sref="adhesion" class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
     </button>
 </div>

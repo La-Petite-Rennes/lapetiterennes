@@ -1,18 +1,18 @@
 
 <div>
-    <h2><span translate="membershipApp.coordonnees.detail.title">Coordonnees</span> {{coordonnees.id}}</h2>
+    <h2><span data-translate="membershipApp.coordonnees.detail.title">Coordonnees</span> {{coordonnees.id}}</h2>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th translate="entity.detail.field">Field</th>
-                    <th translate="entity.detail.value">Value</th>
+                    <th data-translate="entity.detail.field">Field</th>
+                    <th data-translate="entity.detail.value">Value</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <span translate="membershipApp.coordonnees.adresse1">Adresse1</span>
+                        <span data-translate="membershipApp.coordonnees.adresse1">Adresse1</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{coordonnees.adresse1}}" readonly>
@@ -20,7 +20,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.coordonnees.adresse2">Adresse2</span>
+                        <span data-translate="membershipApp.coordonnees.adresse2">Adresse2</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{coordonnees.adresse2}}" readonly>
@@ -28,7 +28,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.coordonnees.codePostal">CodePostal</span>
+                        <span data-translate="membershipApp.coordonnees.codePostal">CodePostal</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{coordonnees.codePostal}}" readonly>
@@ -36,7 +36,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.coordonnees.ville">Ville</span>
+                        <span data-translate="membershipApp.coordonnees.ville">Ville</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{coordonnees.ville}}" readonly>
@@ -44,7 +44,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.coordonnees.email">Email</span>
+                        <span data-translate="membershipApp.coordonnees.email">Email</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{coordonnees.email}}" readonly>
@@ -52,7 +52,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span translate="membershipApp.coordonnees.telephone">Telephone</span>
+                        <span data-translate="membershipApp.coordonnees.telephone">Telephone</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{coordonnees.telephone}}" readonly>
@@ -62,9 +62,7 @@
         </table>
     </div>
 
-    <button type="submit"
-            ui-sref="coordonnees"
-            class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    <button type="submit" data-ui-sref="coordonnees" class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
     </button>
 </div>

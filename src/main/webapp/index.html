@@ -16,17 +16,17 @@
         <link rel="stylesheet" href="assets/styles/main.css">
         <!-- endbuild -->
     </head>
-    <body ng-app="membershipApp">
+    <body data-ng-app="membershipApp">
         <!--[if lt IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div ng-show="{{ENV === 'dev'}}" class="development" ng-cloak=""></div>
-        <div ui-view="navbar" ng-cloak=""></div>
+        <div data-ng-show="{{ENV === 'dev'}}" class="development" data-ng-cloak=""></div>
+        <div data-ui-view="navbar" data-ng-cloak=""></div>
         <div class="container">
-            <div class="well" ui-view="content"></div>
+            <div class="well" data-ui-view="content"></div>
 
             <div class="footer">
-                <p translate="footer">This is your footer</p>
+                <p data-translate="footer">This is your footer</p>
             </div>
         </div>
 
