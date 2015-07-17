@@ -8,7 +8,7 @@
 				<span class="glyphicon glyphicon-flash"></span> <span data-translate="membershipApp.adherent.home.createLabel">Create a new Adherent</span>
 			</button>
 		      
-			<button data-ui-sref="adherentImport()" data-has-role="ROLE_ADMIN" class="btn btn-info">
+			<button data-toggle="modal" data-target="#importerModal" data-has-role="ROLE_ADMIN" class="btn btn-info">
 				<span class="glyphicon glyphicon-import"></span>&nbsp;<span>Importer</span>
 			</button>
 		      
@@ -24,6 +24,35 @@
 			</div>
 		</div>
 	</form>
+	
+	<div class="modal fade" id="importerModal" tabindex="-1" role="dialog" aria-labelledby="importerAdherentsLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form name="importerAdherentForm" class="form-horizontal" role="form" novalidate data-ng-submit="uploadImport()" data-show-validation>
+					<div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" id="importerAdherentsLabel">Importer des adhérents</h4>
+                    </div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label  class="control-label col-sm-4">Fichier</label>
+							<div class="col-sm-8">
+                            	<input type="file" name="file" data-ngf-select data-ng-model="importAdherentFile">
+                            </div>
+						</div>
+					</div>
+                    <div class="modal-footer">
+                    	<button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
+							<span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+						</button>
+						<button type="submit" data-ng-disabled="importerAdherentForm.$invalid" class="btn btn-primary">
+							<span class="glyphicon glyphicon-save"></span>&nbsp;Importer
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 	
 	<div class="modal fade" id="renouvelerAdhesionModal" tabindex="-1" role="dialog" aria-labelledby="myAdherentLabel" aria-hidden="true">
 		<div class="modal-dialog">

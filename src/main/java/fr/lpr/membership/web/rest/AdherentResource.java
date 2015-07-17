@@ -1,5 +1,6 @@
 package fr.lpr.membership.web.rest;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.codahale.metrics.annotation.Timed;
 
@@ -35,6 +37,7 @@ import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.security.AuthoritiesConstants;
 import fr.lpr.membership.service.ExportService;
+import fr.lpr.membership.service.ImportService;
 import fr.lpr.membership.web.rest.dto.ExportRequest;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
@@ -52,6 +55,9 @@ public class AdherentResource {
 
 	@Inject
 	private ExportService exportService;
+
+	@Inject
+	private ImportService importService;
 
 	/**
 	 * POST /adherents -> Create a new adherent.
@@ -87,7 +93,7 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> getAll(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-	required = false) Integer limit) throws URISyntaxException {
+			required = false) Integer limit) throws URISyntaxException {
 		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
 		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
 
@@ -100,8 +106,8 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-	required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
-	defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
+			required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
+			defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
 		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
@@ -154,6 +160,20 @@ public class AdherentResource {
 		}
 
 		exportService.export(request.getFormat(), properties, response);
+	}
+
+	/**
+	 * GET /adherent/export -> Export the adherent
+	 */
+	@RequestMapping(value = "/adherents/import", method = RequestMethod.POST)
+	@Timed
+	@RolesAllowed(AuthoritiesConstants.ADMIN)
+	public void importAdherents(@RequestParam("file") MultipartFile file) throws Exception {
+		if (!file.isEmpty()) {
+			try (InputStream inputStream = file.getInputStream()) {
+				importService.importCsv(inputStream);
+			}
+		}
 	}
 
 }

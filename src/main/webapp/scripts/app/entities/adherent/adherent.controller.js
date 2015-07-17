@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('membershipApp')
-    .controller('AdherentController', function ($scope, Adherent, Coordonnees, Adhesion, ParseLinks) {
+    .controller('AdherentController', function ($scope, Adherent, Coordonnees, Adhesion, ParseLinks, Upload) {
         $scope.adherents = [];
         $scope.coordonneess = Coordonnees.query();
         $scope.adhesions = Adhesion.query();
@@ -120,5 +120,20 @@ angular.module('membershipApp')
             
             $scope.editForm.$setPristine();
             $scope.editForm.$setUntouched();
+        };
+        
+        $scope.uploadImport = function () {
+            Upload.upload({
+                url: 'api/adherents/import',
+                file: $scope.importAdherentFile
+            }).progress(function (evt) {
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+            }).success(function (data, status, headers, config) {
+            	$('#importerModal').modal('hide');
+            	$scope.reset();
+            }).error(function (data, status, headers, config) {
+                console.log('error status: ' + status);
+            });
         };
     });
