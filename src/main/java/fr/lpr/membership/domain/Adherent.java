@@ -72,7 +72,7 @@ public class Adherent implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Coordonnees coordonnees;
 
-	@OneToMany(mappedBy = "adherent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "adherent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	// @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Adhesion> adhesions;
 

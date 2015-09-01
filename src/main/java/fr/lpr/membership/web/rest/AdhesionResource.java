@@ -1,26 +1,30 @@
 package fr.lpr.membership.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import fr.lpr.membership.domain.Adhesion;
-import fr.lpr.membership.repository.AdherentRepository;
-import fr.lpr.membership.repository.AdhesionRepository;
+import javax.inject.Inject;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
+import com.codahale.metrics.annotation.Timed;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import fr.lpr.membership.domain.Adhesion;
+import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.repository.AdhesionRepository;
 
 /**
  * REST controller for managing Adhesion.
@@ -118,6 +122,8 @@ public class AdhesionResource {
     @Timed
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete Adhesion : {}", id);
-        adhesionRepository.delete(id);
+        Adhesion adhesion = adhesionRepository.findOne(id);
+        adhesion.setAdherent(null);
+        adhesionRepository.delete(adhesion);
     }
 }
