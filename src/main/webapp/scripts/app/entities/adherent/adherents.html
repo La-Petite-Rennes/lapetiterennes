@@ -168,13 +168,13 @@
 	                        </div>
                         </fieldset>
                         
-                        <fieldset>
+                        <fieldset data-ng-show="!editAdherent">
                         	<legend>Adhésion</legend>
                         	
 	                        <div class="form-group required">
 	                            <label class="control-label col-sm-2" data-translate="membershipApp.adhesion.typeAdhesion">TypeAdhesion</label>
 	                            <div class="col-sm-10">
-		                            <select class="form-control" name="typeAdhesion" data-ng-model="nouvelleAdhesion.typeAdhesion" required>
+		                            <select class="form-control" name="typeAdhesion" data-ng-model="nouvelleAdhesion.typeAdhesion" data-ng-required="!editAdherent">
 		                            	<option selected="selected" value="Simple">Simple</option>
 		                            	<option value="Famille">Famille</option>
 		                            	<option value="Soutien">Soutien</option>

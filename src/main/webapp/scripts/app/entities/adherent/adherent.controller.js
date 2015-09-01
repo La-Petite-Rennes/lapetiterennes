@@ -11,6 +11,7 @@ angular.module('membershipApp')
         $scope.sort = 'id';
         $scope.sortOrder = 'ASC';
         
+        $scope.editAdherent = false;
         $scope.nouvelleAdhesion = {
         	dateAdhesion : new Date()
         }
@@ -62,7 +63,9 @@ angular.module('membershipApp')
         $scope.loadAll();
 
         $scope.create = function () {
-        	$scope.adherent.adhesions = ($scope.adherent.adhesions||[]).concat($scope.nouvelleAdhesion)
+        	if (!$scope.editAdherent) {
+        		$scope.adherent.adhesions = ($scope.adherent.adhesions||[]).concat($scope.nouvelleAdhesion)
+        	}
             Adherent.update($scope.adherent,
                 function () {
                     $scope.reset();
@@ -72,6 +75,7 @@ angular.module('membershipApp')
         };
 
         $scope.update = function (id) {
+        	$scope.editAdherent = true;
             Adherent.get({id: id}, function(result) {
                 $scope.adherent = result;
                 $('#saveAdherentModal').modal('show');
@@ -114,6 +118,7 @@ angular.module('membershipApp')
         $scope.clear = function () {
             $scope.adherent = {prenom: null, nom: null, benevole: null, remarqueBenevolat: null, genre: null, autreRemarque: null, id: null, coordonnees: {}};
             $scope.nouvelleAdhesion = { dateAdhesion : new Date() };
+            $scope.editAdherent = false;
             
             $scope.renouvelerAdhesionForm.$setPristine();
             $scope.renouvelerAdhesionForm.$setUntouched();
