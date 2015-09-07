@@ -16,10 +16,11 @@ angular.module('membershipApp')
     		'email': true,
     		'adhesions': true
         }
+        $scope.adhesionState = 'all';
         
         // View functions
         $scope.export = function () {
-        	$http.post('api/adherents/export', {format: $scope.format, properties: $scope.properties})
+        	$http.post('api/adherents/export', {format: $scope.format, adhesionState: $scope.adhesionState, properties: $scope.properties})
         		.success(function(result, status, headers) {
         			downloadFile(result, headers);
         		}

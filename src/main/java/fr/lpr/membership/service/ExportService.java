@@ -30,10 +30,12 @@ import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVWriter;
 
 import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.StatutAdhesion;
 import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
 import fr.lpr.membership.domain.util.LocalDateAdapter;
 import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.web.rest.dto.ExportRequest.AdhesionState;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
 @Service
@@ -62,15 +64,25 @@ public class ExportService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public void export(String format, List<String> properties, HttpServletResponse response) throws Exception {
+	/**
+	 * Export adherents.
+	 * 
+	 * @param format
+	 * @param properties
+	 * @param adhesionState
+	 * @param response
+	 * @throws Exception
+	 */
+	public void export(final String format, final List<String> properties, final AdhesionState adhesionState, final HttpServletResponse response) throws Exception {
 		Page<Adherent> page = null;
 		do {
 			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
-			final List<AdherentDto> dtos = page.getContent().stream().map(ad -> {
-				final AdherentDto adherentDto = new AdherentDto();
-				properties.stream().forEach(p -> DTO_MAPPER.get(p).accept(ad, adherentDto));
-				return adherentDto;
-			}).collect(Collectors.toList());
+			
+			final List<AdherentDto> dtos = page.getContent()
+					.stream()
+					.filter(ad -> filterAdhesionState(ad, adhesionState))
+					.map(ad -> mapDto(ad, properties))
+					.collect(Collectors.toList());
 
 			switch (format) {
 			case CSV:
@@ -86,6 +98,35 @@ public class ExportService {
 				exportCsv(dtos, properties, response);
 			}
 		} while (page.hasNext());
+	}
+
+	private AdherentDto mapDto(Adherent adherent, final List<String> properties) {
+		final AdherentDto adherentDto = new AdherentDto();
+		properties.stream().forEach(p -> DTO_MAPPER.get(p).accept(adherent, adherentDto));
+		return adherentDto;
+	}
+	
+	private boolean filterAdhesionState(Adherent ad, AdhesionState adhesionState) {
+		if (adhesionState == AdhesionState.all) {
+			return true;
+		} 
+		else if (adhesionState == AdhesionState.valid) {
+			return ad.getStatutAdhesion() == StatutAdhesion.GREEN;
+		} 
+		else if (adhesionState == AdhesionState.expiring) {
+			return ad.getStatutAdhesion() == StatutAdhesion.ORANGE;
+		} 
+		else if (adhesionState == AdhesionState.expired) {
+			LocalDate lastAdhesion = ad.getLastAdhesion();
+			if (lastAdhesion != null) {
+				return ad.getStatutAdhesion() == StatutAdhesion.RED &&
+						ad.getLastAdhesion().plusYears(1).isAfter(LocalDate.now().minusMonths(1));
+			}
+			else {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void exportCsv(List<AdherentDto> dtos, List<String> properties, HttpServletResponse response) throws IOException {

@@ -157,3 +157,7 @@ ul#strength {
 .statut-RED {
 	color: red;
 }
+
+.checkbox-inline label {
+	font-weight: normal;
+}

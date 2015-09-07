@@ -160,7 +160,7 @@ public class AdherentResource {
 			}
 		}
 
-		exportService.export(request.getFormat(), properties, response);
+		exportService.export(request.getFormat(), properties, request.getAdhesionState(), response);
 	}
 
 	/**
