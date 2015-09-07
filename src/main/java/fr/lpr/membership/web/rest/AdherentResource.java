@@ -83,6 +83,7 @@ public class AdherentResource {
 		if (adherent.getId() == null) {
 			return create(adherent);
 		}
+		adherent.setAdhesions(adherentRepository.findOne(adherent.getId()).getAdhesions());
 		adherentRepository.save(adherent);
 		return ResponseEntity.ok().build();
 	}

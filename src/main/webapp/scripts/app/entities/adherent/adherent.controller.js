@@ -64,7 +64,7 @@ angular.module('membershipApp')
 
         $scope.create = function () {
         	if (!$scope.editAdherent) {
-        		$scope.adherent.adhesions = ($scope.adherent.adhesions||[]).concat($scope.nouvelleAdhesion)
+        		$scope.adherent.adhesions = [$scope.nouvelleAdhesion];
         	}
             Adherent.update($scope.adherent,
                 function () {
