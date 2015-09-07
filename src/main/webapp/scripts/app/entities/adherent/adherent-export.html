@@ -82,7 +82,7 @@
 			<label>Adhérents dont l'adhésion</label>
 			<div class="radio">
 				<label>
-					<input type="radio" data-ng-model="adhesionState" autocomplete="off" value="expired"> est arrivée à terme depuis moins de 30 jours
+					<input type="radio" data-ng-model="adhesionState" autocomplete="off" value="recently_expired"> est arrivée à terme depuis moins de 30 jours
 				</label>
 			</div>
 			<div class="radio">
@@ -93,6 +93,11 @@
 			<div class="radio">
 				<label>
 					<input type="radio" data-ng-model="adhesionState" autocomplete="off" value="valid"> est à jour
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<input type="radio" data-ng-model="adhesionState" autocomplete="off" value="expired"> n'est plus à jour
 				</label>
 			</div>
 			<div class="radio">
