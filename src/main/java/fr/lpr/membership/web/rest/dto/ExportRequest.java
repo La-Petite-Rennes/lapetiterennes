@@ -35,7 +35,7 @@ public class ExportRequest {
 	}
 	
 	public static enum AdhesionState {
-		all, expired, expiring, valid
+		all, expired, expiring, valid, recently_expired
 	}
 
 }
