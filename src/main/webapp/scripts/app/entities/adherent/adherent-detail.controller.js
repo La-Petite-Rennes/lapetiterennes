@@ -18,7 +18,7 @@ angular.module('membershipApp')
         $scope.update = function (adhesion) {
         	Adhesion.get({id: adhesion.id}, function(result) {
 	        	$scope.adhesionToEdit = result;
-	        	$('#saveAdhesionModal').modal('show');
+	        	$('#saveAdhesionModal').modal({ show: true, backdrop: 'static' });
         	});
         };
         
@@ -33,7 +33,7 @@ angular.module('membershipApp')
         
         $scope.delete = function (adhesion) {
         	$scope.adhesionToDelete = adhesion;
-        	$('#deleteAdhesionConfirmation').modal('show');
+        	$('#deleteAdhesionConfirmation').modal({ show: true, backdrop: 'static' });
         };
         
         $scope.confirmDelete = function (adhesionId) {

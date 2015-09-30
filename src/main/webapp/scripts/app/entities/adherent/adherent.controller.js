@@ -78,14 +78,14 @@ angular.module('membershipApp')
         	$scope.editAdherent = true;
             Adherent.get({id: id}, function(result) {
                 $scope.adherent = result;
-                $('#saveAdherentModal').modal('show');
+                $('#saveAdherentModal').modal({ show: true, backdrop: 'static' });
             });
         };
 
         $scope.delete = function (id) {
             Adherent.get({id: id}, function(result) {
                 $scope.adherent = result;
-                $('#deleteAdherentConfirmation').modal('show');
+                $('#deleteAdherentConfirmation').modal({ show: true, backdrop: 'static' });
             });
         };
 
@@ -103,7 +103,7 @@ angular.module('membershipApp')
         	Adherent.get({id: id}, function(result) {
                 $scope.adherent = result;
             	$scope.nouvelleAdhesion.adherent = $scope.adherent;
-            	$('#renouvelerAdhesionModal').modal('show');
+            	$('#renouvelerAdhesionModal').modal({ show: true, backdrop: 'static' });
             });
         };
         
