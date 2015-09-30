@@ -18,6 +18,16 @@ angular.module('membershipApp')
                     return data;
                 }
             },
-            'update': { method:'PUT' }
+            'update': { 
+            	method:'PUT',
+            	transformRequest: function (data) {
+            		if (data.adhesions !== undefined) {
+	            		data.adhesions.forEach(function(ad) {
+	            			ad.dateAdhesion = ad.dateAdhesion.getDate() + '/' + (ad.dateAdhesion.getMonth() + 1) + '/' + ad.dateAdhesion.getFullYear();
+	            		});
+            		}
+            		return angular.toJson(data);
+            	}
+            }
         });
     });

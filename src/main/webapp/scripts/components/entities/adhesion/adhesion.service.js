@@ -18,6 +18,13 @@ angular.module('membershipApp')
             	url: 'api/adhesions/adherent/:adherentId',
             	isArray: true
             },
-            'update': { method:'PUT' }
+            'update': { 
+            	method:'PUT',
+            	transformRequest: function (data) {
+            		var adhesion = angular.copy(data);
+            		adhesion.dateAdhesion = data.dateAdhesion.getDate() + '/' + (data.dateAdhesion.getMonth() + 1) + '/' + data.dateAdhesion.getFullYear();
+            		return angular.toJson(adhesion);
+            	} 
+            }
         });
     });
