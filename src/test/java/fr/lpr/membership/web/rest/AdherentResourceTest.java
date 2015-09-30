@@ -10,11 +10,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.Coordonnees;
 import fr.lpr.membership.domain.Genre;
+import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.repository.AdherentRepository;
 
 /**
@@ -46,226 +50,211 @@ import fr.lpr.membership.repository.AdherentRepository;
 @IntegrationTest
 public class AdherentResourceTest {
 
-    private static final String DEFAULT_PRENOM = "SAMPLE_TEXT";
-    private static final String UPDATED_PRENOM = "UPDATED_TEXT";
-    private static final String DEFAULT_NOM = "SAMPLE_TEXT";
-    private static final String UPDATED_NOM = "UPDATED_TEXT";
+	private static final String DEFAULT_PRENOM = "SAMPLE_TEXT";
+	private static final String UPDATED_PRENOM = "UPDATED_TEXT";
+	private static final String DEFAULT_NOM = "SAMPLE_TEXT";
+	private static final String UPDATED_NOM = "UPDATED_TEXT";
 
-    private static final Boolean DEFAULT_BENEVOLE = false;
-    private static final Boolean UPDATED_BENEVOLE = true;
-    private static final String DEFAULT_REMARQUE_BENEVOLAT = "SAMPLE_TEXT";
-    private static final String UPDATED_REMARQUE_BENEVOLAT = "UPDATED_TEXT";
-    private static final Genre DEFAULT_GENRE = Genre.Autre;
-    private static final Genre UPDATED_GENRE = Genre.H;
-    private static final String DEFAULT_AUTRE_REMARQUE = "SAMPLE_TEXT";
-    private static final String UPDATED_AUTRE_REMARQUE = "UPDATED_TEXT";
+	private static final Boolean DEFAULT_BENEVOLE = false;
+	private static final Boolean UPDATED_BENEVOLE = true;
+	private static final String DEFAULT_REMARQUE_BENEVOLAT = "SAMPLE_TEXT";
+	private static final String UPDATED_REMARQUE_BENEVOLAT = "UPDATED_TEXT";
+	private static final Genre DEFAULT_GENRE = Genre.Autre;
+	private static final Genre UPDATED_GENRE = Genre.H;
+	private static final String DEFAULT_AUTRE_REMARQUE = "SAMPLE_TEXT";
+	private static final String UPDATED_AUTRE_REMARQUE = "UPDATED_TEXT";
 
-    @Inject
-    private AdherentRepository adherentRepository;
-    
-    private MockMvc restAdherentMockMvc;
+	@Inject
+	private AdherentRepository adherentRepository;
 
-    private Adherent adherent;
+	private MockMvc restAdherentMockMvc;
 
-    @PostConstruct
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        AdherentResource adherentResource = new AdherentResource();
-        ReflectionTestUtils.setField(adherentResource, "adherentRepository", adherentRepository);
-        this.restAdherentMockMvc = MockMvcBuilders.standaloneSetup(adherentResource).build();
-    }
+	private Adherent adherent;
 
-    @Before
-    public void initTest() {
-        adherent = new Adherent();
-        adherent.setPrenom(DEFAULT_PRENOM);
-        adherent.setNom(DEFAULT_NOM);
-        adherent.setBenevole(DEFAULT_BENEVOLE);
-        adherent.setRemarqueBenevolat(DEFAULT_REMARQUE_BENEVOLAT);
-        adherent.setGenre(DEFAULT_GENRE);
-        adherent.setAutreRemarque(DEFAULT_AUTRE_REMARQUE);
-    }
+	@PostConstruct
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		final AdherentResource adherentResource = new AdherentResource();
+		ReflectionTestUtils.setField(adherentResource, "adherentRepository", adherentRepository);
+		this.restAdherentMockMvc = MockMvcBuilders.standaloneSetup(adherentResource).build();
+	}
 
-    @Test
-    @Transactional
-    public void createAdherent() throws Exception {
-        int databaseSizeBeforeCreate = adherentRepository.findAll().size();
+	@Before
+	public void initTest() {
+		adherent = new Adherent();
+		adherent.setPrenom(DEFAULT_PRENOM);
+		adherent.setNom(DEFAULT_NOM);
+		adherent.setBenevole(DEFAULT_BENEVOLE);
+		adherent.setRemarqueBenevolat(DEFAULT_REMARQUE_BENEVOLAT);
+		adherent.setGenre(DEFAULT_GENRE);
+		adherent.setAutreRemarque(DEFAULT_AUTRE_REMARQUE);
+	}
 
-        // Create the Adherent
-        restAdherentMockMvc.perform(post("/api/adherents")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(adherent)))
-                .andExpect(status().isCreated());
+	@Test
+	@Transactional
+	public void createAdherent() throws Exception {
+		final int databaseSizeBeforeCreate = adherentRepository.findAll().size();
 
-        // Validate the Adherent in the database
-        List<Adherent> adherents = adherentRepository.findAll();
-        assertThat(adherents).hasSize(databaseSizeBeforeCreate + 1);
-        Adherent testAdherent = adherents.get(adherents.size() - 1);
-        assertThat(testAdherent.getPrenom()).isEqualTo(DEFAULT_PRENOM);
-        assertThat(testAdherent.getNom()).isEqualTo(DEFAULT_NOM);
-        assertThat(testAdherent.getBenevole()).isEqualTo(DEFAULT_BENEVOLE);
-        assertThat(testAdherent.getRemarqueBenevolat()).isEqualTo(DEFAULT_REMARQUE_BENEVOLAT);
-        assertThat(testAdherent.getGenre()).isEqualTo(DEFAULT_GENRE);
-        assertThat(testAdherent.getAutreRemarque()).isEqualTo(DEFAULT_AUTRE_REMARQUE);
-    }
-    
-    @Test
-    @Transactional
-    public void createAdherentWithCoordinates() throws Exception {
-    	/// Given
-        int databaseSizeBeforeCreate = adherentRepository.findAll().size();
-    	Coordonnees coordonnees = new Coordonnees();
-    	coordonnees.setAdresse1("15 Rue de Paris");
-    	coordonnees.setCodePostal("35000");
-    	coordonnees.setVille("Rennes");
-    	adherent.setCoordonnees(coordonnees);
-    	
-    	// When
-    	 restAdherentMockMvc.perform(post("/api/adherents")
-                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                 .content(TestUtil.convertObjectToJsonBytes(adherent)))
-                 .andExpect(status().isCreated());
-    	
-    	// Then
-    	 List<Adherent> adherents = adherentRepository.findAll();
-         assertThat(adherents).hasSize(databaseSizeBeforeCreate + 1);
-         Adherent testAdherent = adherents.get(adherents.size() - 1);
-         assertThat(testAdherent.getCoordonnees()).isNotNull().isEqualToComparingOnlyGivenFields(coordonnees, "adresse1", "codePostal", "ville");
-    }
+		// Create the Adherent
+		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		.andExpect(status().isCreated());
 
-    @Test
-    @Transactional
-    public void checkPrenomIsRequired() throws Exception {
-        // Validate the database is empty
-        assertThat(adherentRepository.findAll()).hasSize(0);
-        // set the field null
-        adherent.setPrenom(null);
+		// Validate the Adherent in the database
+		final List<Adherent> adherents = adherentRepository.findAll();
+		assertThat(adherents).hasSize(databaseSizeBeforeCreate + 1);
+		final Adherent testAdherent = adherents.get(adherents.size() - 1);
+		assertThat(testAdherent.getPrenom()).isEqualTo(DEFAULT_PRENOM);
+		assertThat(testAdherent.getNom()).isEqualTo(DEFAULT_NOM);
+		assertThat(testAdherent.getBenevole()).isEqualTo(DEFAULT_BENEVOLE);
+		assertThat(testAdherent.getRemarqueBenevolat()).isEqualTo(DEFAULT_REMARQUE_BENEVOLAT);
+		assertThat(testAdherent.getGenre()).isEqualTo(DEFAULT_GENRE);
+		assertThat(testAdherent.getAutreRemarque()).isEqualTo(DEFAULT_AUTRE_REMARQUE);
+	}
 
-        // Create the Adherent, which fails.
-        restAdherentMockMvc.perform(post("/api/adherents")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(adherent)))
-                .andExpect(status().isBadRequest());
+	@Test
+	@Transactional
+	public void createAdherentWithCoordinates() throws Exception {
+		// / Given
+		final int databaseSizeBeforeCreate = adherentRepository.findAll().size();
+		final Coordonnees coordonnees = new Coordonnees();
+		coordonnees.setAdresse1("15 Rue de Paris");
+		coordonnees.setCodePostal("35000");
+		coordonnees.setVille("Rennes");
+		adherent.setCoordonnees(coordonnees);
 
-        // Validate the database is still empty
-        List<Adherent> adherents = adherentRepository.findAll();
-        assertThat(adherents).hasSize(0);
-    }
+		// When
+		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		.andExpect(status().isCreated());
 
-    @Test
-    @Transactional
-    public void checkNomIsRequired() throws Exception {
-        // Validate the database is empty
-        assertThat(adherentRepository.findAll()).hasSize(0);
-        // set the field null
-        adherent.setNom(null);
+		// Then
+		final List<Adherent> adherents = adherentRepository.findAll();
+		assertThat(adherents).hasSize(databaseSizeBeforeCreate + 1);
+		final Adherent testAdherent = adherents.get(adherents.size() - 1);
+		assertThat(testAdherent.getCoordonnees()).isNotNull().isEqualToComparingOnlyGivenFields(coordonnees, "adresse1", "codePostal", "ville");
+	}
 
-        // Create the Adherent, which fails.
-        restAdherentMockMvc.perform(post("/api/adherents")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(adherent)))
-                .andExpect(status().isBadRequest());
+	@Test
+	@Transactional
+	public void checkPrenomIsRequired() throws Exception {
+		// Validate the database is empty
+		assertThat(adherentRepository.findAll()).hasSize(0);
+		// set the field null
+		adherent.setPrenom(null);
 
-        // Validate the database is still empty
-        List<Adherent> adherents = adherentRepository.findAll();
-        assertThat(adherents).hasSize(0);
-    }
+		// Create the Adherent, which fails.
+		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		.andExpect(status().isBadRequest());
 
-    @Test
-    @Transactional
-    public void getAllAdherents() throws Exception {
-        // Initialize the database
-        adherentRepository.saveAndFlush(adherent);
+		// Validate the database is still empty
+		final List<Adherent> adherents = adherentRepository.findAll();
+		assertThat(adherents).hasSize(0);
+	}
 
-        // Get all the adherents
-        restAdherentMockMvc.perform(get("/api/adherents"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(adherent.getId().intValue())))
-                .andExpect(jsonPath("$.[*].prenom").value(hasItem(DEFAULT_PRENOM.toString())))
-                .andExpect(jsonPath("$.[*].nom").value(hasItem(DEFAULT_NOM.toString())))
-                .andExpect(jsonPath("$.[*].benevole").value(hasItem(DEFAULT_BENEVOLE.booleanValue())))
-                .andExpect(jsonPath("$.[*].remarqueBenevolat").value(hasItem(DEFAULT_REMARQUE_BENEVOLAT.toString())))
-                .andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE.toString())))
-                .andExpect(jsonPath("$.[*].statutAdhesion").value("NONE"))
-                .andExpect(jsonPath("$.[*].autreRemarque").value(hasItem(DEFAULT_AUTRE_REMARQUE.toString())));
-    }
+	@Test
+	@Transactional
+	public void checkNomIsRequired() throws Exception {
+		// Validate the database is empty
+		assertThat(adherentRepository.findAll()).hasSize(0);
+		// set the field null
+		adherent.setNom(null);
 
-    @Test
-    @Transactional
-    public void getAdherent() throws Exception {
-        // Initialize the database
-        adherentRepository.saveAndFlush(adherent);
+		// Create the Adherent, which fails.
+		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		.andExpect(status().isBadRequest());
 
-        // Get the adherent
-        restAdherentMockMvc.perform(get("/api/adherents/{id}", adherent.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(adherent.getId().intValue()))
-            .andExpect(jsonPath("$.prenom").value(DEFAULT_PRENOM.toString()))
-            .andExpect(jsonPath("$.nom").value(DEFAULT_NOM.toString()))
-            .andExpect(jsonPath("$.benevole").value(DEFAULT_BENEVOLE.booleanValue()))
-            .andExpect(jsonPath("$.remarqueBenevolat").value(DEFAULT_REMARQUE_BENEVOLAT.toString()))
-            .andExpect(jsonPath("$.genre").value(DEFAULT_GENRE.toString()))
-            .andExpect(jsonPath("$.statutAdhesion").value("NONE"))
-            .andExpect(jsonPath("$.autreRemarque").value(DEFAULT_AUTRE_REMARQUE.toString()));
-    }
+		// Validate the database is still empty
+		final List<Adherent> adherents = adherentRepository.findAll();
+		assertThat(adherents).hasSize(0);
+	}
 
-    @Test
-    @Transactional
-    public void getNonExistingAdherent() throws Exception {
-        // Get the adherent
-        restAdherentMockMvc.perform(get("/api/adherents/{id}", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
-    }
+	@Test
+	@Transactional
+	public void getAllAdherents() throws Exception {
+		// Initialize the database
+		adherentRepository.saveAndFlush(adherent);
 
-    @Test
-    @Transactional
-    public void updateAdherent() throws Exception {
-        // Initialize the database
-        adherentRepository.saveAndFlush(adherent);
+		// Get all the adherents
+		restAdherentMockMvc.perform(get("/api/adherents")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		.andExpect(jsonPath("$.[*].id").value(hasItem(adherent.getId().intValue())))
+		.andExpect(jsonPath("$.[*].prenom").value(hasItem(DEFAULT_PRENOM.toString())))
+		.andExpect(jsonPath("$.[*].nom").value(hasItem(DEFAULT_NOM.toString())))
+		.andExpect(jsonPath("$.[*].benevole").value(hasItem(DEFAULT_BENEVOLE.booleanValue())))
+		.andExpect(jsonPath("$.[*].remarqueBenevolat").value(hasItem(DEFAULT_REMARQUE_BENEVOLAT.toString())))
+		.andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE.toString()))).andExpect(jsonPath("$.[*].statutAdhesion").value("NONE"))
+		.andExpect(jsonPath("$.[*].autreRemarque").value(hasItem(DEFAULT_AUTRE_REMARQUE.toString())));
+	}
 
-		int databaseSizeBeforeUpdate = adherentRepository.findAll().size();
+	@Test
+	@Transactional
+	public void getAdherent() throws Exception {
+		// Initialize the database
+		adherentRepository.saveAndFlush(adherent);
 
-        // Update the adherent
-        adherent.setPrenom(UPDATED_PRENOM);
-        adherent.setNom(UPDATED_NOM);
-        adherent.setBenevole(UPDATED_BENEVOLE);
-        adherent.setRemarqueBenevolat(UPDATED_REMARQUE_BENEVOLAT);
-        adherent.setGenre(UPDATED_GENRE);
-        adherent.setAutreRemarque(UPDATED_AUTRE_REMARQUE);
-        restAdherentMockMvc.perform(put("/api/adherents")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(adherent)))
-                .andExpect(status().isOk());
+		// Get the adherent
+		restAdherentMockMvc.perform(get("/api/adherents/{id}", adherent.getId())).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.id").value(adherent.getId().intValue()))
+		.andExpect(jsonPath("$.prenom").value(DEFAULT_PRENOM.toString())).andExpect(jsonPath("$.nom").value(DEFAULT_NOM.toString()))
+		.andExpect(jsonPath("$.benevole").value(DEFAULT_BENEVOLE.booleanValue()))
+		.andExpect(jsonPath("$.remarqueBenevolat").value(DEFAULT_REMARQUE_BENEVOLAT.toString()))
+		.andExpect(jsonPath("$.genre").value(DEFAULT_GENRE.toString())).andExpect(jsonPath("$.statutAdhesion").value("NONE"))
+		.andExpect(jsonPath("$.autreRemarque").value(DEFAULT_AUTRE_REMARQUE.toString()));
+	}
 
-        // Validate the Adherent in the database
-        List<Adherent> adherents = adherentRepository.findAll();
-        assertThat(adherents).hasSize(databaseSizeBeforeUpdate);
-        Adherent testAdherent = adherents.get(adherents.size() - 1);
-        assertThat(testAdherent.getPrenom()).isEqualTo(UPDATED_PRENOM);
-        assertThat(testAdherent.getNom()).isEqualTo(UPDATED_NOM);
-        assertThat(testAdherent.getBenevole()).isEqualTo(UPDATED_BENEVOLE);
-        assertThat(testAdherent.getRemarqueBenevolat()).isEqualTo(UPDATED_REMARQUE_BENEVOLAT);
-        assertThat(testAdherent.getGenre()).isEqualTo(UPDATED_GENRE);
-        assertThat(testAdherent.getAutreRemarque()).isEqualTo(UPDATED_AUTRE_REMARQUE);
-    }
+	@Test
+	@Transactional
+	public void getNonExistingAdherent() throws Exception {
+		// Get the adherent
+		restAdherentMockMvc.perform(get("/api/adherents/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
+	}
 
-    @Test
-    @Transactional
-    public void deleteAdherent() throws Exception {
-        // Initialize the database
-        adherentRepository.saveAndFlush(adherent);
+	@Test
+	@Transactional
+	public void updateAdherent() throws Exception {
+		// Initialize the database
+		final Adhesion uneAdhesion = new Adhesion();
+		uneAdhesion.setTypeAdhesion(TypeAdhesion.Simple);
+		uneAdhesion.setDateAdhesion(LocalDate.now());
+		adherent.setAdhesions(new HashSet<>());
+		adherent.getAdhesions().add(uneAdhesion);
+		adherentRepository.saveAndFlush(adherent);
 
-		int databaseSizeBeforeDelete = adherentRepository.findAll().size();
+		final int databaseSizeBeforeUpdate = adherentRepository.findAll().size();
 
-        // Get the adherent
-        restAdherentMockMvc.perform(delete("/api/adherents/{id}", adherent.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+		// Update the adherent
+		adherent.setPrenom(UPDATED_PRENOM);
+		adherent.setNom(UPDATED_NOM);
+		adherent.setBenevole(UPDATED_BENEVOLE);
+		adherent.setRemarqueBenevolat(UPDATED_REMARQUE_BENEVOLAT);
+		adherent.setGenre(UPDATED_GENRE);
+		adherent.setAutreRemarque(UPDATED_AUTRE_REMARQUE);
+		restAdherentMockMvc.perform(put("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		.andExpect(status().isOk());
 
-        // Validate the database is empty
-        List<Adherent> adherents = adherentRepository.findAll();
-        assertThat(adherents).hasSize(databaseSizeBeforeDelete - 1);
-    }
+		// Validate the Adherent in the database
+		final List<Adherent> adherents = adherentRepository.findAll();
+		assertThat(adherents).hasSize(databaseSizeBeforeUpdate);
+		final Adherent testAdherent = adherents.get(adherents.size() - 1);
+		assertThat(testAdherent.getPrenom()).isEqualTo(UPDATED_PRENOM);
+		assertThat(testAdherent.getNom()).isEqualTo(UPDATED_NOM);
+		assertThat(testAdherent.getBenevole()).isEqualTo(UPDATED_BENEVOLE);
+		assertThat(testAdherent.getRemarqueBenevolat()).isEqualTo(UPDATED_REMARQUE_BENEVOLAT);
+		assertThat(testAdherent.getGenre()).isEqualTo(UPDATED_GENRE);
+		assertThat(testAdherent.getAutreRemarque()).isEqualTo(UPDATED_AUTRE_REMARQUE);
+	}
+
+	@Test
+	@Transactional
+	public void deleteAdherent() throws Exception {
+		// Initialize the database
+		adherentRepository.saveAndFlush(adherent);
+
+		final int databaseSizeBeforeDelete = adherentRepository.findAll().size();
+
+		// Get the adherent
+		restAdherentMockMvc.perform(delete("/api/adherents/{id}", adherent.getId()).accept(TestUtil.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+
+		// Validate the database is empty
+		final List<Adherent> adherents = adherentRepository.findAll();
+		assertThat(adherents).hasSize(databaseSizeBeforeDelete - 1);
+	}
 }

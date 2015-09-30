@@ -159,7 +159,7 @@ public class Adherent implements Serializable {
 
 	@JsonIgnore
 	private Optional<Adhesion> lastAdhesion() {
-		if (this.adhesions.isEmpty()) {
+		if (this.adhesions == null || this.adhesions.isEmpty()) {
 			return Optional.empty();
 		} else {
 			final SortedSet<Adhesion> orderedAdhesions = new TreeSet<>((a1, a2) -> a2.getDateAdhesion().compareTo(a1.getDateAdhesion()));

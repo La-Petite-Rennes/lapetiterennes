@@ -22,8 +22,8 @@ import org.joda.time.LocalDate;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import fr.lpr.membership.domain.util.CustomLocalDateDeserializer;
 import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
-import fr.lpr.membership.domain.util.ISO8601LocalDateDeserializer;
 
 /**
  * A Adhesion.
@@ -46,7 +46,7 @@ public class Adhesion implements Serializable {
 
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	@JsonSerialize(using = CustomLocalDateSerializer.class)
-	@JsonDeserialize(using = ISO8601LocalDateDeserializer.class)
+	@JsonDeserialize(using = CustomLocalDateDeserializer.class)
 	@Column(name = "date_adhesion", nullable = false)
 	private LocalDate dateAdhesion;
 
