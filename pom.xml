@@ -19,6 +19,12 @@
     <prerequisites>
         <maven>3.0.0</maven>
     </prerequisites>
+    
+    <scm>
+		<url>https://github.com/glebreton/lapetiterennes</url>
+		<connection>scm:git:git://github.com/glebreton/lapetiterennes.git</connection>
+		<developerConnection>scm:git:git@github.com:glebreton/lapetiterennes.git</developerConnection>
+	</scm>
 
     <properties>
         <HikariCP.version>2.3.7</HikariCP.version>
