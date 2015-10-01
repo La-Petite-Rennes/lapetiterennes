@@ -1,13 +1,12 @@
 package fr.lpr.membership.repository;
 
-import fr.lpr.membership.domain.Coordonnees;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import fr.lpr.membership.domain.Coordonnees;
 
 /**
  * Spring Data JPA repository for the Coordonnees entity.
  */
-public interface CoordonneesRepository extends JpaRepository<Coordonnees,Long> {
+public interface CoordonneesRepository extends JpaRepository<Coordonnees, Long> {
 
 }

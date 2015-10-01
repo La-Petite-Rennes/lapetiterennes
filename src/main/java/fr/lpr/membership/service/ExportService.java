@@ -67,28 +67,30 @@ public class ExportService {
 
 	/**
 	 * Export adherents.
-	 * 
+	 *
 	 * @param format
+	 *            the format (json, xml, csv)
 	 * @param properties
+	 *            the properties to export
 	 * @param adhesionState
+	 *            export adherents with this specified adhesion state
 	 * @param response
+	 *            the http response
 	 * @throws Exception
+	 *             if an error occurs
 	 */
-	public void export(final String format, final List<String> properties, final AdhesionState adhesionState, final HttpServletResponse response) throws Exception {
+	public void export(final String format, final List<String> properties, final AdhesionState adhesionState, final HttpServletResponse response)
+			throws Exception {
 		final List<AdherentDto> adherents = new ArrayList<>();
-		
+
 		Page<Adherent> page = null;
 		do {
 			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
-			
-			adherents.addAll(page.getContent()
-					.stream()
-					.filter(ad -> filterAdhesionState(ad, adhesionState))
-					.map(ad -> mapDto(ad, properties))
+
+			adherents.addAll(page.getContent().stream().filter(ad -> filterAdhesionState(ad, adhesionState)).map(ad -> mapDto(ad, properties))
 					.collect(Collectors.toList()));
-			
-			
-			System.out.println("HAS NEXT PAGE : " +page.hasNext());
+
+			System.out.println("HAS NEXT PAGE : " + page.hasNext());
 		} while (page.hasNext());
 
 		switch (format) {
@@ -111,27 +113,21 @@ public class ExportService {
 		properties.stream().forEach(p -> DTO_MAPPER.get(p).accept(adherent, adherentDto));
 		return adherentDto;
 	}
-	
+
 	private boolean filterAdhesionState(Adherent ad, AdhesionState adhesionState) {
 		if (adhesionState == AdhesionState.all) {
 			return true;
-		} 
-		else if (adhesionState == AdhesionState.valid) {
+		} else if (adhesionState == AdhesionState.valid) {
 			return ad.getStatutAdhesion() == StatutAdhesion.GREEN;
-		} 
-		else if (adhesionState == AdhesionState.expiring) {
+		} else if (adhesionState == AdhesionState.expiring) {
 			return ad.getStatutAdhesion() == StatutAdhesion.ORANGE;
-		} 
-		else if (adhesionState == AdhesionState.expired) {
+		} else if (adhesionState == AdhesionState.expired) {
 			return ad.getStatutAdhesion() == StatutAdhesion.RED;
-		}
-		else if (adhesionState == AdhesionState.recently_expired) {
-			LocalDate lastAdhesion = ad.getLastAdhesion();
+		} else if (adhesionState == AdhesionState.recently_expired) {
+			final LocalDate lastAdhesion = ad.getLastAdhesion();
 			if (lastAdhesion != null) {
-				return ad.getStatutAdhesion() == StatutAdhesion.RED &&
-						ad.getLastAdhesion().plusYears(1).isAfter(LocalDate.now().minusMonths(1));
-			}
-			else {
+				return ad.getStatutAdhesion() == StatutAdhesion.RED && ad.getLastAdhesion().plusYears(1).isAfter(LocalDate.now().minusMonths(1));
+			} else {
 				return false;
 			}
 		}
@@ -144,8 +140,8 @@ public class ExportService {
 		try (CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(response.getOutputStream()), ';')) {
 			csvWriter.writeNext(new String[] { "ID", "Nom", "Prénom", "Adresse", "Code Postal", "Ville", "Date de dernière adhésion", "Email", "Téléphone" });
 
-			dtos.forEach(a -> csvWriter.writeNext(new String[] { a.id.toString(), a.nom, a.prenom, a.adresse, a.codePostal, a.ville,
-					a.formatLastAdhesion(), a.email, a.telephone }));
+			dtos.forEach(a -> csvWriter.writeNext(new String[] { a.id.toString(), a.nom, a.prenom, a.adresse, a.codePostal, a.ville, a.formatLastAdhesion(),
+					a.email, a.telephone }));
 		}
 	}
 
@@ -180,14 +176,14 @@ public class ExportService {
 		@JsonIgnore
 		@XmlTransient
 		public LocalDate lastAdhesion;
-		
+
 		public String formatLastAdhesion() {
 			if (lastAdhesion != null) {
 				return lastAdhesion.toString("dd/MM/yyyy");
-			} 
+			}
 			return null;
 		}
-		
+
 	}
 
 	static class AdhesionDto {

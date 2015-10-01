@@ -60,7 +60,13 @@ public class AdherentResource {
 	private ImportService importService;
 
 	/**
-	 * POST /adherents -> Create a new adherent.
+	 * POST /adherents -&gt; Create a new adherent.
+	 *
+	 * @param adherent
+	 *            the adherent
+	 * @return result of the creation
+	 * @throws URISyntaxException
+	 *             if uri cannot be built
 	 */
 	@RequestMapping(value = "/adherents", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
@@ -74,7 +80,13 @@ public class AdherentResource {
 	}
 
 	/**
-	 * PUT /adherents -> Updates an existing adherent.
+	 * PUT /adherents -&gt; Updates an existing adherent.
+	 *
+	 * @param adherent
+	 *            the adherent
+	 * @return result of the update
+	 * @throws URISyntaxException
+	 *             if uri cannot be built
 	 */
 	@RequestMapping(value = "/adherents", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
@@ -89,7 +101,15 @@ public class AdherentResource {
 	}
 
 	/**
-	 * GET /adherents -> get all the adherents.
+	 * GET /adherents -&gt; get all the adherents.
+	 *
+	 * @param offset
+	 *            the offset
+	 * @param limit
+	 *            max number of adherents
+	 * @return the adherents
+	 * @throws URISyntaxException
+	 *             if uris cannot be built
 	 */
 	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
@@ -102,7 +122,21 @@ public class AdherentResource {
 	}
 
 	/**
-	 * Search /adherents -> get the adherents filtered by name and sorted
+	 * Search /adherents -&gt; get the adherents filtered by name and sorted
+	 *
+	 * @param offset
+	 *            the offset
+	 * @param limit
+	 *            max number of adherents
+	 * @param criteria
+	 *            the criteria
+	 * @param sortProperty
+	 *            property to sort on
+	 * @param sortOrder
+	 *            the sort order
+	 * @return the adherents matching the search
+	 * @throws URISyntaxException
+	 *             if uris cannot be built
 	 */
 	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
@@ -125,7 +159,11 @@ public class AdherentResource {
 	}
 
 	/**
-	 * GET /adherents/:id -> get the "id" adherent.
+	 * GET /adherents/:id -&gt; get the "id" adherent.
+	 *
+	 * @param id
+	 *            the identifier
+	 * @return the adherent
 	 */
 	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
@@ -136,7 +174,10 @@ public class AdherentResource {
 	}
 
 	/**
-	 * DELETE /adherents/:id -> delete the "id" adherent.
+	 * DELETE /adherents/:id -&gt; delete the "id" adherent.
+	 *
+	 * @param id
+	 *            the identifier
 	 */
 	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
@@ -147,7 +188,14 @@ public class AdherentResource {
 	}
 
 	/**
-	 * GET /adherent/export -> Export the adherent
+	 * GET /adherent/export -&gt; Export the adherent
+	 *
+	 * @param request
+	 *            the json payload request
+	 * @param response
+	 *            the http response
+	 * @throws Exception
+	 *             if an error occurs
 	 */
 	@RequestMapping(value = "/adherents/export", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
@@ -164,7 +212,12 @@ public class AdherentResource {
 	}
 
 	/**
-	 * GET /adherent/export -> Export the adherent
+	 * GET /adherent/export -&gt; Export the adherent
+	 *
+	 * @param file
+	 *            the file to import
+	 * @throws Exception
+	 *             if an error occurs
 	 */
 	@RequestMapping(value = "/adherents/import", method = RequestMethod.POST)
 	@Timed

@@ -1,13 +1,12 @@
 package fr.lpr.membership.repository;
 
-import fr.lpr.membership.domain.Adhesion;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import fr.lpr.membership.domain.Adhesion;
 
 /**
  * Spring Data JPA repository for the Adhesion entity.
  */
-public interface AdhesionRepository extends JpaRepository<Adhesion,Long> {
+public interface AdhesionRepository extends JpaRepository<Adhesion, Long> {
 
 }
