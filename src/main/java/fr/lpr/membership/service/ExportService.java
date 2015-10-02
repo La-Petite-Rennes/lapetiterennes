@@ -89,8 +89,6 @@ public class ExportService {
 
 			adherents.addAll(page.getContent().stream().filter(ad -> filterAdhesionState(ad, adhesionState)).map(ad -> mapDto(ad, properties))
 					.collect(Collectors.toList()));
-
-			System.out.println("HAS NEXT PAGE : " + page.hasNext());
 		} while (page.hasNext());
 
 		switch (format) {

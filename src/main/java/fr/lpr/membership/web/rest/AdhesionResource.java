@@ -58,6 +58,7 @@ public class AdhesionResource {
 			return ResponseEntity.badRequest().header("Failure", "A new adhesion cannot already have an ID").build();
 		}
 		adhesionRepository.save(adhesion);
+
 		return ResponseEntity.created(new URI("/api/adhesions/" + adhesion.getId())).build();
 	}
 

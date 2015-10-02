@@ -8,5 +8,7 @@
     <include file="classpath:config/liquibase/changelog/20150506085429_added_entity_Coordonnees.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150506101045_added_entity_Adherent.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150506122401_added_entity_Adhesion.xml" relativeToChangelogFile="false"/>
+    
+    <include file="classpath:config/liquibase/changelog/20151002_added_entity_Adherent_reminderEmail.xml" relativeToChangelogFile="false"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

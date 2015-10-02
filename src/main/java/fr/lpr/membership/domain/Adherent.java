@@ -23,14 +23,17 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import fr.lpr.membership.domain.util.CustomLocalDateDeserializer;
 import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
 
 /**
@@ -75,6 +78,12 @@ public class Adherent implements Serializable {
 	@OneToMany(mappedBy = "adherent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	// @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 	private Set<Adhesion> adhesions;
+
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	@JsonSerialize(using = CustomLocalDateSerializer.class)
+	@JsonDeserialize(using = CustomLocalDateDeserializer.class)
+	@Column(name = "reminder_email")
+	private LocalDate reminderEmail;
 
 	public Long getId() {
 		return id;
@@ -181,6 +190,21 @@ public class Adherent implements Serializable {
 		} else {
 			return StatutAdhesion.GREEN;
 		}
+	}
+
+	/**
+	 * @return the reminderEmail
+	 */
+	public LocalDate getReminderEmail() {
+		return reminderEmail;
+	}
+
+	/**
+	 * @param reminderEmail
+	 *            the reminderEmail to set
+	 */
+	public void setReminderEmail(LocalDate reminderEmail) {
+		this.reminderEmail = reminderEmail;
 	}
 
 	@Override
