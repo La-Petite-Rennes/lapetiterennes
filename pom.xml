@@ -11,7 +11,7 @@
 
     <groupId>fr.lpr.membership</groupId>
     <artifactId>membership</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>membership</name>
@@ -19,12 +19,13 @@
     <prerequisites>
         <maven>3.0.0</maven>
     </prerequisites>
-    
+
     <scm>
-		<url>https://github.com/glebreton/lapetiterennes</url>
-		<connection>scm:git:git://github.com/glebreton/lapetiterennes.git</connection>
-		<developerConnection>scm:git:git@github.com:glebreton/lapetiterennes.git</developerConnection>
-	</scm>
+        <connection>scm:git:git://github.com/glebreton/lapetiterennes.git</connection>
+        <developerConnection>scm:git:git@github.com:glebreton/lapetiterennes.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/glebreton/lapetiterennes</url>
+    </scm>
 
     <properties>
         <HikariCP.version>2.3.7</HikariCP.version>
@@ -117,6 +118,12 @@
             <groupId>com.mattbertolini</groupId>
             <artifactId>liquibase-slf4j</artifactId>
             <version>${liquibase-slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>3.3</version>
         </dependency>
         <dependency>
             <groupId>com.ryantenney.metrics</groupId>
@@ -366,12 +373,6 @@
             <artifactId>spring-security-data</artifactId>
             <version>${spring-security.version}</version>
         </dependency>
-        
-        <dependency>
-			<groupId>com.opencsv</groupId>
-			<artifactId>opencsv</artifactId>
-			<version>3.3</version>
-		</dependency>
     </dependencies>
     <build>
         <resources>
