@@ -112,6 +112,6 @@ public class MailService {
 		context.setVariable("survey", env.getProperty("survey"));
 		final String content = templateEngine.process("adhesionExpiringEmail", context);
 		final String subject = messageSource.getMessage("email.expiring.title", null, Locale.FRENCH);
-		sendEmail(adherent.getCoordonnees().getEmail(), subject, content, false, false);
+		sendEmail(adherent.getCoordonnees().getEmail(), subject, content, false, true);
 	}
 }
