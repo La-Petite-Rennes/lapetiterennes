@@ -187,7 +187,7 @@
                     <td>{{adhesion.dateAdhesion}}</td>
 					<td>{{adhesion.typeAdhesion}}</td>
 					<td>
-						<button type="submit" data-ng-click="update(adhesion)" class="btn btn-primary btn-sm">
+						<button type="submit" data-ng-click="update(adhesion)" data-has-role="ROLE_ADMIN" class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span data-translate="entity.action.edit"> Edit</span>
                         </button>
 						<button type="submit" data-ng-click="delete(adhesion)" data-has-role="ROLE_ADMIN" class="btn btn-danger btn-sm">
