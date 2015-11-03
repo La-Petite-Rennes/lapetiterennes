@@ -41,7 +41,7 @@ public class AdherentService {
 	@Autowired
 	private MailService mailService;
 
-	@Scheduled(cron = "0 0 10 * * *")
+	@Scheduled(cron = "0 0 9 30 * *", zone = "GMT")
 	public void remindAdhesionExpiring() {
 		log.info("Démarrage du batch d'envoi d'email de rappel de cotisation");
 
