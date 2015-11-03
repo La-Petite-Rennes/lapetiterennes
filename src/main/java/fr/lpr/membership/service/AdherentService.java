@@ -43,7 +43,7 @@ public class AdherentService {
 
 	@Scheduled(cron = "0 0 10 * * *")
 	public void remindAdhesionExpiring() {
-		log.debug("Démarrage du batch d'envoi d'email de rappel de cotisation");
+		log.info("Démarrage du batch d'envoi d'email de rappel de cotisation");
 
 		// Get Adherents
 		final List<Adherent> adherents = new ArrayList<>();
@@ -68,12 +68,12 @@ public class AdherentService {
 			}
 		});
 
-		log.debug("{} emails de rappel de cotisation envoyés", adherents.size());
+		log.info("{} emails de rappel de cotisation envoyés", adherents.size());
 	}
 
 	@Transactional
 	private void sendMail(Adherent adherent) throws MessagingException {
-		mailService.setAdhesionExpiringEmail(adherent);
+		mailService.sendAdhesionExpiringEmail(adherent);
 		adherent.setReminderEmail(LocalDate.now());
 		adherentRepository.save(adherent);
 	}

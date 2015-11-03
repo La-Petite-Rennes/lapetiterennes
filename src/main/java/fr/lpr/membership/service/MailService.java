@@ -106,7 +106,7 @@ public class MailService {
 	}
 
 	@Async
-	public void setAdhesionExpiringEmail(Adherent adherent) throws MessagingException {
+	public void sendAdhesionExpiringEmail(Adherent adherent) throws MessagingException {
 		log.debug("Sending adhesion expring e-mail to '{}'", adherent.getCoordonnees().getEmail());
 		final Context context = new Context(Locale.FRENCH);
 		context.setVariable("survey", env.getProperty("survey"));
