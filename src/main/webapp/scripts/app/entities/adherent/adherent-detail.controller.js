@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('membershipApp')
-    .controller('AdherentDetailController', function ($scope, $stateParams, Adherent, Coordonnees, Adhesion) {
+    .controller('AdherentDetailController', function ($scope, $http, $stateParams, Adherent, Coordonnees, Adhesion) {
     	// View Model
         $scope.adherent = {};
         $scope.adhesionToEdit = {};
@@ -44,6 +44,13 @@ angular.module('membershipApp')
         			$scope.clear();
         		});
         };
+        
+        $scope.sendReminderEmail = function () {
+        	$http.post('api/adherents/reminderEmail/' + $scope.adherent.id)
+        		.success(function() {
+        			$scope.clear();
+        		})
+        }
         
         $scope.clear = function () {
         	$scope.adhesionToEdit = {};

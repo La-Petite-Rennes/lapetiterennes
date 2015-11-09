@@ -53,10 +53,10 @@ public class AdherentService {
 			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
 
 			adherents
-					.addAll(page.getContent().stream().filter(ad -> ad.getStatutAdhesion() == StatutAdhesion.ORANGE)
-							.filter(ad -> !Strings.isNullOrEmpty(ad.getCoordonnees().getEmail()))
-							.filter(ad -> ad.getReminderEmail() == null || ad.getReminderEmail().isBefore(LocalDate.now().minusMonths(1)))
-							.collect(Collectors.toList()));
+			.addAll(page.getContent().stream().filter(ad -> ad.getStatutAdhesion() == StatutAdhesion.ORANGE)
+					.filter(ad -> !Strings.isNullOrEmpty(ad.getCoordonnees().getEmail()))
+					.filter(ad -> ad.getReminderEmail() == null || ad.getReminderEmail().isBefore(LocalDate.now().minusMonths(1)))
+					.collect(Collectors.toList()));
 		} while (page.hasNext());
 
 		// Send mail for each adherents
@@ -72,7 +72,7 @@ public class AdherentService {
 	}
 
 	@Transactional
-	private void sendMail(Adherent adherent) throws MessagingException {
+	public void sendMail(Adherent adherent) throws MessagingException {
 		mailService.sendAdhesionExpiringEmail(adherent);
 		adherent.setReminderEmail(LocalDate.now());
 		adherentRepository.save(adherent);

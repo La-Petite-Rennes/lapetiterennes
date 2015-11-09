@@ -173,6 +173,16 @@
         </table>
     </div>
     
+    <form class="form-horizontal" data-has-role="ROLE_ADMIN" style="padding-bottom: 15px;">
+    	<div data-ng-show="adherent.reminderEmail != null">
+    		<span>Email de rappel envoyé le :</span>&nbsp;{{adherent.reminderEmail}}
+    	</div>
+    	
+    	<button data-ng-click="sendReminderEmail()" class="btn btn-info">
+    		<span class="glyphicon glyphicon-envelope"></span>&nbsp;<span>Envoi mail rappel</span>
+    	</button>
+    </form>
+    
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>

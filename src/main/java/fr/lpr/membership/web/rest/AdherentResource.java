@@ -36,6 +36,7 @@ import com.codahale.metrics.annotation.Timed;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.security.AuthoritiesConstants;
+import fr.lpr.membership.service.AdherentService;
 import fr.lpr.membership.service.ExportService;
 import fr.lpr.membership.service.ImportService;
 import fr.lpr.membership.web.rest.dto.ExportRequest;
@@ -52,6 +53,9 @@ public class AdherentResource {
 
 	@Inject
 	private AdherentRepository adherentRepository;
+
+	@Inject
+	private AdherentService adherentService;
 
 	@Inject
 	private ExportService exportService;
@@ -114,7 +118,7 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> getAll(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-			required = false) Integer limit) throws URISyntaxException {
+	required = false) Integer limit) throws URISyntaxException {
 		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
 		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
 
@@ -141,8 +145,8 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-			required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
-			defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
+	required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
+	defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
 		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
@@ -188,7 +192,7 @@ public class AdherentResource {
 	}
 
 	/**
-	 * GET /adherent/export -&gt; Export the adherent
+	 * GET /adherents/export -&gt; Export the adherents
 	 *
 	 * @param request
 	 *            the json payload request
@@ -212,7 +216,7 @@ public class AdherentResource {
 	}
 
 	/**
-	 * GET /adherent/export -&gt; Export the adherent
+	 * GET /adherents/import -&gt; Import the adherents
 	 *
 	 * @param file
 	 *            the file to import
@@ -227,6 +231,27 @@ public class AdherentResource {
 			try (InputStream inputStream = file.getInputStream()) {
 				importService.importCsv(inputStream);
 			}
+		}
+	}
+
+	/**
+	 * POST /adherents/reminderEmail/:id -&gt; Send a reminder email to an adherent
+	 *
+	 * @param adherentId
+	 *            the adherent identifier
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/adherents/reminderEmail/{adherentId}", method = RequestMethod.POST)
+	@RolesAllowed(AuthoritiesConstants.ADMIN)
+	public ResponseEntity<Void> remindesEmail(@PathVariable("adherentId") Long adherentId) throws Exception {
+		final Adherent adherent = adherentRepository.findOne(adherentId);
+
+		if (adherent != null) {
+			adherentService.sendMail(adherent);
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.notFound().build();
 		}
 	}
 
