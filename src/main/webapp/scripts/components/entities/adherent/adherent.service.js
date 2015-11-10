@@ -10,20 +10,18 @@ angular.module('membershipApp')
             	isArray: true
             },
             'get': {
-                method: 'GET',
-                transformResponse: function (data) {
-                    data = angular.fromJson(data);
-                    var lastAdhesionFrom = data.lastAdhesion.split("-");
-                    data.lastAdhesion = new Date(lastAdhesionFrom[2], lastAdhesionFrom[1] - 1, lastAdhesionFrom[0]);
-                    return data;
-                }
+                method: 'GET'
             },
             'update': { 
             	method:'PUT',
-            	transformRequest: function (data) {
+            	transformRequest: function (adherent) {
+            		var data = angular.copy(adherent);
+            	
             		if (data.adhesions !== undefined) {
 	            		data.adhesions.forEach(function(ad) {
-	            			ad.dateAdhesion = ad.dateAdhesion.getDate() + '/' + (ad.dateAdhesion.getMonth() + 1) + '/' + ad.dateAdhesion.getFullYear();
+	            			if (ad.dateAdhesion instanceof Date) {
+	            				ad.dateAdhesion = ad.dateAdhesion.getDate() + '/' + (ad.dateAdhesion.getMonth() + 1) + '/' + ad.dateAdhesion.getFullYear();
+	            			}
 	            		});
             		}
             		return angular.toJson(data);
