@@ -17,16 +17,16 @@ angular.module('membershipApp')
         }
         
         $scope.search = function(sort) {
-        	// Sort property
-        	if (sort !== undefined) {
-        		$scope.sort = sort;
-        	}
-        	
         	// Sort order
         	if (sort === $scope.sort) {
         		$scope.sortOrder = $scope.sortOrder === 'ASC' ? 'DESC' : 'ASC';
         	} else {
         		$scope.sortOrder = 'ASC';
+        	}
+        	
+        	// Sort property
+        	if (sort !== undefined) {
+        		$scope.sort = sort;
         	}
         	
         	// Reload
