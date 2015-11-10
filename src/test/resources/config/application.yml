@@ -37,6 +37,7 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
             hibernate.hbm2ddl.auto: validate
+            hibernate.search.default.directory_provider: ram
 
 mail:
     host: localhost

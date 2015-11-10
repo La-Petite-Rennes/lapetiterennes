@@ -29,6 +29,7 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
             hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+            hibernate.search.default.directory_provider: ram
     messages:
         cache-seconds: 1
     thymeleaf:

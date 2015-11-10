@@ -29,7 +29,8 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
             hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
-            
+            hibernate.search.default.directory_provider: filesystem
+			hibernate.search.default.indexBase: /usr/lucene/indexes
     thymeleaf:
         mode: XHTML
         cache: true

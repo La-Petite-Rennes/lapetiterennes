@@ -19,11 +19,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.AnalyzerDef;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.TokenFilterDef;
+import org.hibernate.search.annotations.TokenizerDef;
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -32,6 +43,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Joiner;
 
 import fr.lpr.membership.domain.util.CustomLocalDateDeserializer;
 import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
@@ -43,6 +55,9 @@ import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
 @Table(name = "ADHERENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @JsonAutoDetect(getterVisibility = Visibility.PUBLIC_ONLY)
+@Indexed
+@AnalyzerDef(name = "nameAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
+	@TokenFilterDef(factory = ASCIIFoldingFilterFactory.class), @TokenFilterDef(factory = LowerCaseFilterFactory.class) })
 public class Adherent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -53,10 +68,12 @@ public class Adherent implements Serializable {
 
 	@NotNull
 	@Column(name = "prenom", nullable = false)
+	@Field(analyze = Analyze.NO)
 	private String prenom;
 
 	@NotNull
 	@Column(name = "nom", nullable = false)
+	@Field(analyze = Analyze.NO)
 	private String nom;
 
 	@Column(name = "benevole")
@@ -205,6 +222,14 @@ public class Adherent implements Serializable {
 	 */
 	public void setReminderEmail(LocalDate reminderEmail) {
 		this.reminderEmail = reminderEmail;
+	}
+
+	@Field
+	@Analyzer(definition = "nameAnalyzer")
+	@Transient
+	@JsonIgnore
+	public String getFullName() {
+		return Joiner.on(' ').join(prenom, nom);
 	}
 
 	@Override

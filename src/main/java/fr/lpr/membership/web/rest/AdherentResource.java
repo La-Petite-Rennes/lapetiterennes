@@ -35,6 +35,7 @@ import com.codahale.metrics.annotation.Timed;
 
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.repository.SearchAdherentRepository;
 import fr.lpr.membership.security.AuthoritiesConstants;
 import fr.lpr.membership.service.AdherentService;
 import fr.lpr.membership.service.ExportService;
@@ -53,6 +54,9 @@ public class AdherentResource {
 
 	@Inject
 	private AdherentRepository adherentRepository;
+
+	@Inject
+	private SearchAdherentRepository searchAdherentRepository;
 
 	@Inject
 	private AdherentService adherentService;
@@ -118,7 +122,7 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> getAll(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-	required = false) Integer limit) throws URISyntaxException {
+			required = false) Integer limit) throws URISyntaxException {
 		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
 		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
 
@@ -145,8 +149,8 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-	required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
-	defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
+			required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
+			defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
 		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
@@ -154,7 +158,7 @@ public class AdherentResource {
 		if (criteria == null || criteria.isEmpty()) {
 			page = adherentRepository.findAll(pageRequest);
 		} else {
-			page = adherentRepository.findByNomContainingOrPrenomContainingAllIgnoreCase(criteria, criteria, pageRequest);
+			page = searchAdherentRepository.findAdherentByName(criteria, pageRequest);
 		}
 
 		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
