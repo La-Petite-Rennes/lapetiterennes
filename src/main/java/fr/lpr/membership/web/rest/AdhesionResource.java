@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
+import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.AdhesionRepository;
@@ -57,7 +58,12 @@ public class AdhesionResource {
 		if (adhesion.getId() != null) {
 			return ResponseEntity.badRequest().header("Failure", "A new adhesion cannot already have an ID").build();
 		}
-		adhesionRepository.save(adhesion);
+
+		final Adherent adherent = adherentRepository.findOne(adhesion.getAdherent().getId());
+		adherent.addAdhesion(adhesion);
+		adhesion.setAdherent(adherent);
+
+		adherentRepository.save(adherent);
 
 		return ResponseEntity.created(new URI("/api/adhesions/" + adhesion.getId())).build();
 	}

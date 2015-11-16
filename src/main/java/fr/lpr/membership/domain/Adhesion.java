@@ -17,6 +17,11 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Indexed;
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -24,11 +29,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import fr.lpr.membership.domain.util.CustomLocalDateDeserializer;
 import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
+import fr.lpr.membership.domain.util.LocalDateBridge;
 
 /**
  * A Adhesion.
  */
 @Entity
+@Indexed
 @Table(name = "ADHESION")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Adhesion implements Serializable {
@@ -48,9 +55,12 @@ public class Adhesion implements Serializable {
 	@JsonSerialize(using = CustomLocalDateSerializer.class)
 	@JsonDeserialize(using = CustomLocalDateDeserializer.class)
 	@Column(name = "date_adhesion", nullable = false)
+	@Field(name = "lastAdhesion", analyze = Analyze.NO)
+	@FieldBridge(impl = LocalDateBridge.class)
 	private LocalDate dateAdhesion;
 
 	@ManyToOne
+	@ContainedIn
 	private Adherent adherent;
 
 	public Long getId() {

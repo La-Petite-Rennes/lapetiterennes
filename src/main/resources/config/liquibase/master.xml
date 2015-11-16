@@ -10,5 +10,6 @@
     <include file="classpath:config/liquibase/changelog/20150506122401_added_entity_Adhesion.xml" relativeToChangelogFile="false"/>
     
     <include file="classpath:config/liquibase/changelog/20151002_added_entity_Adherent_reminderEmail.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20151116_added_entity_Adherent_lastAdhesion.xml" relativeToChangelogFile="false"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

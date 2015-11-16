@@ -31,8 +31,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.lpr.membership.Application;
+import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.AdhesionRepository;
 
 /**
@@ -55,15 +57,20 @@ public class AdhesionResourceTest {
 	@Inject
 	private AdhesionRepository adhesionRepository;
 
+	@Inject
+	private AdherentRepository adherentRepository;
+
 	private MockMvc restAdhesionMockMvc;
 
 	private Adhesion adhesion;
+	private Adherent adherent;
 
 	@PostConstruct
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		final AdhesionResource adhesionResource = new AdhesionResource();
 		ReflectionTestUtils.setField(adhesionResource, "adhesionRepository", adhesionRepository);
+		ReflectionTestUtils.setField(adhesionResource, "adherentRepository", adherentRepository);
 		this.restAdhesionMockMvc = MockMvcBuilders.standaloneSetup(adhesionResource).build();
 	}
 
@@ -72,6 +79,13 @@ public class AdhesionResourceTest {
 		adhesion = new Adhesion();
 		adhesion.setTypeAdhesion(DEFAULT_TYPE_ADHESION);
 		adhesion.setDateAdhesion(DEFAULT_DATE_ADHESION);
+
+		adherent = new Adherent();
+		adherent.setPrenom("firstName");
+		adherent.setNom("lastName");
+
+		adherentRepository.save(adherent);
+		adhesion.setAdherent(adherent);
 	}
 
 	@Test
@@ -81,7 +95,7 @@ public class AdhesionResourceTest {
 
 		// Create the Adhesion
 		restAdhesionMockMvc.perform(post("/api/adhesions").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adhesion)))
-		.andExpect(status().isCreated());
+				.andExpect(status().isCreated());
 
 		// Validate the Adhesion in the database
 		final List<Adhesion> adhesions = adhesionRepository.findAll();
@@ -101,7 +115,7 @@ public class AdhesionResourceTest {
 
 		// Create the Adhesion, which fails.
 		restAdhesionMockMvc.perform(post("/api/adhesions").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adhesion)))
-		.andExpect(status().isBadRequest());
+				.andExpect(status().isBadRequest());
 
 		// Validate the database is still empty
 		final List<Adhesion> adhesions = adhesionRepository.findAll();
@@ -116,9 +130,9 @@ public class AdhesionResourceTest {
 
 		// Get all the adhesions
 		restAdhesionMockMvc.perform(get("/api/adhesions")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
-		.andExpect(jsonPath("$.[*].id").value(hasItem(adhesion.getId().intValue())))
-		.andExpect(jsonPath("$.[*].typeAdhesion").value(hasItem(DEFAULT_TYPE_ADHESION.toString())))
-		.andExpect(jsonPath("$.[*].dateAdhesion").value(hasItem(DEFAULT_DATE_ADHESION.toString("dd/MM/yyyy"))));
+				.andExpect(jsonPath("$.[*].id").value(hasItem(adhesion.getId().intValue())))
+				.andExpect(jsonPath("$.[*].typeAdhesion").value(hasItem(DEFAULT_TYPE_ADHESION.toString())))
+				.andExpect(jsonPath("$.[*].dateAdhesion").value(hasItem(DEFAULT_DATE_ADHESION.toString("dd/MM/yyyy"))));
 	}
 
 	@Test
@@ -129,9 +143,9 @@ public class AdhesionResourceTest {
 
 		// Get the adhesion
 		restAdhesionMockMvc.perform(get("/api/adhesions/{id}", adhesion.getId())).andExpect(status().isOk())
-		.andExpect(content().contentType(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.id").value(adhesion.getId().intValue()))
-		.andExpect(jsonPath("$.typeAdhesion").value(DEFAULT_TYPE_ADHESION.toString()))
-		.andExpect(jsonPath("$.dateAdhesion").value(DEFAULT_DATE_ADHESION.toString("dd/MM/yyyy")));
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.id").value(adhesion.getId().intValue()))
+				.andExpect(jsonPath("$.typeAdhesion").value(DEFAULT_TYPE_ADHESION.toString()))
+				.andExpect(jsonPath("$.dateAdhesion").value(DEFAULT_DATE_ADHESION.toString("dd/MM/yyyy")));
 	}
 
 	@Test
@@ -153,7 +167,7 @@ public class AdhesionResourceTest {
 		adhesion.setTypeAdhesion(UPDATED_TYPE_ADHESION);
 		adhesion.setDateAdhesion(UPDATED_DATE_ADHESION);
 		restAdhesionMockMvc.perform(put("/api/adhesions").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adhesion)))
-		.andExpect(status().isOk());
+				.andExpect(status().isOk());
 
 		// Validate the Adhesion in the database
 		final List<Adhesion> adhesions = adhesionRepository.findAll();

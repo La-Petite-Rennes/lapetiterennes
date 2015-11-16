@@ -32,7 +32,9 @@ import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.AnalyzerDef;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
 import org.joda.time.LocalDate;
@@ -44,9 +46,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 
 import fr.lpr.membership.domain.util.CustomLocalDateDeserializer;
 import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
+import fr.lpr.membership.domain.util.LocalDateBridge;
 
 /**
  * A Adherent.
@@ -93,7 +97,7 @@ public class Adherent implements Serializable {
 	private Coordonnees coordonnees;
 
 	@OneToMany(mappedBy = "adherent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	// @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	@IndexedEmbedded
 	private Set<Adhesion> adhesions;
 
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
@@ -101,6 +105,13 @@ public class Adherent implements Serializable {
 	@JsonDeserialize(using = CustomLocalDateDeserializer.class)
 	@Column(name = "reminder_email")
 	private LocalDate reminderEmail;
+
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	@Column(name = "last_adhesion")
+	@Field(name = "last_adhesion", analyze = Analyze.NO)
+	@FieldBridge(impl = LocalDateBridge.class)
+	@JsonIgnore
+	private LocalDate lastAdhesion;
 
 	public Long getId() {
 		return id;
@@ -175,12 +186,31 @@ public class Adherent implements Serializable {
 	public void setAdhesions(Set<Adhesion> adhesions) {
 		this.adhesions = adhesions;
 		this.adhesions.forEach(a -> a.setAdherent(this));
+
+		resetLastAdhesion();
 	}
 
+	public void addAdhesion(Adhesion adhesion) {
+		if (this.adhesions == null) {
+			this.adhesions = Sets.newHashSet();
+		}
+		this.adhesions.add(adhesion);
+		resetLastAdhesion();
+	}
+
+	private void resetLastAdhesion() {
+		this.lastAdhesion = lastAdhesion().map(ad -> ad.getDateAdhesion()).orElse(null);
+	}
+
+	/**
+	 * The date of the last adhesion.
+	 *
+	 * @return
+	 */
 	@JsonSerialize(using = CustomLocalDateSerializer.class)
 	@JsonProperty
 	public LocalDate getLastAdhesion() {
-		return lastAdhesion().map(ad -> ad.getDateAdhesion()).orElse(null);
+		return lastAdhesion;
 	}
 
 	@JsonIgnore

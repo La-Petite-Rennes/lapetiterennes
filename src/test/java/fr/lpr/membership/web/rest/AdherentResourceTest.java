@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -34,6 +33,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Sets;
 
 import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.Adherent;
@@ -226,8 +227,7 @@ public class AdherentResourceTest {
 		final Adhesion uneAdhesion = new Adhesion();
 		uneAdhesion.setTypeAdhesion(TypeAdhesion.Simple);
 		uneAdhesion.setDateAdhesion(LocalDate.now());
-		adherent.setAdhesions(new HashSet<>());
-		adherent.getAdhesions().add(uneAdhesion);
+		adherent.setAdhesions(Sets.newHashSet(uneAdhesion));
 		adherentRepository.saveAndFlush(adherent);
 
 		final int databaseSizeBeforeUpdate = adherentRepository.findAll().size();
