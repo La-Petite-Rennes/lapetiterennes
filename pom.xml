@@ -11,7 +11,7 @@
 
     <groupId>fr.lpr.membership</groupId>
     <artifactId>membership</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>war</packaging>
 
     <name>membership</name>
@@ -23,7 +23,7 @@
     <scm>
         <connection>scm:git:git://github.com/glebreton/lapetiterennes.git</connection>
         <developerConnection>scm:git:git@github.com:glebreton/lapetiterennes.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>membership-1.2</tag>
         <url>https://github.com/glebreton/lapetiterennes</url>
     </scm>
 
