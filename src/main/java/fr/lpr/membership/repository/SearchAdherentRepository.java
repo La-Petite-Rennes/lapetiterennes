@@ -1,5 +1,6 @@
 package fr.lpr.membership.repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,19 +8,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.search.util.AnalyzerUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Repository;
-
-import com.google.common.base.Splitter;
 
 import fr.lpr.membership.domain.Adherent;
 
@@ -38,9 +39,10 @@ public class SearchAdherentRepository {
 		// alternatively you can write the Lucene query using the Lucene query parser
 		// or the Lucene programmatic API. The Hibernate Search DSL is recommended though
 		final QueryBuilder qb = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(Adherent.class).get();
+		final Analyzer analyzer = fullTextEntityManager.getSearchFactory().getAnalyzer("nameAnalyzer");
 		final BooleanJunction<?> query = qb.bool();
-		Splitter.on(' ').omitEmptyStrings().split(name)
-				.forEach(term -> query.must(qb.keyword().wildcard().onField("fullName").matching('*' + term.toLowerCase() + '*').createQuery()));
+
+		tokenized(analyzer, name).forEach(term -> query.must(qb.keyword().wildcard().onField("fullName").matching('*' + term + '*').createQuery()));
 
 		// wrap Lucene query in a javax.persistence.Query
 		final FullTextQuery persistenceQuery = fullTextEntityManager.createFullTextQuery(query.createQuery(), Adherent.class);
@@ -59,5 +61,13 @@ public class SearchAdherentRepository {
 		// execute search
 		final List<Adherent> result = persistenceQuery.getResultList();
 		return new PageImpl<>(result, pageable, pageable.getOffset() + result.size() + 1);
+	}
+
+	private List<String> tokenized(Analyzer analyzer, String term) {
+		try {
+			return AnalyzerUtils.tokenizedTermValues(analyzer, "fullName", term);
+		} catch (final IOException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 }
