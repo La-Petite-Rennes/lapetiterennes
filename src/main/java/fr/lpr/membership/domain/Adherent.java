@@ -61,7 +61,7 @@ import fr.lpr.membership.domain.util.LocalDateBridge;
 @JsonAutoDetect(getterVisibility = Visibility.PUBLIC_ONLY)
 @Indexed
 @AnalyzerDef(name = "nameAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
-		@TokenFilterDef(factory = ASCIIFoldingFilterFactory.class), @TokenFilterDef(factory = LowerCaseFilterFactory.class) })
+	@TokenFilterDef(factory = ASCIIFoldingFilterFactory.class), @TokenFilterDef(factory = LowerCaseFilterFactory.class) })
 public class Adherent implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -205,7 +205,7 @@ public class Adherent implements Serializable {
 	/**
 	 * The date of the last adhesion.
 	 *
-	 * @return
+	 * @return the last adhesion
 	 */
 	@JsonSerialize(using = CustomLocalDateSerializer.class)
 	@JsonProperty
