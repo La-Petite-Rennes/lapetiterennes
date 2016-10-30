@@ -8,6 +8,12 @@ endpoints.jolokia.enabled: false
 # security configuration (this key should be unique for your application, and kept secret)
 jhipster.security.rememberme.key: 0967e4154fe22d114184fba3e9e1691c79045949
 
+# service timeout configured to 4 hours.
+server:
+    connection-timeout: -1
+    session:
+        timeout: 240
+
 async:
     corePoolSize: 2
     maxPoolSize: 50
