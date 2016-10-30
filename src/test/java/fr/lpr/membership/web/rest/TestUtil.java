@@ -1,17 +1,18 @@
 package fr.lpr.membership.web.rest;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer;
-import com.fasterxml.jackson.datatype.joda.ser.JacksonJodaFormat;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.datetime.joda.DateTimeFormatterFactory;
 import org.springframework.http.MediaType;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat;
+import com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer;
 
 /**
  * Utility class for testing REST controllers.
@@ -39,7 +40,7 @@ public class TestUtil {
         DateTimeFormatterFactory formatterFactory = new DateTimeFormatterFactory();
         formatterFactory.setIso(DateTimeFormat.ISO.DATE);
         module.addSerializer(DateTime.class, new DateTimeSerializer(
-            new JacksonJodaFormat(formatterFactory.createDateTimeFormatter()
+            new JacksonJodaDateFormat(formatterFactory.createDateTimeFormatter()
                 .withZoneUTC())));
         mapper.registerModule(module);
         return mapper.writeValueAsBytes(object);

@@ -49,7 +49,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
     }
 
     @Bean(destroyMethod = "shutdown")
-    @ConditionalOnMissingClass(name = "fr.lpr.membership.config.HerokuDatabaseConfiguration")
+    @ConditionalOnMissingClass("fr.lpr.membership.config.HerokuDatabaseConfiguration")
     @Profile("!" + Constants.SPRING_PROFILE_CLOUD)
     public DataSource dataSource() {
         log.debug("Configuring Datasource");

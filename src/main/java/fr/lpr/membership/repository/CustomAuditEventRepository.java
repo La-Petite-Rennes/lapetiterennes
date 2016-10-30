@@ -55,6 +55,23 @@ public class CustomAuditEventRepository {
 
                 persistenceAuditEventRepository.save(persistentAuditEvent);
             }
+
+			@Override
+			public List<AuditEvent> find(Date after) {
+				Iterable<PersistentAuditEvent> persistentAuditEvents;
+				if (after == null) {
+					persistentAuditEvents = persistenceAuditEventRepository.findAll();
+				} else {
+					persistentAuditEvents = persistenceAuditEventRepository.findAllByAuditEventDateBetween(new LocalDateTime(after), new LocalDateTime());
+				}
+				
+				return auditEventConverter.convertToAuditEvent(persistentAuditEvents);
+			}
+
+			@Override
+			public List<AuditEvent> find(String principal, Date after, String type) {
+				return find(principal, after);
+			}
         };
     }
 }

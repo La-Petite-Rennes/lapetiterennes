@@ -72,7 +72,6 @@ public class Application {
 	 */
 	public static void main(String[] args) throws UnknownHostException {
 		final SpringApplication app = new SpringApplication(Application.class);
-		app.setShowBanner(false);
 		final SimpleCommandLinePropertySource source = new SimpleCommandLinePropertySource(args);
 		addDefaultProfile(app, source);
 		addLiquibaseScanPackages();
