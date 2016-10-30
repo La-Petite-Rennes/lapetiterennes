@@ -1,0 +1,24 @@
+<div>
+
+	<h2 data-translate="membershipApp.article.home.title">Article</h2>
+
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Prix</th>
+					<th>Quantité</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="article in articles">
+					<td>{{article.name}}</td>
+					<td>{{article.price}}</td>
+					<td>{{article.quantity}}</td>
+				</tr>
+			</tbody>
+		</table>	
+	</div>
+
+</div>

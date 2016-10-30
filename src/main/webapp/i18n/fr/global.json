@@ -9,6 +9,7 @@
                 "coordonnees": "Coordonnees",
                 "adhesion": "Adhesion",
                 "adherent": "Adherent",
+                "article": "Article",
                 "additionalEntity": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
