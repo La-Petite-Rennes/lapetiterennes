@@ -1,0 +1,15 @@
+{
+	"membershipApp": {
+		"newSale": {
+			"home": {
+				"title": "Nouvelle vente"
+			},
+			"item": {
+				"name": "Article",
+				"quantity": "Quantité",
+				"add": "Ajouter cet article"
+			},
+			"save": "Enregistrer cette vente"
+		}
+	}
+}

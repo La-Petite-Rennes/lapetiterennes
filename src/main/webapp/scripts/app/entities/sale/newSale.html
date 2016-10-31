@@ -1,0 +1,48 @@
+<div>
+
+<div class="row">
+	<div class="col-md-8">
+		<h2 data-translate="membershipApp.newSale.home.title">Nouvelle vente</h2>
+		
+		<form class="form-horizontal" data-ng-submit="addItem()">
+			<div class="form-group">
+				<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.name">Article</label>
+				<div class="col-sm-7">
+					<select class="form-control" data-ng-model="newItem.id" data-ng-options="article.id as article.name for article in articles | orderBy: article.name">
+						<option value="">-- choose article --</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.quantity">Quantité</label>
+				<div class="col-sm-7">
+					<input type="number" min="1" data-ng-model="newItem.quantity" class="form-control">
+				</div>
+			</div>
+			
+			<button type="submit" class="btn">
+				<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.newSale.item.add">Ajouter cet article</span>
+			</button>
+		</form>
+	</div>
+	
+	<div class="col-md-4">
+		<h3>Panier</h3>
+		
+		<ul>
+			<li data-ng-repeat="item in basket.items">
+				<div>{{getArticle(item.id).name}}</div>
+				<div>P.U. : <b>{{toEuros(getArticle(item.id).price)}}&nbsp;€</b></div>
+				<div>Qté : <b>{{item.quantity}}</b></div>
+			</li>
+		</ul>
+		
+		<h4>Total : {{saleCost()}}&nbsp;€</h4>
+		
+		<button class="btn btn-primary">
+			<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.newSale.save">Enregistrer cette vente</span>
+		</button>
+	</div>
+</div>
+</div>

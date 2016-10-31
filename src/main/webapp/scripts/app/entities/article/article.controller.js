@@ -10,7 +10,7 @@ angular.module('membershipApp')
 			Article.query(function(result) {
 				$scope.articles = result;
 			})
-		}
+		};
 		
 		$scope.stockLevel = function(article) {
 			if (article.quantity === 0) {
@@ -20,7 +20,7 @@ angular.module('membershipApp')
 			} else {
 				return 'article-sufficientStock';
 			}
-		}
+		};
 		
 		$scope.sortBy = function(propertyName) {
 			$scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
