@@ -161,3 +161,13 @@ ul#strength {
 .checkbox-inline label {
 	font-weight: normal;
 }
+
+.article-outOfStock {
+	color: red;
+}
+.article-insufficientStock {
+	color: orange;
+}
+.article-sufficientStock {
+	color: green;
+}

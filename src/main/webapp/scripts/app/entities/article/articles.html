@@ -6,13 +6,13 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th>Nom</th>
-					<th>Prix</th>
-					<th>Quantité</th>
+					<th><a href="" data-ng-click="sortBy('name')">Nom</a></th>
+					<th><a href="" data-ng-click="sortBy('price')">Prix</a></th>
+					<th><a href="" data-ng-click="sortBy('quantity')">Quantité</a></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr data-ng-repeat="article in articles">
+				<tr data-ng-repeat="article in articles | orderBy:propertyName:reverse" data-ng-class="stockLevel(article)">
 					<td>{{article.name}}</td>
 					<td>{{article.price}}</td>
 					<td>{{article.quantity}}</td>
