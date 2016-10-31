@@ -30,12 +30,12 @@ public class ArticleResource {
 	@PostConstruct
 	public void init() {
 		articles = new ArrayList<>(5);
-		articles.add(new Article().name("Cassette Route Shimano Ultegra 6800 11 vitesses")
-				.price(5399).quantity(8));
 		articles.add(new Article().name("Dérailleur arrière Shimano Tiagra 4700 10v")
-				.price(3199).quantity(15));
-		articles.add(new Article().name("Frein Shimano Dura-Ace 9000").price(11799).quantity(3));
-		articles.add(new Article().name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").price(6999).quantity(25));
+				.id(13L).price(3199).quantity(15));
+		articles.add(new Article().name("Cassette Route Shimano Ultegra 6800 11 vitesses")
+				.id(35L).price(5399).quantity(8));
+		articles.add(new Article().id(5L).name("Frein Shimano Dura-Ace 9000").price(11799).quantity(3));
+		articles.add(new Article().id(8L).name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").price(6999).quantity(25));
 	}
 	
 	@RequestMapping(value="/articles", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
