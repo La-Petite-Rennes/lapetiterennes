@@ -30,9 +30,16 @@
 	<div class="col-md-4">
 		<h3>Panier</h3>
 		
-		<ul>
-			<li data-ng-repeat="item in basket.items">
-				<div>{{getArticle(item.id).name}}</div>
+		<ul class="list-group">
+			<li class="list-group-item" data-ng-repeat="item in basket.items">
+				<div style="display:flex; justify-content: space-between;">
+					<small style="margin-right: 0px;">{{getArticle(item.id).name}}</small>
+					<span style="text-align: right;">
+						<span class="glyphicon glyphicon-minus" data-ng-click="decrementQuantity(item)"></span>
+						<span class="glyphicon glyphicon-plus" data-ng-click="incrementQuantity(item)"></span>
+						<span class="glyphicon glyphicon-remove" data-ng-click="removeItem(item)"></span>
+					</span>
+				</div>
 				<div>P.U. : <b>{{toEuros(getArticle(item.id).price)}}&nbsp;€</b></div>
 				<div>Qté : <b>{{item.quantity}}</b></div>
 			</li>

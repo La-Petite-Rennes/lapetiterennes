@@ -47,6 +47,18 @@ angular.module('membershipApp')
 			}
 		}
 		
+		$scope.incrementQuantity = function(item) {
+			item.quantity += 1;
+		}
+		
+		$scope.decrementQuantity = function(item) {
+			if (item.quantity === 1) {
+				$scope.removeItem(item);
+			} else {
+				item.quantity -= 1;
+			}
+		}
+		
 		$scope.saleCost = function() {
 			var totalCost = 0;
 			
