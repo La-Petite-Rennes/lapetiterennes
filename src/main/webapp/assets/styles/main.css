@@ -171,3 +171,11 @@ ul#strength {
 .article-sufficientStock {
 	color: green;
 }
+
+.sale .adherent {
+	padding-bottom: 20px;
+	margin-bottom: 15px;
+	border-bottom-width: thin;
+	border-bottom-color: lightgray;
+	border-bottom-style: solid;
+}

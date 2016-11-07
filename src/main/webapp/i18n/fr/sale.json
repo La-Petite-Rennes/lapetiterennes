@@ -9,6 +9,12 @@
 				"quantity": "Quantité",
 				"add": "Ajouter cet article"
 			},
+			"adherent": {
+				"label": "Adhérent",
+				"search": "Rechercher un adhérent",
+				"select": "Sélectionner"
+			},				
+			"date": "Date de la vente",
 			"save": "Enregistrer cette vente"
 		}
 	}

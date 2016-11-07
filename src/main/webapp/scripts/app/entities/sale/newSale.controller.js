@@ -1,11 +1,13 @@
 'use strict'
 
 angular.module('membershipApp')
-	.controller('NewSaleController', function ($scope, Article) {
+	.controller('NewSaleController', function ($scope, Article, Adherent) {
 		$scope.basket = {
+			date : new Date(),
 			items: []
 		};
 		$scope.articles = [];
+		$scope.searchAdherentCriteria;
 		$scope.newItem = {
 			id: 0,
 			quantity: 1
@@ -15,6 +17,30 @@ angular.module('membershipApp')
 			Article.query(function(result) {
 				$scope.articles = result;
 			})
+		};
+		
+		$scope.openAdherentModal = function() {
+			$('#searchAdherentModal').modal({ show: true, backdrop: 'static' });
+		}
+		
+		$scope.searchAdherent = function() {
+			var query = {
+	    		page: $scope.page,
+	    		per_page: 20,
+	    		criteria: $scope.searchAdherentCriteria
+	        };
+	        	
+	        Adherent.search(query, function(result, headers) {
+	           	$scope.searchedAdherents = result;
+	        });
+		};
+		
+		$scope.selectAdherent = function(adherent) {
+			// TODO A développer
+		};
+		
+		$scope.clear = function() {
+			// TODO A développer
 		};
 		
 		$scope.addItem = function() {
