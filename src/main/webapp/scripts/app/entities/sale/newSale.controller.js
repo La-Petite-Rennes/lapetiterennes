@@ -8,6 +8,7 @@ angular.module('membershipApp')
 		};
 		$scope.articles = [];
 		$scope.searchAdherentCriteria;
+		$scope.adherent = null;
 		$scope.newItem = {
 			id: 0,
 			quantity: 1
@@ -36,11 +37,17 @@ angular.module('membershipApp')
 		};
 		
 		$scope.selectAdherent = function(adherent) {
-			// TODO A développer
+			$scope.adherent = adherent;
+			$scope.adherent.name = $scope.adherent.prenom + ' ' + $scope.adherent.nom;
+			$scope.basket.adherentId = $scope.adherent.id;
+			
+			$('#searchAdherentModal').modal('hide');
+			$scope.clearSearchAdherent();
 		};
 		
-		$scope.clear = function() {
-			// TODO A développer
+		$scope.clearSearchAdherent = function() {
+			$scope.searchAdherentCriteria = '';
+			$scope.searchedAdherents = null;
 		};
 		
 		$scope.addItem = function() {

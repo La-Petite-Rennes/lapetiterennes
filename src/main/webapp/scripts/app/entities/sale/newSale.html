@@ -5,7 +5,7 @@
 			<div class="modal-content">
 				<form name="searchAdherentForm" class="form-horizontal" role="form" novalidate>
 					<div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clear()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clearSearchAdherent()">&times;</button>
                         <h4 class="modal-title" id="searchAdherentLabel" data-translate="membershipApp.newSale.adherent.search">SearchAdherent</h4>
                     </div>
 					<div class="modal-body">
@@ -25,7 +25,7 @@
 					                	<th></th>
 					                </tr>
 					            </thead>
-				                <tbody data-infinite-scroll="loadPage(page + 1)" data-infinite-scroll-disabled="links['last'] == page">
+				                <tbody>
 				                	<tr data-ng-repeat="adherent in searchedAdherents">
 				                		<td class="statut-{{adherent.statutAdhesion}}">{{adherent.prenom}}</td>
 				                		<td class="statut-{{adherent.statutAdhesion}}">{{adherent.nom}}</td>
@@ -53,7 +53,16 @@
 				<div class="adherent">
 					<div class="form-group">
 						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.adherent.label">Adherent</label>
-						<label class="col-sm-7" data-ng-model="adherent.name"></label>
+						<span class="form-control-static col-sm-7">{{adherent.name}}</span>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-4">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="renew" data-ng-model="adherent.renew">Renouvellement
+								</label>
+							</div>
+						</div>
 					</div>
 					<button type="button" class="btn col-sm-offset-4" data-ng-click="openAdherentModal()">
 						<span class="glyphicon glyphicon-search"></span>&nbsp;<span data-translate="membershipApp.newSale.adherent.search">SearchAdherent</span>

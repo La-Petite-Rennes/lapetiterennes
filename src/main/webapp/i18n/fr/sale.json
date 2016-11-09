@@ -11,6 +11,7 @@
 			},
 			"adherent": {
 				"label": "Adhérent",
+				"renew": "Renouvellement",
 				"search": "Rechercher un adhérent",
 				"select": "Sélectionner"
 			},				
