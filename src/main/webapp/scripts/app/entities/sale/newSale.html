@@ -50,51 +50,67 @@
 			<h2 data-translate="membershipApp.newSale.home.title">Nouvelle vente</h2>
 			
 			<form class="form-horizontal" data-ng-submit="addItem()">
-				<div class="adherent">
-					<div class="form-group">
+				<div id="adherent">
+					<div class="form-group" data-ng-show="adherent">
 						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.adherent.label">Adherent</label>
 						<span class="form-control-static col-sm-7">{{adherent.name}}</span>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-offset-4">
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" name="renew" data-ng-model="adherent.renew">Renouvellement
-								</label>
-							</div>
-						</div>
 					</div>
 					<button type="button" class="btn col-sm-offset-4" data-ng-click="openAdherentModal()">
 						<span class="glyphicon glyphicon-search"></span>&nbsp;<span data-translate="membershipApp.newSale.adherent.search">SearchAdherent</span>
 					</button>
 				</div>
-			
-				<div class="form-group">
-					<label class="control-label col-sm-4" data-translate="membershipApp.newSale.date">DateVente</label>
-					<div class="col-sm-7">
-						<input type="date" class="form-control" name="saleDate" data-ng-model="basket.date">
-					</div>
-				</div>
-			
-				<div class="form-group">
-					<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.name">Article</label>
-					<div class="col-sm-7">
-						<select class="form-control" data-ng-model="newItem.id" data-ng-options="article.id as article.name for article in articles | orderBy: article.name">
-							<option value="">-- choose article --</option>
-						</select>
-					</div>
-				</div>
 				
-				<div class="form-group">
-					<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.quantity">Quantité</label>
-					<div class="col-sm-7">
-						<input type="number" min="1" data-ng-model="newItem.quantity" class="form-control">
+				<div id="saleInfos">
+					<div class="form-group">
+						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.date">DateVente</label>
+						<div class="col-sm-7">
+							<input type="date" class="form-control" name="saleDate" data-ng-model="basket.date">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-4">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="renew" data-ng-model="adherent.renew">
+									<span data-translate="membershipApp.newSale.adherent.renew"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.paymentType.label">PaymentType</label>
+						<label class="radio-inline">
+							<input type="radio" name="paymentTypeOptions" id="inlineRadio1" value="option1">
+							<span data-translate="membershipApp.newSale.paymentType.cash"></span>
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="paymentTypeOptions" id="inlineRadio1" value="option1">
+							<span data-translate="membershipApp.newSale.paymentType.cheque"></span>
+						</label>
 					</div>
 				</div>
-				
-				<button type="submit" class="btn">
-					<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.newSale.item.add">Ajouter cet article</span>
-				</button>
+			
+				<div id="selectItem">
+					<div class="form-group">
+						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.name">Article</label>
+						<div class="col-sm-7">
+							<select class="form-control" data-ng-model="newItem.id" data-ng-options="article.id as article.name for article in articles | orderBy: article.name">
+								<option value="">-- choose article --</option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.quantity">Quantité</label>
+						<div class="col-sm-7">
+							<input type="number" min="1" data-ng-model="newItem.quantity" class="form-control">
+						</div>
+					</div>
+					
+					<button type="submit" class="btn">
+						<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.newSale.item.add">Ajouter cet article</span>
+					</button>
+				</div>
 			</form>
 		</div>
 		

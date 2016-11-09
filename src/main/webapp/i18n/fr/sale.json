@@ -15,6 +15,11 @@
 				"search": "Rechercher un adhérent",
 				"select": "Sélectionner"
 			},				
+			"paymentType": {
+				"label": "Règlement",
+				"cash": "Espèces",
+				"cheque": "Chèque"
+			},
 			"date": "Date de la vente",
 			"save": "Enregistrer cette vente"
 		}
