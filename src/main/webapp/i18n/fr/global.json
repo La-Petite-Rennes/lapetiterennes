@@ -9,7 +9,8 @@
                 "coordonnees": "Coordonnees",
                 "adhesion": "Adhesion",
                 "adherent": "Adherent",
-                "article": "Article",
+                "article": "Articles",
+                "newSale": "Nouvelle vente",
                 "additionalEntity": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
