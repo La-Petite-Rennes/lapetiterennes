@@ -22,6 +22,14 @@
 			},
 			"date": "Date de la vente",
 			"save": "Enregistrer cette vente"
+		},
+		"saleHistory": {
+			"home": {
+				"title": "Historique des ventes"
+			},
+			"bestSale": {
+				"since": "Les articles les plus vendus depuis :"
+			}
 		}
 	}
 }

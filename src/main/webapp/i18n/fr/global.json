@@ -11,6 +11,7 @@
                 "adherent": "Adherent",
                 "article": "Articles",
                 "newSale": "Nouvelle vente",
+                "saleHistory": "Ventes",
                 "additionalEntity": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

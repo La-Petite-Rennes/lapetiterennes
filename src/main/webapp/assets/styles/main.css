@@ -182,3 +182,22 @@ ul#strength {
 
 .sale #selectItem {
 }
+
+.history-since {
+	padding: 8px 15px 20px 15px;
+	margin-bottom: 15px;
+	border-bottom-width: thin;
+	border-bottom-color: lightgray;
+	border-bottom-style: solid;
+}
+
+.history-since .btn:active {
+	color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+.history-totalPrice {
+	text-align: right;
+	padding-right: 20px;
+}

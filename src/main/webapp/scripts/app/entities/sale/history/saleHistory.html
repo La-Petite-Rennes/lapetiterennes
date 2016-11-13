@@ -1,0 +1,40 @@
+<div>
+
+	<div class="row">
+		<div>
+			<h2 data-translate="membershipApp.saleHistory.home.title">SaleHistory</h2>
+			
+			<div class="history-since">
+				<span data-translate="membershipApp.saleHistory.bestSale.since">BestSalesSince</span>
+				<button type="button" id="weekHistory" data-ng-click="weekHistory()" class="btn btn-xs">Une semaine</button>
+				<button type="button" id="monthHistory" data-ng-click="monthHistory()" class="btn btn-xs">Un mois</button>
+				<button type="button" class="btn btn-xs">Toujours</button>
+			</div>
+			
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th><a href="" data-ng-click="sortBy('label')">Article</a></th>
+							<th><a href="" data-ng-click="sortBy('unitPrice')">Prix unitaire</a></th>
+							<th><a href="" data-ng-click="sortBy('nbSales')">Quantité</a></th>
+							<th><a href="" data-ng-click="sortBy('totalPrice')">Prix total</a></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="item in history | orderBy:propertyName:reverse">
+							<td>{{item.label}}</td>
+							<td>{{toEuros(item.unitPrice)}} €</td>
+							<td>{{item.nbSales}}</td>
+							<td>{{toEuros(item.totalPrice)}} €</td>
+						</tr>
+					</tbody>
+				</table>	
+			</div>
+			
+			<div class="history-totalPrice">
+				<span><strong>Total : </strong></span><span>{{toEuros(totalPrice())}} €</span>
+			</div>
+		</div>
+	</div>
+</div>
