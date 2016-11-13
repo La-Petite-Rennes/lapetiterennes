@@ -27,6 +27,10 @@ angular.module('membershipApp')
 			$scope.propertyName = propertyName;
 		};
 		
+		$scope.toEuros = function(price) {
+			return parseInt(price / 100) + "," + (price % 100);
+		};
+		
 		$scope.loadAll();
 		
 	});
