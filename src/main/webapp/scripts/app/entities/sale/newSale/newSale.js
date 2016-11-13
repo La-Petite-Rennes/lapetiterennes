@@ -12,7 +12,7 @@ angular.module('membershipApp')
     			},
     			views: {
     				'content@': {
-    					templateUrl: 'scripts/app/entities/sale/newSale.html',
+    					templateUrl: 'scripts/app/entities/sale/newSale/newSale.html',
     					controller: 'NewSaleController'
     				}
     			},
