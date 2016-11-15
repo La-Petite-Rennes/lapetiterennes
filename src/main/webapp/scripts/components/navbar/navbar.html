@@ -19,14 +19,14 @@
                     </a>
                 </li>
                 
-                <li data-ui-sref-active="active" data-ng-switch-when="true" data-has-any-role="ROLE_ADMIN, ROLE_WORKSHOP_MANAGER">
+                <li data-ui-sref-active="active" data-ng-switch-when="true" data-has-role="ROLE_WORKSHOP_MANAGER">
                     <a data-ui-sref="article">
                         <span class="glyphicon glyphicon-th-list"></span>
                         <span data-translate="global.menu.entities.article">Articles</span>
                     </a>
                 </li>
                 
-                <li data-ui-sref-active="active" data-ng-switch-when="true" data-has-any-role="ROLE_ADMIN, ROLE_WORKSHOP_MANAGER">
+                <li data-ui-sref-active="active" data-ng-switch-when="true" data-has-role="ROLE_WORKSHOP_MANAGER">
                     <a data-ui-sref="saleHistory">
                         <span class="glyphicon glyphicon-piggy-bank"></span>
                         <span data-translate="global.menu.entities.saleHistory">saleHistory</span>
@@ -40,7 +40,13 @@
                     </a>
                 </li>
                 
-                <li data-ui-sref-active="active" data-ng-switch-when="true" class="dropdown pointer">
+                <li data-ui-sref-active="active" data-ng-switch-when="true">
+                	<a data-ui-sref="adherent">
+                    	<span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span data-translate="global.menu.entities.adherent">adherent</span>
+                    </a>
+                </li>
+                
+                <li data-ui-sref-active="active" data-has-role="ROLE_ADMIN" class="dropdown pointer" data-ng-hide="true">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">
                     	<span>
                     		<span class="glyphicon glyphicon-th-list"></span>
@@ -49,19 +55,19 @@
                     	</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li data-ui-sref-active="active" data-ng-show="false">
-                        	<a data-ui-sref="coordonnees">
-                        		<span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span data-translate="global.menu.entities.coordonnees">coordonnees</span>
+                        <li data-ui-sref-active="active">
+                        	<a data-ui-sref="adherent">
+                        		<span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span data-translate="global.menu.entities.adherent">adherent</span>
                         	</a>
                         </li>
-                        <li data-ui-sref-active="active" data-ng-show="false">
+                        <li data-ui-sref-active="active">
                         	<a data-ui-sref="adhesion">
                         		<span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span data-translate="global.menu.entities.adhesion">adhesion</span>
                         	</a>
                         </li>
                         <li data-ui-sref-active="active">
-                        	<a data-ui-sref="adherent">
-                        		<span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span data-translate="global.menu.entities.adherent">adherent</span>
+                        	<a data-ui-sref="coordonnees">
+                        		<span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span data-translate="global.menu.entities.coordonnees">coordonnees</span>
                         	</a>
                         </li>
                         <!-- JHipster will add entities to the menu here -->
