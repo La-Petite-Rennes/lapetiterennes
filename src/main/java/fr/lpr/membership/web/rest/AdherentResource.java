@@ -189,7 +189,7 @@ public class AdherentResource {
 	 */
 	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
-	@RolesAllowed(AuthoritiesConstants.ADMIN)
+	@RolesAllowed({AuthoritiesConstants.ADMIN, AuthoritiesConstants.WORKSHOP_MANAGER})
 	public void delete(@PathVariable Long id) {
 		log.debug("REST request to delete Adherent : {}", id);
 		adherentRepository.delete(id);
