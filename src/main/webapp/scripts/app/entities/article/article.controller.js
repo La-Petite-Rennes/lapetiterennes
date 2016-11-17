@@ -22,6 +22,24 @@ angular.module('membershipApp')
 			}
 		};
 		
+		$scope.clearReassort = function() {
+			$scope.reassort = [];
+			for (var article of $scope.articles) {
+				$scope.reassort.push({
+					id: article.id,
+					name: article.name,
+					quantity: 0
+				});
+			}
+			
+			console.log($scope.articles);
+		}
+		
+		$scope.saveReassort = function() {
+			$('#reassortModal').modal('hide');
+			// TODO
+		}
+		
 		$scope.sortBy = function(propertyName) {
 			$scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
 			$scope.propertyName = propertyName;

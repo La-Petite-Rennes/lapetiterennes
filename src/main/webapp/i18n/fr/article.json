@@ -3,7 +3,10 @@
 		"article": {
 			"home": {
 				"title": "Articles"
-			}
+			},
+			"reassort": "Réassort",
+			"name": "Nom",
+			"quantity": "Quantité"
 		}
 	}
 }

@@ -6,8 +6,8 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th><a href="" data-ng-click="sortBy('name')">Nom</a></th>
-					<th><a href="" data-ng-click="sortBy('quantity')">Quantité</a></th>
+					<th><a href="" data-ng-click="sortBy('name')" data-translate="membershipApp.article.name">Nom</a></th>
+					<th><a href="" data-ng-click="sortBy('quantity')" data-translate="membershipApp.article.quantity">Quantité</a></th>
 					<th><a href="" data-ng-click="sortBy('salePrice')">Prix de vente</a></th>
 					<th><a href="" data-ng-click="sortBy('provider.name')">Fournisseur</a></th>
 					<th><a href="" data-ng-click="sortBy('unitPrice')">Prix unitaire</a></th>
@@ -22,7 +22,50 @@
 					<td>{{toEuros(article.unitPrice)}} €</td>
 				</tr>
 			</tbody>
-		</table>	
+		</table>
+		
+		<button class="btn btn-primary" data-toggle="modal" data-target="#reassortModal" data-ng-click="clearReassort()" data-backdrop="static">
+			<span class="glyphicon glyphicon-barcode"></span> <span data-translate="membershipApp.article.reassort">Reassort</span>
+		</button>
+	</div>
+	
+	<div class="modal fade" id="reassortModal" tabindex="-1" role="dialog" aria-labelledby="reassortLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form name="reassortForm" class="form-horizontal" role="form" novalidate data-ng-submit="saveReassort()" data-show-validation>
+					<div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clearReassort()">&times;</button>
+                        <h4 class="modal-title" id="reassortLabel" data-translate="membershipApp.article.reassort">Reassort</h4>
+                    </div>
+                    <div class="modal-body">
+						<div class="table-responsive">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th><span data-translate="membershipApp.article.name">Nom</span></th>
+										<th><span data-translate="membershipApp.article.quantity">Quantité</span></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr data-ng-repeat="item in reassort | orderBy:name:reverse">
+										<td>{{item.name}}</td>
+										<td><input type="number" data-ng-model="item.quantity" /></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+                    </div>
+                    <div class="modal-footer">
+                    	<button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clearReassort()">
+							<span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+						</button>
+						<button type="submit" data-ng-disabled="reassortForm.$invalid" class="btn btn-primary">
+							<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.enter">Valider</span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 
 </div>
