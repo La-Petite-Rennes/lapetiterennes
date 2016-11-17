@@ -94,8 +94,8 @@
 					<div class="form-group">
 						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.name">Article</label>
 						<div class="col-sm-7">
-							<select class="form-control" data-ng-model="newItem.id" data-ng-options="article.id as article.name for article in articles | orderBy: article.name">
-								<option value="">-- choose article --</option>
+							<select class="form-control placeholder" data-ng-model="newItem.article" data-ng-options="article as article.name for article in articles | orderBy: article.name">
+								<option value="" disabled selected>{{ 'membershipApp.newSale.item.choose' | translate }}</option>
 							</select>
 						</div>
 					</div>
@@ -104,6 +104,14 @@
 						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.quantity">Quantité</label>
 						<div class="col-sm-7">
 							<input type="number" min="1" data-ng-model="newItem.quantity" class="form-control">
+						</div>
+					</div>
+					
+					<!-- Champ de saisie "Prix libre". Affiché uniquement pour les articles sans prix -->
+					<div class="form-group" data-ng-show="newItem.article && !newItem.article.salePrice">
+						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.freePrice">FreePrice</label>
+						<div class="col-sm-7">
+							<input type="number" min="0" step="any" data-ng-model="newItem.freePrice" class="form-control">
 						</div>
 					</div>
 					
@@ -127,7 +135,7 @@
 							<span class="glyphicon glyphicon-remove" data-ng-click="removeItem(item)"></span>
 						</span>
 					</div>
-					<div>P.U. : <b>{{toEuros(getArticle(item.id).price)}}&nbsp;€</b></div>
+					<div>P.U. : <b>{{toEuros(item.price)}}&nbsp;€</b></div>
 					<div>Qté : <b>{{item.quantity}}</b></div>
 				</li>
 			</ul>

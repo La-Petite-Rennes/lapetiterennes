@@ -1,5 +1,6 @@
 package fr.lpr.membership.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,16 +22,17 @@ public class Article {
 	private Long id;
 	
 	@NotNull
+	@Column(nullable=false, unique=true)
 	private String name;
 	
 	private int quantity;
 	
-	private int salePrice;
+	private Integer salePrice;
 	
 	@ManyToOne
 	private Provider provider;
 	
-	private int unitPrice;
+	private Integer unitPrice;
 
 	public Long getId() {
 		return id;
@@ -71,15 +73,15 @@ public class Article {
 		return this;
 	}
 
-	public int getSalePrice() {
+	public Integer getSalePrice() {
 		return salePrice;
 	}
 
-	public void setSalePrice(int salePrice) {
+	public void setSalePrice(Integer salePrice) {
 		this.salePrice = salePrice;
 	}
 	
-	public Article salePrice(int salePrice) {
+	public Article salePrice(Integer salePrice) {
 		setSalePrice(salePrice);
 		return this;
 	}
@@ -97,17 +99,21 @@ public class Article {
 		return this;
 	}
 
-	public int getUnitPrice() {
+	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(int unitPrice) {
+	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 	
-	public Article unitPrice(int unitPrice) {
+	public Article unitPrice(Integer unitPrice) {
 		setUnitPrice(unitPrice);
 		return this;
+	}
+	
+	public boolean isFreePrice() {
+		return salePrice == null;
 	}
 	
 }

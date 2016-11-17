@@ -40,6 +40,7 @@ public class ArticleResource {
 				.id(35L).salePrice(5399).quantity(8).provider(p1).unitPrice(4599));
 		articles.add(new Article().id(5L).name("Frein Shimano Dura-Ace 9000").salePrice(11799).quantity(3).provider(p2).unitPrice(11000));
 		articles.add(new Article().id(8L).name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").salePrice(6999).provider(p2).unitPrice(5150).quantity(25));
+		articles.add(new Article().id(15L).name("Cable de frein").quantity(47));
 	}
 	
 	@RequestMapping(value="/articles", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)

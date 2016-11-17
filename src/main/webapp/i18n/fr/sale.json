@@ -7,7 +7,9 @@
 			"item": {
 				"name": "Article",
 				"quantity": "Quantité",
-				"add": "Ajouter cet article"
+				"add": "Ajouter cet article",
+				"choose": "-- Choisir un article --",
+				"freePrice": "Prix libre"
 			},
 			"adherent": {
 				"label": "Adhérent",

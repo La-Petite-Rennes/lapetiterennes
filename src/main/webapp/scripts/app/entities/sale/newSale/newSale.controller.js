@@ -1,5 +1,6 @@
 'use strict'
 
+// TODO Créer un objet NewSaleItem et Basket et y ajouter les fonctions Javascripts qui vont bien.
 angular.module('membershipApp')
 	.controller('NewSaleController', function ($scope, Article, Adherent) {
 		$scope.basket = {
@@ -51,10 +52,15 @@ angular.module('membershipApp')
 		};
 		
 		$scope.addItem = function() {
-			var basketItem = getBasketItem($scope.newItem.id);
+			var basketItem = getBasketItem($scope.newItem.article.id);
 			if (basketItem === null) {
-				$scope.basket.items.push($scope.newItem);
+				$scope.basket.items.push({
+					id: $scope.newItem.article.id,
+					quantity: $scope.newItem.quantity,
+					price: newItemPrice($scope.newItem)
+				});
 			} else {
+				basketItem.price = newItemPrice($scope.newItem);
 				basketItem.quantity += $scope.newItem.quantity;
 			}
 			
@@ -71,6 +77,16 @@ angular.module('membershipApp')
 				}
 			}
 			return null;
+		}
+		
+		var newItemPrice = function(newItem) {
+			var price;
+			if ($scope.newItem.article.salePrice) {
+				price = $scope.newItem.article.salePrice;
+			} else { 
+				price = parseInt($scope.newItem.freePrice * 100);
+			}
+			return price;
 		}
 		
 		$scope.removeItem = function(item) {
@@ -97,7 +113,7 @@ angular.module('membershipApp')
 			
 			for (var index in $scope.basket.items) {
 				var item = $scope.basket.items[index];
-				totalCost += $scope.getArticle(item.id).price * item.quantity;
+				totalCost += item.price * item.quantity;
 			};
 			
 			return $scope.toEuros(totalCost);
