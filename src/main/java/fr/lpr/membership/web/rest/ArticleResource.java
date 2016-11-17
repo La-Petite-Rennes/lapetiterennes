@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 
 import fr.lpr.membership.domain.Article;
+import fr.lpr.membership.domain.Provider;
 
 @RestController
 @RequestMapping("/api")
@@ -29,13 +30,16 @@ public class ArticleResource {
 	
 	@PostConstruct
 	public void init() {
+		Provider p1 = new Provider().name("Chain Reaction Cycles");
+		Provider p2 = new Provider().name("Probike Shop");
+		
 		articles = new ArrayList<>(5);
 		articles.add(new Article().name("Dérailleur arrière Shimano Tiagra 4700 10v")
-				.id(13L).price(3199).quantity(15));
+				.id(13L).salePrice(3199).quantity(15).provider(p1).unitPrice(2599));
 		articles.add(new Article().name("Cassette Route Shimano Ultegra 6800 11 vitesses")
-				.id(35L).price(5399).quantity(8));
-		articles.add(new Article().id(5L).name("Frein Shimano Dura-Ace 9000").price(11799).quantity(3));
-		articles.add(new Article().id(8L).name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").price(6999).quantity(25));
+				.id(35L).salePrice(5399).quantity(8).provider(p1).unitPrice(4599));
+		articles.add(new Article().id(5L).name("Frein Shimano Dura-Ace 9000").salePrice(11799).quantity(3).provider(p2).unitPrice(11000));
+		articles.add(new Article().id(8L).name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").salePrice(6999).provider(p2).unitPrice(5150).quantity(25));
 	}
 	
 	@RequestMapping(value="/articles", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)

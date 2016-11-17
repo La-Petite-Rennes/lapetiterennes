@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -24,7 +25,12 @@ public class Article {
 	
 	private int quantity;
 	
-	private int price;
+	private int salePrice;
+	
+	@ManyToOne
+	private Provider provider;
+	
+	private int unitPrice;
 
 	public Long getId() {
 		return id;
@@ -65,16 +71,42 @@ public class Article {
 		return this;
 	}
 
-	public int getPrice() {
-		return price;
+	public int getSalePrice() {
+		return salePrice;
 	}
 
-	public void setPrice(int price) {
-		this.price = price;
+	public void setSalePrice(int salePrice) {
+		this.salePrice = salePrice;
 	}
 	
-	public Article price(int price) {
-		setPrice(price);
+	public Article salePrice(int salePrice) {
+		setSalePrice(salePrice);
+		return this;
+	}
+
+	public Provider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+	}
+	
+	public Article provider(Provider provider) {
+		setProvider(provider);
+		return this;
+	}
+
+	public int getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(int unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+	
+	public Article unitPrice(int unitPrice) {
+		setUnitPrice(unitPrice);
 		return this;
 	}
 	

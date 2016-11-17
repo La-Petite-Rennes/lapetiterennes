@@ -7,15 +7,19 @@
 			<thead>
 				<tr>
 					<th><a href="" data-ng-click="sortBy('name')">Nom</a></th>
-					<th><a href="" data-ng-click="sortBy('price')">Prix</a></th>
 					<th><a href="" data-ng-click="sortBy('quantity')">Quantité</a></th>
+					<th><a href="" data-ng-click="sortBy('salePrice')">Prix de vente</a></th>
+					<th><a href="" data-ng-click="sortBy('provider.name')">Fournisseur</a></th>
+					<th><a href="" data-ng-click="sortBy('unitPrice')">Prix unitaire</a></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr data-ng-repeat="article in articles | orderBy:propertyName:reverse" data-ng-class="stockLevel(article)">
 					<td>{{article.name}}</td>
-					<td>{{toEuros(article.price)}} €</td>
 					<td>{{article.quantity}}</td>
+					<td>{{toEuros(article.salePrice)}} €</td>
+					<td>{{article.provider.name}}</td>
+					<td>{{toEuros(article.unitPrice)}} €</td>
 				</tr>
 			</tbody>
 		</table>	
