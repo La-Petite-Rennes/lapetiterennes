@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Added the entity Provider.
+    -->
+    <changeSet id="20161121_added_entity_Provider" author="glebreton">
+        <createTable tableName="STOCK_HISTORY">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="event" type="varchar(50)">
+            	<constraints nullable="false" />
+            </column>
+            <column name="createdAt" type="datetime">
+            	<constraints nullable="false" />
+            </column>
+            <column name="quantity" type="integer">
+            	<constraints nullable="false" />
+            </column>
+            <column name="article_id" type="bigint" />
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="STOCK_HISTORY"
+                                 constraintName="fk_stockHistory_article_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ARTICLE"/>
+
+    </changeSet>
+</databaseChangeLog>
