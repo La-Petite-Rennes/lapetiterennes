@@ -20,7 +20,6 @@ import com.google.common.base.Strings;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.StatutAdhesion;
 import fr.lpr.membership.repository.AdherentRepository;
-import fr.lpr.membership.repository.AdhesionRepository;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
 /**
@@ -31,9 +30,6 @@ import fr.lpr.membership.web.rest.util.PaginationUtil;
 public class AdherentService {
 
 	private final Logger log = LoggerFactory.getLogger(AdherentService.class);
-
-	@Autowired
-	private AdhesionRepository adhesionRepository;
 
 	@Autowired
 	private AdherentRepository adherentRepository;
