@@ -13,5 +13,8 @@
     <include file="classpath:config/liquibase/changelog/20151116_added_entity_Adherent_lastAdhesion.xml" relativeToChangelogFile="false"/>
     
     <include file="classpath:config/liquibase/changelog/20161115_addWorkshopManagerRole.xml" relativeToChangelogFile="false"/>
+    
+    <include file="classpath:config/liquibase/changelog/20161121_added_entity_Provider.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20161121_added_entity_Article.xml" relativeToChangelogFile="false"/>
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

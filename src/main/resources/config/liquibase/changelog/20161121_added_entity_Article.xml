@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Added the entity Article.
+    -->
+    <changeSet id="20161121_added_entity_Article" author="jhipster">
+        <createTable tableName="ARTICLE">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="quantity" type="integer">
+            	<constraints nullable="false" />
+            </column>
+            <column name="salePrice" type="integer"/>
+            <column name="provider_id" type="bigint"/>
+            <column name="unitPrice" type="integer"/>
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="provider_id"
+                                 baseTableName="ARTICLE"
+                                 constraintName="fk_article_provider_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="PROVIDER"/>
+
+    </changeSet>
+</databaseChangeLog>
