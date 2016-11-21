@@ -15,6 +15,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
+import fr.lpr.membership.domain.Article;
+
 @Entity
 @Table(name="STOCK_HISTORY")
 @Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -35,8 +37,10 @@ public class StockHistory {
 	@Column(nullable = false)
 	private int quantity;
 
-	public static StockHistory from(Reassort reassort) {
-		return new StockHistory().event(StockEvent.REASSORT).quantity(reassort.getQuantity());
+	private Article article;
+
+	public static StockHistory from(Reassort reassort, Article article) {
+		return new StockHistory().event(StockEvent.REASSORT).quantity(reassort.getQuantity()).article(article);
 	}
 
 	public StockHistory() {
@@ -92,6 +96,19 @@ public class StockHistory {
 
 	public StockHistory quantity(int quantity) {
 		setQuantity(quantity);
+		return this;
+	}
+
+	public Article getArticle() {
+		return article;
+	}
+
+	public void setArticle(Article article) {
+		this.article = article;
+	}
+
+	public StockHistory article(Article article) {
+		setArticle(article);
 		return this;
 	}
 

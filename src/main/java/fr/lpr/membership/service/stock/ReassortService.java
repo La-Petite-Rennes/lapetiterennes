@@ -28,7 +28,7 @@ public class ReassortService {
 			Article article = articleRepository.findOne(reassort.getId());
 			article.setQuantity(article.getQuantity() + reassort.getQuantity());
 
-			stockHistoryRepository.save(StockHistory.from(reassort));
+			stockHistoryRepository.save(StockHistory.from(reassort, article));
 		}
 	}
 
