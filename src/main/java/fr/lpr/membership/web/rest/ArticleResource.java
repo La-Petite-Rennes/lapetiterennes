@@ -89,7 +89,7 @@ public class ArticleResource {
 
 	@RequestMapping(value="/articles/reassort", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
 	@Timed
-	public ResponseEntity<Void> reassort(List<Reassort> reassorts) {
+	public ResponseEntity<Void> reassort(@RequestBody List<Reassort> reassorts) {
 		reassortService.reassort(reassorts);
 		return ResponseEntity.ok().build();
 	}

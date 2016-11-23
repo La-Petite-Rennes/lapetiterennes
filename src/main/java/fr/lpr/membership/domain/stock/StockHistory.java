@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -37,6 +38,7 @@ public class StockHistory {
 	@Column(nullable = false)
 	private int quantity;
 
+	@ManyToOne(optional = true)
 	private Article article;
 
 	public static StockHistory from(Reassort reassort, Article article) {

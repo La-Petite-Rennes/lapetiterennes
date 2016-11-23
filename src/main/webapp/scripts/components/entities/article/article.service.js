@@ -11,7 +11,12 @@ angular.module('membershipApp')
                 method: 'GET'
             },
             'update': { 
-            	method:'PUT'
+            	method: 'PUT'
+            },
+            'reassort': {
+            	method: 'POST',
+            	url: 'api/articles/reassort',
+            	isArray: true
             }
         });
     });

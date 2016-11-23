@@ -6,14 +6,22 @@ angular.module('membershipApp')
 		$scope.reverse = false;
 		$scope.propertyName= 'name';
 		
+		$scope.reassort = {
+			waitingConfiration: false,
+			items: []
+		};
+		
 		$scope.loadAll = function() {
 			Article.query(function(result) {
 				$scope.articles = result;
+				$scope.reverse = false;
+				$scope.propertyName= 'name';
+				$scope.clearReassort();
 			})
 		};
 		
 		$scope.stockLevel = function(article) {
-			if (article.quantity === 0) {
+			if (article.quantity <= 0) {
 				return 'article-outOfStock';
 			} else if (article.quantity <= 5) {
 				return 'article-insufficientStock';
@@ -23,21 +31,29 @@ angular.module('membershipApp')
 		};
 		
 		$scope.clearReassort = function() {
-			$scope.reassort = [];
+			$scope.reassort = {
+				waitingConfiration: false,
+				items: []
+			};
+			
 			for (var article of $scope.articles) {
-				$scope.reassort.push({
+				$scope.reassort.items.push({
 					id: article.id,
 					name: article.name,
 					quantity: 0
 				});
 			}
-			
-			console.log($scope.articles);
 		}
 		
 		$scope.saveReassort = function() {
-			$('#reassortModal').modal('hide');
-			// TODO
+			if (!$scope.reassort.waitingConfirmation) {
+				$scope.reassort.waitingConfirmation = true;
+			} else {
+				Article.reassort($scope.reassort.items, function() {
+					$('#reassortModal').modal('hide');
+					$scope.loadAll();
+				});
+			}
 		}
 		
 		$scope.sortBy = function(propertyName) {

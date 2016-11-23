@@ -47,21 +47,35 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr data-ng-repeat="item in reassort | orderBy:name:reverse">
+									<tr data-ng-repeat="item in reassort.items | orderBy:name:reverse" 
+											data-ng-if="!reassort.waitingConfirmation || item.quantity !== 0">
 										<td>{{item.name}}</td>
-										<td><input type="number" data-ng-model="item.quantity" /></td>
+										<td>
+											<input data-ng-if="!reassort.waitingConfirmation" type="number" data-ng-model="item.quantity" />
+											<span data-ng-if="reassort.waitingConfirmation">{{item.quantity}}</span>
+										</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
                     </div>
                     <div class="modal-footer">
-                    	<button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clearReassort()">
-							<span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
-						</button>
-						<button type="submit" data-ng-disabled="reassortForm.$invalid" class="btn btn-primary">
-							<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.enter">Valider</span>
-						</button>
+						<div data-ng-if="!reassort.waitingConfirmation">
+	                    	<button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clearReassort()">
+								<span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+							</button>
+							<button data-ng-swith-when="false" type="submit" data-ng-disabled="reassortForm.$invalid" class="btn btn-primary">
+								<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.enter">Valider</span>
+							</button>
+						</div>
+						<div data-ng-if="reassort.waitingConfirmation">
+							<button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="reassort.waitingConfirmation=false">
+								<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back">Retour</span>
+							</button>
+							<button data-ng-swith-when="true" type="submit" class="btn btn-primary">
+								<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.confirm">Confirmer</span>
+							</button>
+						</div>
 					</div>
 				</form>
 			</div>
