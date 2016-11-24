@@ -1,0 +1,12 @@
+{
+	"membershipApp": {
+		"payment": {
+			"type": {
+				"label": "Règlement",
+				"cash": "Espèces",
+				"cheque": "Chèque",
+				"galleco": "Galléco"
+			}
+		}
+	}
+}

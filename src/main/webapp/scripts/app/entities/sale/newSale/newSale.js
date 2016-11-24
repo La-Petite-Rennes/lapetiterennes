@@ -20,6 +20,7 @@ angular.module('membershipApp')
     				translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('adherent');
                         $translatePartialLoader.addPart('sale');
+                        $translatePartialLoader.addPart('payment');
                         return $translate.refresh();
                     }]
     			}

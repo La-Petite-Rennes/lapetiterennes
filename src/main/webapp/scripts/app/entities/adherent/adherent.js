@@ -21,6 +21,7 @@ angular.module('membershipApp')
                         $translatePartialLoader.addPart('adherent');
                         $translatePartialLoader.addPart('adhesion');
                         $translatePartialLoader.addPart('coordonnees');
+                        $translatePartialLoader.addPart('payment');
                         return $translate.refresh();
                     }]
                 }
