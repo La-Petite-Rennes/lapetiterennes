@@ -27,6 +27,7 @@ import org.joda.time.LocalDate;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import fr.lpr.membership.domain.sale.PaymentType;
 import fr.lpr.membership.domain.util.CustomLocalDateDeserializer;
 import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
 import fr.lpr.membership.domain.util.LocalDateBridge;
@@ -63,6 +64,10 @@ public class Adhesion implements Serializable {
 	@ContainedIn
 	private Adherent adherent;
 
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private PaymentType paymentType;
+
 	public Long getId() {
 		return id;
 	}
@@ -71,12 +76,22 @@ public class Adhesion implements Serializable {
 		this.id = id;
 	}
 
+	public Adhesion id(Long id) {
+		setId(id);
+		return this;
+	}
+
 	public TypeAdhesion getTypeAdhesion() {
 		return typeAdhesion;
 	}
 
 	public void setTypeAdhesion(TypeAdhesion typeAdhesion) {
 		this.typeAdhesion = typeAdhesion;
+	}
+
+	public Adhesion typeAdhesion(TypeAdhesion typeAdhesion) {
+		setTypeAdhesion(typeAdhesion);
+		return this;
 	}
 
 	public LocalDate getDateAdhesion() {
@@ -92,12 +107,35 @@ public class Adhesion implements Serializable {
 		this.dateAdhesion = dateAdhesion;
 	}
 
+	public Adhesion dateFinAdhesion(LocalDate dateAdhesion) {
+		setDateAdhesion(dateAdhesion);
+		return this;
+	}
+
 	public Adherent getAdherent() {
 		return adherent;
 	}
 
 	public void setAdherent(Adherent adherent) {
 		this.adherent = adherent;
+	}
+
+	public Adhesion adherent(Adherent adherent) {
+		setAdherent(adherent);
+		return this;
+	}
+
+	public PaymentType getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(PaymentType paymentType) {
+		this.paymentType = paymentType;
+	}
+
+	public Adhesion paymentType(PaymentType paymentType) {
+		setPaymentType(paymentType);
+		return this;
 	}
 
 	@Override

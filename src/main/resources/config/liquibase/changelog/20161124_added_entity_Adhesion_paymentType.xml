@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Add the field 'paymentType' to the entity Adhesion.
+    -->
+    <changeSet id="20161124_added_entity_Adhesion_paymentType" author="glebreton">
+    	<addColumn tableName="ADHESION">
+    		<column name="paymentType" type="varchar(50)" defaultValue="LEGACY" >
+    			<constraints nullable="false" />
+    		</column>
+    	</addColumn>
+    </changeSet>
+</databaseChangeLog>
