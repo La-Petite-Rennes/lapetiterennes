@@ -13,7 +13,8 @@ angular.module('membershipApp')
         
         $scope.editAdherent = false;
         $scope.nouvelleAdhesion = {
-        	dateAdhesion : new Date()
+        	dateAdhesion : new Date(),
+        	paymentType: 'Cash'
         }
         
         $scope.search = function(sort) {
@@ -117,7 +118,10 @@ angular.module('membershipApp')
 
         $scope.clear = function () {
             $scope.adherent = {prenom: null, nom: null, benevole: null, remarqueBenevolat: null, genre: null, autreRemarque: null, id: null, coordonnees: {}};
-            $scope.nouvelleAdhesion = { dateAdhesion : new Date() };
+            $scope.nouvelleAdhesion = { 
+            		dateAdhesion : new Date(),
+                	paymentType: 'Cash'
+            };
             $scope.editAdherent = false;
             
             $scope.renouvelerAdhesionForm.$setPristine();

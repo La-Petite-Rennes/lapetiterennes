@@ -9,7 +9,7 @@
     -->
     <changeSet id="20161124_added_entity_Adhesion_paymentType" author="glebreton">
     	<addColumn tableName="ADHESION">
-    		<column name="paymentType" type="varchar(50)" defaultValue="LEGACY" >
+    		<column name="paymentType" type="varchar(50)" defaultValue="Legacy" >
     			<constraints nullable="false" />
     		</column>
     	</addColumn>

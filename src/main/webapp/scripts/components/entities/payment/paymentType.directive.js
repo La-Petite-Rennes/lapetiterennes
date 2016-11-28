@@ -5,7 +5,8 @@ angular.module('membershipApp')
 		return {
 			restrict: 'E',
 		    scope: {
-		    	labelSize: '=labelSize'
+		    	labelSize: '=labelSize',
+		    	payment: '=model'
 		    },
             templateUrl: 'scripts/components/entities/payment/paymentType.html'
         };

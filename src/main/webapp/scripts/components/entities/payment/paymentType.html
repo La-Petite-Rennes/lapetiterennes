@@ -1,15 +1,15 @@
 <div class="form-group">
 	<label class="control-label col-sm-{{labelSize}}" data-translate="membershipApp.payment.type.label">PaymentType</label>
 	<label class="radio-inline">
-		<input type="radio" name="paymentTypeOptions" id="inlineRadio1" value="option1">
+		<input type="radio" data-ng-model="payment" value="Cash" checked="checked">
 		<span data-translate="membershipApp.payment.type.cash"></span>
 	</label>
 	<label class="radio-inline">
-		<input type="radio" name="paymentTypeOptions" id="inlineRadio1" value="option1">
+		<input type="radio" data-ng-model="payment" value="Check">
 		<span data-translate="membershipApp.payment.type.cheque"></span>
 	</label>
 	<label class="radio-inline">
-		<input type="radio" name="paymentTypeOptions" id="inlineRadio1" value="option1">
+		<input type="radio" data-ng-model="payment" value="Galleco">
 		<span data-translate="membershipApp.payment.type.galleco"></span>
 	</label>
 </div>
