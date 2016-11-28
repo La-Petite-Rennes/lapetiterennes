@@ -5,7 +5,8 @@
 				"label": "Règlement",
 				"cash": "Espèces",
 				"cheque": "Chèque",
-				"galleco": "Galléco"
+				"galleco": "Galléco",
+				"waiting": "Non réglé"
 			}
 		}
 	}
