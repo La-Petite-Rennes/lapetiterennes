@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
-import org.joda.time.LocalDateTime;
+import org.joda.time.DateTime;
 
 import fr.lpr.membership.domain.Article;
 
@@ -31,9 +31,9 @@ public class StockHistory {
 	@NotNull
 	private StockEvent event;
 
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@Column(nullable = false)
-	private LocalDateTime createdAt;
+	private DateTime createdAt;
 
 	@Column(nullable = false)
 	private int quantity;
@@ -46,11 +46,11 @@ public class StockHistory {
 	}
 
 	public static StockHistory forSale(Article article, int quantity) {
-		return forSale(article, quantity);
+		return new StockHistory().event(StockEvent.SALE).quantity(quantity).article(article);
 	}
 
 	protected StockHistory() {
-		this.createdAt = LocalDateTime.now();
+		this.createdAt = DateTime.now();
 	}
 
 	public Long getId() {
@@ -79,15 +79,15 @@ public class StockHistory {
 		return this;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public DateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(DateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public StockHistory createdAt(LocalDateTime createdAt) {
+	public StockHistory createdAt(DateTime createdAt) {
 		setCreatedAt(createdAt);
 		return this;
 	}

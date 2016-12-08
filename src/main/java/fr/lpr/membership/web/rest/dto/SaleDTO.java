@@ -5,22 +5,22 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.joda.time.LocalDateTime;
+import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import fr.lpr.membership.domain.sale.PaymentType;
-import fr.lpr.membership.domain.util.CustomLocalDateDeserializer;
-import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
+import fr.lpr.membership.domain.util.CustomDateTimeDeserializer;
+import fr.lpr.membership.domain.util.CustomDateTimeSerializer;
 
 public class SaleDTO {
 
-	@JsonSerialize(using = CustomLocalDateSerializer.class)
-	@JsonDeserialize(using = CustomLocalDateDeserializer.class)
+	@JsonSerialize(using = CustomDateTimeSerializer.class)
+	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	@NotNull
-	private LocalDateTime date;
+	private DateTime date;
 
 	@NotNull
 	private Long adherentId;
@@ -32,11 +32,11 @@ public class SaleDTO {
 	@JsonProperty("items")
 	private List<SoldItemDTO> soldItems;
 
-	public LocalDateTime getDate() {
+	public DateTime getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDateTime date) {
+	public void setDate(DateTime date) {
 		this.date = date;
 	}
 

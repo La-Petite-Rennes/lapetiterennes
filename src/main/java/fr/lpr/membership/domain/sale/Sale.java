@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
-import org.joda.time.LocalDateTime;
+import org.joda.time.DateTime;
 
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Article;
@@ -43,18 +43,18 @@ public class Sale {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sale")
 	private List<SoldItem> soldItems;
 
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@Column(nullable = false)
-	private LocalDateTime createdAt;
+	private DateTime createdAt;
 
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@Column(nullable = false)
-	private LocalDateTime updatedAt;
+	private DateTime updatedAt;
 
 	public Sale() {
 		this.soldItems = new ArrayList<>();
-		this.createdAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
+		this.createdAt = DateTime.now();
+		this.updatedAt = DateTime.now();
 	}
 
 	public Long getId() {
@@ -113,28 +113,28 @@ public class Sale {
 		this.soldItems.add(new SoldItem(article, quantity, price));
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public DateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(DateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public Sale createdAt(LocalDateTime createdAt) {
+	public Sale createdAt(DateTime createdAt) {
 		setCreatedAt(createdAt);
 		return this;
 	}
 
-	public LocalDateTime getUpdatedAt() {
+	public DateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(LocalDateTime updatedAt) {
+	public void setUpdatedAt(DateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 
-	public Sale updatedAt(LocalDateTime updatedAt) {
+	public Sale updatedAt(DateTime updatedAt) {
 		setUpdatedAt(updatedAt);
 		return this;
 	}
