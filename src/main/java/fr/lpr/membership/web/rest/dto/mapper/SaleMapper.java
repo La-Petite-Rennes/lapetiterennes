@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Article;
 import fr.lpr.membership.domain.sale.Sale;
-import fr.lpr.membership.domain.stock.StockHistory;
+import fr.lpr.membership.domain.sale.SoldItem;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.ArticleRepository;
 import fr.lpr.membership.web.rest.dto.SaleDTO;
@@ -26,9 +26,9 @@ public abstract class SaleMapper {
 	@Mapping(source="adherentId", target="adherent")
 	public abstract Sale saleDtoToSale(SaleDTO saleDTO);
 
-	public StockHistory soldItemToStockHistory(SoldItemDTO soldItemDTO) {
+	public SoldItem soldItemToStockHistory(SoldItemDTO soldItemDTO) {
 		Article article = articleFromId(soldItemDTO.getId());
-		return StockHistory.forSale(article, soldItemDTO.getQuantity(), soldItemDTO.getPrice());
+		return new SoldItem(article, soldItemDTO.getQuantity(), soldItemDTO.getPrice());
 	}
 
 	public Adherent adherentFromId(Long adherentId) {

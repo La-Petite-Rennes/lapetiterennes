@@ -11,7 +11,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,7 +23,6 @@ import org.joda.time.LocalDateTime;
 
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Article;
-import fr.lpr.membership.domain.stock.StockHistory;
 
 @Entity
 @Table(name="SALE")
@@ -42,9 +40,8 @@ public class Sale {
 	@NotNull
 	private PaymentType paymentType;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "SOLD_ITEMS")
-	private List<StockHistory> soldItems;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sale")
+	private List<SoldItem> soldItems;
 
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	@Column(nullable = false)
@@ -99,25 +96,21 @@ public class Sale {
 		return this;
 	}
 
-	public List<StockHistory> getSoldItems() {
+	public List<SoldItem> getSoldItems() {
 		return soldItems;
 	}
 
-	public void setSoldItems(List<StockHistory> soldItems) {
+	public void setSoldItems(List<SoldItem> soldItems) {
 		this.soldItems = soldItems;
 	}
 
-	public Sale soldItems(List<StockHistory> soldItems) {
+	public Sale soldItems(List<SoldItem> soldItems) {
 		setSoldItems(soldItems);
 		return this;
 	}
 
 	public void addSoldItem(Article article, int quantity, int price) {
-		if (article.getSalePrice() != null && price < article.getSalePrice()) {
-			// FIXME Throws Exception
-		}
-
-		this.soldItems.add(StockHistory.forSale(article, quantity, price));
+		this.soldItems.add(new SoldItem(article, quantity, price));
 	}
 
 	public LocalDateTime getCreatedAt() {

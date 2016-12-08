@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -28,6 +29,7 @@ public class SaleDTO {
 	private PaymentType paymentType;
 
 	@NotEmpty
+	@JsonProperty("items")
 	private List<SoldItemDTO> soldItems;
 
 	public LocalDateTime getDate() {

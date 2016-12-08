@@ -41,19 +41,12 @@ public class StockHistory {
 	@ManyToOne(optional = true)
 	private Article article;
 
-	@Column(nullable = false)
-	private int price;
-
 	public static StockHistory from(Reassort reassort, Article article) {
 		return new StockHistory().event(StockEvent.REASSORT).quantity(reassort.getQuantity()).article(article);
 	}
 
 	public static StockHistory forSale(Article article, int quantity) {
-		return forSale(article, quantity, article.getSalePrice());
-	}
-
-	public static StockHistory forSale(Article article, int quantity, int price) {
-		return new StockHistory().event(StockEvent.SALE).quantity(quantity).article(article).price(price);
+		return forSale(article, quantity);
 	}
 
 	protected StockHistory() {
@@ -122,19 +115,6 @@ public class StockHistory {
 
 	public StockHistory article(Article article) {
 		setArticle(article);
-		return this;
-	}
-
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
-	public StockHistory price(int price) {
-		setPrice(price);
 		return this;
 	}
 

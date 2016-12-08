@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Add entites Sale and SoldItem
+    -->
+    <changeSet id="20161208_added_entity_Sale" author="glebreton">
+    	<createTable tableName="SALE">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="adherent_id" type="bigint" />
+            <column name="paymentType" type="varchar(50)">
+            	<constraints nullable="false" />
+            </column>
+            <column name="createdAt" type="datetime">
+            	<constraints nullable="false" />
+            </column>
+            <column name="updatedAt" type="datetime">
+            	<constraints nullable="false" />
+            </column>
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="adherent_id"
+                                 baseTableName="SALE"
+                                 constraintName="fk_sale_adherent_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ADHERENT"/>
+		
+		<createTable tableName="SOLD_ITEM">
+			<column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sale_id" type="bigint" />
+            <column name="stockHistory_id" type="bigint" />
+            <column name="price" type="integer">
+            	<constraints nullable="false" />
+            </column>
+		</createTable>
+		
+		<addForeignKeyConstraint baseColumnNames="sale_id"
+                                 baseTableName="SOLD_ITEM"
+                                 constraintName="fk_soldItem_sale_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="SALE"/>
+		
+		<addForeignKeyConstraint baseColumnNames="stockHistory_id"
+                                 baseTableName="SOLD_ITEM"
+                                 constraintName="fk_soldItem_stockHistory_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="STOCK_HISTORY"/>
+		
+    </changeSet>
+    
+</databaseChangeLog>

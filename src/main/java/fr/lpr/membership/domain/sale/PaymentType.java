@@ -6,6 +6,6 @@ public enum PaymentType {
 	Check,
 	Galleco,
 	Waiting,
-	Legacy // Used only to map old membership
+	NotSpecified // Used only to map old membership
 
 }
