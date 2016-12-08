@@ -2,7 +2,7 @@
 
 // TODO Créer un objet NewSaleItem et Basket et y ajouter les fonctions Javascripts qui vont bien.
 angular.module('membershipApp')
-	.controller('NewSaleController', function ($scope, Article, Adherent) {
+	.controller('NewSaleController', function ($scope, Sale, Article, Adherent) {
 		$scope.basket = {
 			date : new Date(),
 			items: []
@@ -131,6 +131,12 @@ angular.module('membershipApp')
 		
 		$scope.toEuros = function(priceInCent) {
 			return parseInt(priceInCent / 100) + "," + (priceInCent % 100);
+		}
+		
+		$scope.saveSale = function() {
+			Sale.save($scope.basket, function(result) {
+				// TODO Clear all
+			});
 		}
 		
 		$scope.loadAll();
