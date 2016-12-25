@@ -32,6 +32,13 @@
 			"bestSale": {
 				"since": "Les articles les plus vendus depuis :"
 			}
+		},
+		"statistics": {
+			"home": {
+				"title": "Statistiques de ventes"
+			},
+			"month": "Mois",
+			"amount": "Montant"
 		}
 	}
 }

@@ -129,12 +129,22 @@ public class Adherent implements Serializable {
 		this.prenom = prenom;
 	}
 
+	public Adherent prenom(String prenom) {
+		setPrenom(prenom);
+		return this;
+	}
+
 	public String getNom() {
 		return nom;
 	}
 
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+
+	public Adherent nom(String nom) {
+		setNom(nom);
+		return this;
 	}
 
 	public Boolean getBenevole() {
@@ -145,12 +155,22 @@ public class Adherent implements Serializable {
 		this.benevole = benevole;
 	}
 
+	public Adherent benevole(Boolean benevole) {
+		setBenevole(benevole);
+		return this;
+	}
+
 	public String getRemarqueBenevolat() {
 		return remarqueBenevolat;
 	}
 
 	public void setRemarqueBenevolat(String remarqueBenevolat) {
 		this.remarqueBenevolat = remarqueBenevolat;
+	}
+
+	public Adherent remarqueBenevolat(String remarqueBenevolat) {
+		setRemarqueBenevolat(remarqueBenevolat);
+		return this;
 	}
 
 	public Genre getGenre() {
@@ -161,6 +181,11 @@ public class Adherent implements Serializable {
 		this.genre = genre;
 	}
 
+	public Adherent genre(Genre genre) {
+		setGenre(genre);
+		return this;
+	}
+
 	public String getAutreRemarque() {
 		return autreRemarque;
 	}
@@ -169,12 +194,22 @@ public class Adherent implements Serializable {
 		this.autreRemarque = autreRemarque;
 	}
 
+	public Adherent autreRemarque(String autreRemarque) {
+		setAutreRemarque(autreRemarque);
+		return this;
+	}
+
 	public Coordonnees getCoordonnees() {
 		return coordonnees;
 	}
 
 	public void setCoordonnees(Coordonnees coordonnees) {
 		this.coordonnees = coordonnees;
+	}
+
+	public Adherent coordonnees(Coordonnees coordonnees) {
+		setCoordonnees(coordonnees);
+		return this;
 	}
 
 	@JsonIgnore

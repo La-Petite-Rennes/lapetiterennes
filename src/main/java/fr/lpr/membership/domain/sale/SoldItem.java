@@ -3,6 +3,7 @@ package fr.lpr.membership.domain.sale;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,10 +26,10 @@ public class SoldItem {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(optional = false)
 	private Sale sale;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.PERSIST, optional = false, fetch = FetchType.EAGER)
 	private StockHistory stockHistory;
 
 	@Column(nullable = false)
@@ -77,7 +78,7 @@ public class SoldItem {
 		return this;
 	}
 
-	protected StockHistory getStockHistory() {
+	public StockHistory getStockHistory() {
 		return stockHistory;
 	}
 

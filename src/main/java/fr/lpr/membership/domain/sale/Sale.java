@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,7 +41,7 @@ public class Sale {
 	@NotNull
 	private PaymentType paymentType;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sale")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sale", fetch = FetchType.EAGER)
 	private List<SoldItem> soldItems;
 
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
@@ -110,7 +111,15 @@ public class Sale {
 	}
 
 	public void addSoldItem(Article article, int quantity, int price) {
-		this.soldItems.add(new SoldItem(article, quantity, price));
+		SoldItem soldItem = new SoldItem(article, quantity, price);
+		soldItem.setSale(this);
+		this.soldItems.add(soldItem);
+	}
+
+	public void addSoldItem(Article article, int quantity) {
+		SoldItem soldItem = new SoldItem(article, quantity);
+		soldItem.setSale(this);
+		this.soldItems.add(soldItem);
 	}
 
 	public DateTime getCreatedAt() {

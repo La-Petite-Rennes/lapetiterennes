@@ -34,8 +34,12 @@
 			<column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="sale_id" type="bigint" />
-            <column name="stockHistory_id" type="bigint" />
+            <column name="sale_id" type="bigint">
+            	<constraints nullable="false" />
+            </column>
+            <column name="stockHistory_id" type="bigint">
+            	<constraints nullable="false" />
+            </column>
             <column name="price" type="integer">
             	<constraints nullable="false" />
             </column>

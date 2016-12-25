@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.datetime.joda.DateTimeFormatterFactory;
 
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat;
 import com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer;
@@ -22,5 +23,10 @@ public class JacksonConfiguration {
                 new JacksonJodaDateFormat(formatterFactory.createDateTimeFormatter()
                         .withZoneUTC())));
         return module;
+    }
+
+    @Bean
+    public GuavaModule guavaModule() {
+    	return new GuavaModule();
     }
 }

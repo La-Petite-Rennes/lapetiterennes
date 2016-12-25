@@ -3,6 +3,7 @@ package fr.lpr.membership.web.rest;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.joda.time.YearMonth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import com.codahale.metrics.annotation.Timed;
 
 import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.service.sale.SaleService;
+import fr.lpr.membership.service.sale.SaleStatistics;
+import fr.lpr.membership.service.sale.SaleStatisticsService;
 import fr.lpr.membership.web.rest.dto.SaleDTO;
 import fr.lpr.membership.web.rest.dto.mapper.SaleMapper;
 
@@ -30,10 +33,18 @@ public class SaleResource {
 	@Autowired
 	private SaleMapper saleMapper;
 
-	@RequestMapping(method=RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@Autowired
+	private SaleStatisticsService statisticsService;
+
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Void> newSale(@RequestBody @Validated SaleDTO saleDTO) throws URISyntaxException {
 		Sale newSale = saleService.newSale(saleMapper.saleDtoToSale(saleDTO));
 		return ResponseEntity.created(new URI("/api/sales/" + newSale.getId())).build();
+	}
+
+	@RequestMapping(value = "/statistics", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public SaleStatistics<YearMonth> statistics() {
+		return statisticsService.last12MonthsSales();
 	}
 
 }

@@ -1,0 +1,24 @@
+<div>
+
+	<div class="row">
+		<h2 data-translate="membershipApp.statistics.home.title">Statistiques de ventes</h2>
+		
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th data-translate="membershipApp.statistics.month">Mois</th>
+						<th data-translate="membershipApp.statistics.amount">Montant</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="stat in salesAmountByMonth">
+						<td>{{stat.month}}</td>
+						<td>{{stat.amount}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>

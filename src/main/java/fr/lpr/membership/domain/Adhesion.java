@@ -107,7 +107,7 @@ public class Adhesion implements Serializable {
 		this.dateAdhesion = dateAdhesion;
 	}
 
-	public Adhesion dateFinAdhesion(LocalDate dateAdhesion) {
+	public Adhesion dateAdhesion(LocalDate dateAdhesion) {
 		setDateAdhesion(dateAdhesion);
 		return this;
 	}

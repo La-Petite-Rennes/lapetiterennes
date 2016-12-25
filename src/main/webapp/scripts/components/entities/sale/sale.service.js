@@ -5,6 +5,10 @@ angular.module('membershipApp')
 		return $resource('api/sales/:id', {}, {
 			'save' : { 
 				method: 'POST' 
+			},
+			'statistics': {
+				method: 'GET',
+				url: 'api/sales/statistics'
 			}
 		});
 	});
