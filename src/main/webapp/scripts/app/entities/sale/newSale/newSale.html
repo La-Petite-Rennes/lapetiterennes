@@ -111,9 +111,9 @@
 					<div style="display:flex; justify-content: space-between;">
 						<small style="margin-right: 0px;">{{getArticle(item.id).name}}</small>
 						<span style="text-align: right;">
-							<span class="glyphicon glyphicon-minus" data-ng-click="decrementQuantity(item)"></span>
-							<span class="glyphicon glyphicon-plus" data-ng-click="incrementQuantity(item)"></span>
-							<span class="glyphicon glyphicon-remove" data-ng-click="removeItem(item)"></span>
+							<span class="glyphicon glyphicon-minus" data-ng-click="basket.decrement(item)"></span>
+							<span class="glyphicon glyphicon-plus" data-ng-click="basket.increment(item)"></span>
+							<span class="glyphicon glyphicon-remove" data-ng-click="basket.removeItem(item)"></span>
 						</span>
 					</div>
 					<div>P.U. : <b>{{toEuros(item.price)}}&nbsp;€</b></div>

@@ -2,18 +2,18 @@
 
 // TODO Créer un objet NewSaleItem et Basket et y ajouter les fonctions Javascripts qui vont bien.
 angular.module('membershipApp')
-	.controller('NewSaleController', function ($scope, Sale, Article, Adherent) {
-		$scope.basket = {
-			date : new Date(),
-			items: []
-		};
+	.controller('NewSaleController', function ($scope, Sale, Article, Adherent, Basket) {
 		$scope.articles = [];
-		$scope.searchAdherentCriteria;
-		$scope.adherent = null;
-		$scope.newItem = {
-			id: 0,
-			quantity: 1
-		};
+		
+		$scope.clearSale = function() {
+			$scope.basket = new Basket();
+			$scope.searchAdherentCriteria = null;
+			$scope.adherent = null;
+			$scope.newItem = {
+				id: 0,
+				quantity: 1
+			};
+		}
 		
 		$scope.loadAll = function() {
 			Article.query(function(result) {
@@ -40,7 +40,7 @@ angular.module('membershipApp')
 		$scope.selectAdherent = function(adherent) {
 			$scope.adherent = adherent;
 			$scope.adherent.name = $scope.adherent.prenom + ' ' + $scope.adherent.nom;
-			$scope.basket.adherentId = $scope.adherent.id;
+			$scope.basket.setAdherent($scope.adherent);
 			
 			$('#searchAdherentModal').modal('hide');
 			$scope.clearSearchAdherent();
@@ -52,34 +52,13 @@ angular.module('membershipApp')
 		};
 		
 		$scope.addItem = function() {
-			var basketItem = getBasketItem($scope.newItem.article.id);
-			if (basketItem === null) {
-				$scope.basket.items.push({
-					id: $scope.newItem.article.id,
-					quantity: $scope.newItem.quantity,
-					price: newItemPrice($scope.newItem)
-				});
-			} else {
-				basketItem.price = newItemPrice($scope.newItem);
-				basketItem.quantity += $scope.newItem.quantity;
-			}
-			
+			$scope.basket.addItem($scope.newItem.article, $scope.newItem.quantity, saleItemPrice($scope.newItem));
 			$scope.newItem = {
 				quantity: 1
 			};
 		};
 		
-		var getBasketItem = function(articleId) {
-			for (var index in $scope.basket.items) {
-				var basketItem = $scope.basket.items[index];
-				if (basketItem.id === articleId) {
-					return basketItem;
-				}
-			}
-			return null;
-		}
-		
-		var newItemPrice = function(newItem) {
+		var saleItemPrice = function(newItem) {
 			var price;
 			if ($scope.newItem.article.salePrice) {
 				price = $scope.newItem.article.salePrice;
@@ -89,34 +68,8 @@ angular.module('membershipApp')
 			return price;
 		}
 		
-		$scope.removeItem = function(item) {
-			var index = $scope.basket.items.indexOf(item);
-			if (index > -1) {
-				$scope.basket.items.splice(index, 1);
-			}
-		}
-		
-		$scope.incrementQuantity = function(item) {
-			item.quantity += 1;
-		}
-		
-		$scope.decrementQuantity = function(item) {
-			if (item.quantity === 1) {
-				$scope.removeItem(item);
-			} else {
-				item.quantity -= 1;
-			}
-		}
-		
 		$scope.saleCost = function() {
-			var totalCost = 0;
-			
-			for (var index in $scope.basket.items) {
-				var item = $scope.basket.items[index];
-				totalCost += item.price * item.quantity;
-			};
-			
-			return $scope.toEuros(totalCost);
+			return $scope.toEuros($scope.basket.totalCost());
 		}
 		
 		$scope.getArticle = function(articleId) {
@@ -135,9 +88,10 @@ angular.module('membershipApp')
 		
 		$scope.saveSale = function() {
 			Sale.save($scope.basket, function(result) {
-				// TODO Clear all
+				$scope.clearSale();
 			});
 		}
 		
+		$scope.clearSale();
 		$scope.loadAll();
 	});
