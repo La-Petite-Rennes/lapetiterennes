@@ -1,6 +1,5 @@
 package fr.lpr.membership.service.sale;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,10 +26,7 @@ public class SaleStatisticsService {
 	@Autowired
 	private AdhesionRepository adhesionRepository;
 
-	public SaleStatistics<YearMonth> last12MonthsSales() {
-		// Select sales from
-		DateTime from = DateTime.now().minusMonths(12).withDayOfMonth(1).withTimeAtStartOfDay();
-
+	public SaleStatistics<YearMonth> statsByMonths(DateTime from) {
 		Map<YearMonth, List<SalableItem>> soldItemsByMonth =
 				StreamSupport
 						.stream(saleRepository.findAll(QSale.sale.createdAt.between(from, DateTime.now())).spliterator(), false)
@@ -50,14 +46,6 @@ public class SaleStatisticsService {
 		itemsByMonth.addItems(soldItemsByMonth);
 		itemsByMonth.addItems(adhesionsByMonth);
 		return itemsByMonth;
-	}
-
-	public void printByMonthAndArticles() {
-		SaleStatistics<YearMonth> sales = last12MonthsSales();
-		for (YearMonth month : sales.getItemsByPeriod().keySet()) {
-			Collection<SalableItem> items = sales.getItemsByPeriod().get(month);
-			Map<String, List<SalableItem>> collect = items.stream().collect(Collectors.groupingBy(item -> item.getName()));
-		}
 	}
 
 }

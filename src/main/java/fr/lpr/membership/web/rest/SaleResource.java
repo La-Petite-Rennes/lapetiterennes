@@ -3,6 +3,7 @@ package fr.lpr.membership.web.rest;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.joda.time.DateTime;
 import org.joda.time.YearMonth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -44,7 +45,8 @@ public class SaleResource {
 
 	@RequestMapping(value = "/statistics", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public SaleStatistics<YearMonth> statistics() {
-		return statisticsService.last12MonthsSales();
+		DateTime from = DateTime.now().minusMonths(12).withDayOfMonth(1).withTimeAtStartOfDay();
+		return statisticsService.statsByMonths(from);
 	}
 
 }
