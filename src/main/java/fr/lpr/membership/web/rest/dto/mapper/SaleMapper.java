@@ -26,9 +26,22 @@ public abstract class SaleMapper {
 	@Mapping(source="adherentId", target="adherent")
 	public abstract Sale saleDtoToSale(SaleDTO saleDTO);
 
+	@Mapping(source="createdAt", target="date")
+	@Mapping(source="adherent.id", target="adherentId")
+	@Mapping(source="adherent.fullName", target="adherentFullName")
+	public abstract SaleDTO saleToSaleDto(Sale sale);
+
 	public SoldItem soldItemToStockHistory(SoldItemDTO soldItemDTO) {
 		Article article = articleFromId(soldItemDTO.getId());
 		return new SoldItem(article, soldItemDTO.getQuantity(), soldItemDTO.getPrice());
+	}
+
+	public SoldItemDTO soldItemToDto(SoldItem soldItem) {
+		SoldItemDTO dto = new SoldItemDTO();
+		dto.setId(soldItem.getId());
+		dto.setPrice(soldItem.getPrice());
+		dto.setQuantity(soldItem.getQuantity());
+		return dto;
 	}
 
 	public Adherent adherentFromId(Long adherentId) {

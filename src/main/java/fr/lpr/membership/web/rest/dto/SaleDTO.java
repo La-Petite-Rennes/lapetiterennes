@@ -17,6 +17,8 @@ import fr.lpr.membership.domain.util.CustomDateTimeSerializer;
 
 public class SaleDTO {
 
+	private Long id;
+
 	@JsonSerialize(using = CustomDateTimeSerializer.class)
 	@JsonDeserialize(using = CustomDateTimeDeserializer.class)
 	@NotNull
@@ -25,12 +27,24 @@ public class SaleDTO {
 	@NotNull
 	private Long adherentId;
 
+	private String adherentFullName;
+
 	@NotNull
 	private PaymentType paymentType;
 
 	@NotEmpty
 	@JsonProperty("items")
 	private List<SoldItemDTO> soldItems;
+
+	private boolean finished;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public DateTime getDate() {
 		return date;
@@ -48,6 +62,14 @@ public class SaleDTO {
 		this.adherentId = adherentId;
 	}
 
+	public String getAdherentFullName() {
+		return adherentFullName;
+	}
+
+	public void setAdherentFullName(String adherentFullName) {
+		this.adherentFullName = adherentFullName;
+	}
+
 	public PaymentType getPaymentType() {
 		return paymentType;
 	}
@@ -62,6 +84,14 @@ public class SaleDTO {
 
 	public void setSoldItems(List<SoldItemDTO> soldItems) {
 		this.soldItems = soldItems;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 
 }

@@ -31,6 +31,14 @@ angular.module('membershipApp')
 			}
 		};
 		
+		Basket.fromJson = function(jsonObject) {
+			var basket = new Basket();
+			for (var prop in jsonObject) {
+				basket[prop] = jsonObject[prop];
+			}
+			return basket;
+		}
+		
 		Basket.prototype.removeItem = function(item) {
 			var index = this.items.indexOf(item);
 			if (index > -1) {

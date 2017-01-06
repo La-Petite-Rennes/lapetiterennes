@@ -99,4 +99,12 @@ public class SoldItem {
 		return this;
 	}
 
+	public Article getArticle() {
+		return stockHistory.getArticle();
+	}
+
+	public int getQuantity() {
+		return stockHistory.getQuantity();
+	}
+
 }

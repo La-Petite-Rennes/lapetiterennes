@@ -87,7 +87,7 @@ angular.module('membershipApp')
 		}
 		
 		$scope.saveSale = function(finished) {
-			$scope.b
+			$scope.basket.finished = finished;
 			Sale.save($scope.basket, function(result) {
 				// TODO Afficher un message de confirmation
 				$scope.clearSale();

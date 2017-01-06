@@ -120,12 +120,6 @@ public class Sale {
 		this.soldItems.add(soldItem);
 	}
 
-	public void addSoldItem(Article article, int quantity) {
-		SoldItem soldItem = new SoldItem(article, quantity);
-		soldItem.setSale(this);
-		this.soldItems.add(soldItem);
-	}
-
 	public DateTime getCreatedAt() {
 		return createdAt;
 	}

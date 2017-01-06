@@ -39,8 +39,21 @@ public class SaleResource {
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Void> newSale(@RequestBody @Validated SaleDTO saleDTO) throws URISyntaxException {
+		if (saleDTO.getId() != null) {
+			return ResponseEntity.badRequest().header("Failure", "A new sale cannot already have an ID").build();
+		}
+
 		Sale newSale = saleService.newSale(saleMapper.saleDtoToSale(saleDTO));
 		return ResponseEntity.created(new URI("/api/sales/" + newSale.getId())).build();
+	}
+
+	public ResponseEntity<Void> updateSale(@RequestBody @Validated SaleDTO saleDTO) throws URISyntaxException {
+		if (saleDTO.getId() == null) {
+			return newSale(saleDTO);
+		}
+
+		saleService.update(saleMapper.saleDtoToSale(saleDTO));
+		return ResponseEntity.ok().build();
 	}
 
 	@RequestMapping(value = "/statistics", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
