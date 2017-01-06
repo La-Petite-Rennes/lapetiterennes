@@ -86,8 +86,10 @@ angular.module('membershipApp')
 			return parseInt(priceInCent / 100) + "," + (priceInCent % 100);
 		}
 		
-		$scope.saveSale = function() {
+		$scope.saveSale = function(finished) {
+			$scope.b
 			Sale.save($scope.basket, function(result) {
+				// TODO Afficher un message de confirmation
 				$scope.clearSale();
 			});
 		}

@@ -52,6 +52,9 @@ public class Sale {
 	@Column(nullable = false)
 	private DateTime updatedAt;
 
+	@Column(nullable = false)
+	private boolean finished;
+
 	public Sale() {
 		this.soldItems = new ArrayList<>();
 		this.createdAt = DateTime.now();
@@ -103,6 +106,7 @@ public class Sale {
 
 	public void setSoldItems(List<SoldItem> soldItems) {
 		this.soldItems = soldItems;
+		this.soldItems.forEach(item -> item.setSale(this));
 	}
 
 	public Sale soldItems(List<SoldItem> soldItems) {
@@ -145,6 +149,19 @@ public class Sale {
 
 	public Sale updatedAt(DateTime updatedAt) {
 		setUpdatedAt(updatedAt);
+		return this;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public Sale finished(boolean finished) {
+		setFinished(finished);
 		return this;
 	}
 

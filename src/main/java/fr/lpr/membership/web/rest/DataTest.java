@@ -80,7 +80,7 @@ public class DataTest {
 		int nbSales = 100;
 		for (int i = 0; i != nbSales; ++i) {
 			Sale sale = new Sale().adherent(adherent).paymentType(PaymentType.Cash)
-					.createdAt(DateTime.now().minusMonths(random.nextInt(12)));
+					.createdAt(DateTime.now().minusMonths(random.nextInt(12))).finished(true);
 			sale.addSoldItem(articles.get(random.nextInt(articles.size() - 1)), 1);
 			saleRepository.save(sale);
 		}

@@ -23,7 +23,8 @@
 				"cheque": "Chèque"
 			},
 			"date": "Date de la vente",
-			"save": "Enregistrer cette vente"
+			"save": "Enregistrer cette vente",
+			"temporary": "Sauvegarder"
 		},
 		"saleHistory": {
 			"home": {

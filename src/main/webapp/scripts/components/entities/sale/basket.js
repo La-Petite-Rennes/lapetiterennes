@@ -10,6 +10,7 @@ angular.module('membershipApp')
 			this.date = new Date();
 			this.items = [];
 			this.paymentType = null;
+			this.finished = false;
 		}
 
 		Basket.prototype.addItem = function(article, quantity, price) {
@@ -72,6 +73,10 @@ angular.module('membershipApp')
 				}
 			}
 			return null;
+		}
+		
+		Basket.prototype.finished = function(finished) {
+			this.finished = true;
 		}
 		
 		return Basket;

@@ -22,6 +22,9 @@
             <column name="updatedAt" type="datetime">
             	<constraints nullable="false" />
             </column>
+            <column name="finished" type="boolean">
+            	<constraints nullable="false" />
+            </column>
         </createTable>
         
         <addForeignKeyConstraint baseColumnNames="adherent_id"
