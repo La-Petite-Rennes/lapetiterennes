@@ -32,9 +32,10 @@ public class SaleService {
 	 * @return
 	 */
 	public Sale newSale(Sale sale) {
+		Sale existingSale = findTemporarySaleForMember(sale.getAdherent());
+
 		// If the sale is temporary and another one already exists for the same member, merge the sales
-		if (!sale.isFinished()) {
-			Sale existingSale = findTemporarySaleForMember(sale.getAdherent());
+		if (!sale.isFinished() && existingSale != null) {
 			sale.getSoldItems().forEach(item -> existingSale.addSoldItem(item.getArticle(), item.getQuantity(), item.getPrice()));
 			return update(existingSale);
 		}

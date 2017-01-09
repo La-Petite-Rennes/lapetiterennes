@@ -9,6 +9,9 @@ angular.module('membershipApp')
 			'statistics': {
 				method: 'GET',
 				url: 'api/sales/statistics'
+			},
+			'get': {
+				method: 'GET'
 			}
 		});
 	});

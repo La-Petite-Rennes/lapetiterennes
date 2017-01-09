@@ -24,5 +24,9 @@ angular.module('membershipApp')
                         return $translate.refresh();
                     }]
     			}
+    		})
+    		.state('sale/:id', {
+    			parent: 'newSale',
+    			url: '/sale/:id'
     		});
     });

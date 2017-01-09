@@ -49,13 +49,13 @@ angular.module('membershipApp')
         	$http.post('api/adherents/reminderEmail/' + $scope.adherent.id)
         		.success(function() {
         			$scope.clear();
-        		})
-        }
+        		});
+        };
         
         $scope.clear = function () {
         	$scope.adhesionToEdit = {};
         	$scope.adhesionToDelete = {};
-        }
+        };
         
         $scope.load($stateParams.id);
         

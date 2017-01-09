@@ -1,8 +1,7 @@
 'use strict'
 
-// TODO Créer un objet NewSaleItem et Basket et y ajouter les fonctions Javascripts qui vont bien.
 angular.module('membershipApp')
-	.controller('NewSaleController', function ($scope, Sale, Article, Adherent, Basket) {
+	.controller('NewSaleController', function ($scope, $stateParams, Sale, Article, Adherent, Basket) {
 		$scope.articles = [];
 		
 		$scope.clearSale = function() {
@@ -15,10 +14,18 @@ angular.module('membershipApp')
 			};
 		}
 		
-		$scope.loadAll = function() {
+		$scope.loadAll = function(saleId) {
 			Article.query(function(result) {
 				$scope.articles = result;
 			})
+			
+			if (saleId !== null) {
+				Sale.get({id: saleId}, function(result) {
+					$scope.basket = Basket.fromJson(result);
+					// FIXME setAdherent
+					// FIXME Récupérer nom article
+				});
+			}
 		};
 		
 		$scope.openAdherentModal = function() {
@@ -95,5 +102,5 @@ angular.module('membershipApp')
 		}
 		
 		$scope.clearSale();
-		$scope.loadAll();
+		$scope.loadAll($stateParams.id);
 	});
