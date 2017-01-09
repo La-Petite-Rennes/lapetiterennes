@@ -2,8 +2,8 @@ package fr.lpr.membership.domain;
 
 // FIXME Prix d'une adhésion soutien ??
 public enum TypeAdhesion {
-	Simple("Adhésion simple", 20),
-	Famille("Adhésion famille", 40),
+	Simple("Adhésion simple", 2000),
+	Famille("Adhésion famille", 4000),
 	Soutien("Adhésion soutien", 0);
 
 	private final String label;
