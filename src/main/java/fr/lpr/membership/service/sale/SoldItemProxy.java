@@ -15,6 +15,11 @@ public class SoldItemProxy implements SalableItem {
 	}
 
 	@Override
+	public Long getId() {
+		return soldItem.getId();
+	}
+
+	@Override
 	public LocalDate getSaleDate() {
 		return soldItem.getSale().getCreatedAt().toLocalDate();
 	}

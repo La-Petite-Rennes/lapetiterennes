@@ -15,6 +15,11 @@ public class AdhesionProxy implements SalableItem {
 	}
 
 	@Override
+	public Long getId() {
+		return adhesion.getId();
+	}
+
+	@Override
 	public LocalDate getSaleDate() {
 		return adhesion.getDateAdhesion();
 	}

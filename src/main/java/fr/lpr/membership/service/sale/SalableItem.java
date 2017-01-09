@@ -5,7 +5,9 @@ import org.joda.time.LocalDate;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.sale.PaymentType;
 
-public interface SalableItem {
+public interface SalableItem extends Comparable<SalableItem> {
+
+	Long getId();
 
 	LocalDate getSaleDate();
 
@@ -22,5 +24,14 @@ public interface SalableItem {
 	PaymentType getPaymentType();
 
 	Adherent getAdherent();
+
+	@Override
+	default int compareTo(SalableItem o) {
+		if (getClass().equals(o.getClass())) {
+			return getId().compareTo(o.getId());
+		} else {
+			return getClass().getName().compareTo(o.getClass().getName());
+		}
+	}
 
 }

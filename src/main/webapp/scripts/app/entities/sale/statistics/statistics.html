@@ -13,11 +13,15 @@
 				</thead>
 				<tbody>
 					<tr data-ng-repeat="stat in salesAmountByMonth">
-						<td>{{stat.month}}</td>
-						<td>{{stat.amount}}</td>
+						<td>{{stat.month | date:'MMMM yyyy'}}</td>
+						<td>{{stat.amount}}&nbsp;€</td>
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		
+		<div>
+			<strong><span data-translate="membershipApp.statistics.total">Total</span>&nbsp;:&nbsp;<span>{{total}}&nbsp;€</span></strong>
 		</div>
 	</div>
 

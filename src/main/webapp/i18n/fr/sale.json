@@ -36,10 +36,11 @@
 		},
 		"statistics": {
 			"home": {
-				"title": "Statistiques de ventes"
+				"title": "Statistiques de ventes et adhésions"
 			},
 			"month": "Mois",
-			"amount": "Montant"
+			"amount": "Montant",
+			"total": "Grand Total"
 		}
 	}
 }

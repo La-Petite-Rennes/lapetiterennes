@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import com.querydsl.core.BooleanBuilder;
 
 import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Article;
 import fr.lpr.membership.domain.sale.QSale;
 import fr.lpr.membership.domain.sale.Sale;
+import fr.lpr.membership.domain.sale.SoldItem;
 import fr.lpr.membership.repository.sale.SaleRepository;
 import fr.lpr.membership.service.sale.event.SaleSavedEvent;
 
@@ -42,6 +44,13 @@ public class SaleService {
 		// Otherwise, create a new one
 		else {
 			sale.updatedAt(sale.getCreatedAt());
+
+			// TODO Gérer la quantité d'article avec un événement Spring suite à création d'un StockHistory
+			for (SoldItem soldItem : sale.getSoldItems()) {
+				Article article = soldItem.getArticle();
+				article.setQuantity(article.getQuantity() - soldItem.getQuantity());
+			}
+
 			return save(sale);
 		}
 	}
@@ -54,6 +63,7 @@ public class SaleService {
 	 */
 	public Sale update(Sale sale) {
 		sale.updatedAt(DateTime.now());
+		// TODO Gérer la quantité d'article avec un événement Spring suite à mise à jour d'un StockHistory
 		return save(sale);
 	}
 
