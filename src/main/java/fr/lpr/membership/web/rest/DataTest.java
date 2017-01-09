@@ -81,10 +81,10 @@ public class DataTest {
 
 		// Enregistrement des ventes
 		Random random = new Random();
-		int nbSales = 100;
+		int nbSales = 200;
 		for (int i = 0; i != nbSales; ++i) {
 			Sale sale = new Sale().adherent(adherent).paymentType(PaymentType.Cash)
-					.createdAt(DateTime.now().minusMonths(random.nextInt(12))).finished(true);
+					.createdAt(DateTime.now().minusMonths(random.nextInt(15))).finished(true);
 			Article article = articles.get(random.nextInt(articles.size() - 1));
 			sale.addSoldItem(article, 1, article.getSalePrice());
 			saleRepository.save(sale);
