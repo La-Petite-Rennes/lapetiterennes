@@ -45,6 +45,10 @@ public class DataTest {
 	@PostConstruct
 	@Transactional
 	public void init() {
+		if (!adherentRepository.findAll().isEmpty()) {
+			return;
+		}
+
 		// Create an adherent and 2 Adhesions
 		Adherent adherent = new Adherent().prenom("Goulven").nom("Le Breton");
 		Adhesion firstAdhesion = new Adhesion().typeAdhesion(TypeAdhesion.Simple).paymentType(PaymentType.Cash)
