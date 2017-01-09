@@ -1,8 +1,12 @@
 package fr.lpr.membership.web.rest;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
+
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.joda.time.YearMonth;
@@ -22,6 +26,8 @@ import com.codahale.metrics.annotation.Timed;
 
 import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.repository.sale.SaleRepository;
+import fr.lpr.membership.security.AuthoritiesConstants;
+import fr.lpr.membership.service.sale.ExportExcelService;
 import fr.lpr.membership.service.sale.SaleService;
 import fr.lpr.membership.service.sale.SaleStatistics;
 import fr.lpr.membership.service.sale.SaleStatisticsService;
@@ -32,6 +38,8 @@ import fr.lpr.membership.web.rest.dto.mapper.SaleMapper;
 @RequestMapping("/api/sales")
 @Timed
 public class SaleResource {
+
+	private static final String CONTENT_TYPE_HEADER = "Content-Type";
 
 	@Autowired
 	private SaleRepository saleRepository;
@@ -44,6 +52,9 @@ public class SaleResource {
 
 	@Autowired
 	private SaleStatisticsService statisticsService;
+
+	@Autowired
+	private ExportExcelService exportExcelService;
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Void> newSale(@RequestBody @Validated SaleDTO saleDTO) throws URISyntaxException {
@@ -77,6 +88,14 @@ public class SaleResource {
 				.map(saleMapper::saleToSaleDto)
 				.map(saleDTO -> new ResponseEntity<>(saleDTO, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@RequestMapping(value = "/export", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Timed
+	@RolesAllowed({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.WORKSHOP_MANAGER })
+	public void exportStatistics(HttpServletResponse response) throws IOException {
+		response.setHeader(CONTENT_TYPE_HEADER, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		exportExcelService.export(response.getOutputStream());
 	}
 
 }

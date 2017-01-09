@@ -40,7 +40,8 @@
 			},
 			"month": "Mois",
 			"amount": "Montant",
-			"total": "Grand Total"
+			"total": "Grand Total",
+			"exportDetails": "Export détaillé (.xlsx)"
 		}
 	}
 }
