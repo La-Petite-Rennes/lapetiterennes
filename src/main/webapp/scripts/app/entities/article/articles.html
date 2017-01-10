@@ -11,6 +11,7 @@
 					<th><a href="" data-ng-click="sortBy('salePrice')">Prix de vente</a></th>
 					<th><a href="" data-ng-click="sortBy('provider.name')">Fournisseur</a></th>
 					<th><a href="" data-ng-click="sortBy('unitPrice')">Prix unitaire</a></th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -20,6 +21,11 @@
 					<td>{{toEuros(article.salePrice)}} €</td>
 					<td>{{article.provider.name}}</td>
 					<td>{{toEuros(article.unitPrice)}} €</td>
+					<td>
+                        <button type="submit" data-ng-click="forRepairing(article)" class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-wrench"></span>
+                        </button>
+                    </td>
 				</tr>
 			</tbody>
 		</table>

@@ -17,6 +17,13 @@ angular.module('membershipApp')
             	method: 'POST',
             	url: 'api/articles/reassort',
             	isArray: true
+            },
+            'forRepairing': {
+            	method: 'POST',
+            	url: 'api/articles/:articleId/forRepairing',
+            	params: {
+            		articleId: '@articleId',
+            	}
             }
         });
     });
