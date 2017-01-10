@@ -66,6 +66,7 @@ public class SaleResource {
 		return ResponseEntity.created(new URI("/api/sales/" + newSale.getId())).build();
 	}
 
+	@RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Void> updateSale(@RequestBody @Validated SaleDTO saleDTO) throws URISyntaxException {
 		if (saleDTO.getId() == null) {
 			return newSale(saleDTO);
