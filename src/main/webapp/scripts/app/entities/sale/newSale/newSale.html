@@ -123,12 +123,12 @@
 			
 			<h4>Total : {{saleCost()}}&nbsp;€</h4>
 			
-			<button class="btn btn-primary" data-ng-click="saveSale(true)">
+			<button class="btn btn-primary" data-ng-click="saveSale(true)" data-ng-disabled="!canSaveSale()">
 				<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.newSale.save">Enregistrer cette vente</span>
 			</button>
 			
 			<br />
-			<button class="btn" data-ng-click="saveSale(false)" style="margin-top: 10px;">
+			<button class="btn" data-ng-click="saveSale(false)" data-ng-disabled="!canSaveSale()" style="margin-top: 10px;">
 				<span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;<span data-translate="membershipApp.newSale.temporary">Sauvegarder</span>
 			</button>
 		</div>

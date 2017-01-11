@@ -101,6 +101,12 @@ angular.module('membershipApp')
 			});
 		}
 		
+		$scope.canSaveSale = function() {
+			return $scope.adherent !== null &&
+				$scope.basket.paymentType !== null &&
+				$scope.basket.items.length !== 0;
+		}
+		
 		$scope.clearSale();
 		$scope.loadAll($stateParams.id);
 	});
