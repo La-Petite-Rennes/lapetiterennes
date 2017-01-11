@@ -1,8 +1,12 @@
 package fr.lpr.membership.service.sale;
 
+import java.util.stream.Collectors;
+
 import javax.transaction.Transactional;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -10,16 +14,16 @@ import org.springframework.stereotype.Service;
 import com.querydsl.core.BooleanBuilder;
 
 import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.Article;
 import fr.lpr.membership.domain.sale.QSale;
 import fr.lpr.membership.domain.sale.Sale;
-import fr.lpr.membership.domain.sale.SoldItem;
 import fr.lpr.membership.repository.sale.SaleRepository;
 import fr.lpr.membership.service.sale.event.SaleSavedEvent;
 
 @Service
 @Transactional
 public class SaleService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SaleService.class);
 
 	@Autowired
 	private SaleRepository saleRepository;
@@ -34,25 +38,25 @@ public class SaleService {
 	 * @return
 	 */
 	public Sale newSale(Sale sale) {
+		Sale savedSale = null;
+
 		Sale existingSale = findTemporarySaleForMember(sale.getAdherent());
 
 		// If the sale is temporary and another one already exists for the same member, merge the sales
 		if (!sale.isFinished() && existingSale != null) {
 			sale.getSoldItems().forEach(item -> existingSale.addSoldItem(item.getArticle(), item.getQuantity(), item.getPrice()));
-			return update(existingSale);
+			savedSale = update(existingSale);
 		}
 		// Otherwise, create a new one
 		else {
 			sale.updatedAt(sale.getCreatedAt());
-
-			// TODO Gérer la quantité d'article avec un événement Spring suite à création d'un StockHistory
-			for (SoldItem soldItem : sale.getSoldItems()) {
-				Article article = soldItem.getArticle();
-				article.setQuantity(article.getQuantity() - soldItem.getQuantity());
-			}
-
-			return save(sale);
+			savedSale = save(sale);
 		}
+
+		LOGGER.info("Enregistrement d'une vente pour {} : \n\t\t{}", sale.getAdherent().getFullName(),
+				sale.getSoldItems().stream().map(item -> item.getQuantity() + " * " + item.getArticle().getName()).collect(Collectors.joining(", \n\t\t")));
+
+		return savedSale;
 	}
 
 	/**
@@ -63,7 +67,6 @@ public class SaleService {
 	 */
 	public Sale update(Sale sale) {
 		sale.updatedAt(DateTime.now());
-		// TODO Gérer la quantité d'article avec un événement Spring suite à mise à jour d'un StockHistory
 		return save(sale);
 	}
 
