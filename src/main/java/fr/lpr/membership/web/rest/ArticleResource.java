@@ -1,6 +1,5 @@
 package fr.lpr.membership.web.rest;
 
-import static fr.lpr.membership.security.AuthoritiesConstants.ADMIN;
 import static fr.lpr.membership.security.AuthoritiesConstants.WORKSHOP_MANAGER;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -61,7 +60,7 @@ public class ArticleResource {
 	}
 
 	@RequestMapping(value = "/articles", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
+	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
 	public ResponseEntity<Void> create(@Valid @RequestBody Article article) throws URISyntaxException {
 		Article savedArticle = articleRepository.save(article);
@@ -69,7 +68,7 @@ public class ArticleResource {
 	}
 
 	@RequestMapping(value = "/articles/reassort", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
+	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
 	public ResponseEntity<Void> reassort(@RequestBody List<Reassort> reassorts) {
 		reassortService.reassort(reassorts);
@@ -78,7 +77,7 @@ public class ArticleResource {
 
 	@RequestMapping(value="/articles/{id}/forRepairing", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
 	@Transactional
-	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
+	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
 	public ResponseEntity<Article> forRepairing(@PathVariable(name = "id") Long articleId) {
 		Article article = articleRepository.findOne(articleId);
