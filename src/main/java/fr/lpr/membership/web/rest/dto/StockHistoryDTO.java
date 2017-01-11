@@ -2,21 +2,19 @@ package fr.lpr.membership.web.rest.dto;
 
 import org.joda.time.DateTime;
 
-import fr.lpr.membership.domain.stock.StockEvent;
-
 public class StockHistoryDTO {
 
-	private StockEvent event;
+	private String event;
 
 	private DateTime createdAt;
 
 	private int quantity;
 
-	public StockEvent getEvent() {
+	public String getEvent() {
 		return event;
 	}
 
-	public void setEvent(StockEvent event) {
+	public void setEvent(String event) {
 		this.event = event;
 	}
 
