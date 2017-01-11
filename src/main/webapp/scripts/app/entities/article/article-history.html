@@ -1,0 +1,24 @@
+<div>
+
+    <h2 data-translate="membershipApp.article.history.title">ArticleHistory</h2>
+
+	<div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th data-translate="membershipApp.article.history.event">StockEvent</th>
+                    <th data-translate="membershipApp.article.history.quantity">Quantity</th>
+                    <th data-translate="membershipApp.article.history.date">Date</th>
+                </tr>
+            </thead>
+            <tbody data-infinite-scroll="loadPage(page + 1)" data-infinite-scroll-disabled="links['last'] == page">
+                <tr data-ng-repeat="hist in history">
+                    <td>{{hist.event}}</td>
+                    <td>{{hist.quantity}}</td>
+                    <td>{{hist.createdAt | date: 'dd/MM/yyyy'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

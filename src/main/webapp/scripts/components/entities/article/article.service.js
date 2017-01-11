@@ -24,6 +24,11 @@ angular.module('membershipApp')
             	params: {
             		articleId: '@articleId',
             	}
+            },
+            'history': {
+            	method: 'GET',
+            	url: 'api/articles/:id/history',
+            	isArray: true
             }
         });
     });

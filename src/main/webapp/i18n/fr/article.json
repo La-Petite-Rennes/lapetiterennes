@@ -6,7 +6,13 @@
 			},
 			"reassort": "Réassort",
 			"name": "Nom",
-			"quantity": "Quantité"
+			"quantity": "Quantité",
+			"history": {
+				"title": "Historique du stock",
+				"event": "Type",
+				"quantity": "Quantité",
+				"date": "Date"
+			}
 		}
 	}
 }

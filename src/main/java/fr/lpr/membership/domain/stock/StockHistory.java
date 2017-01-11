@@ -38,7 +38,7 @@ public class StockHistory {
 	@Column(nullable = false)
 	private int quantity;
 
-	@ManyToOne(optional = true)
+	@ManyToOne(optional = false)
 	private Article article;
 
 	public static StockHistory from(Reassort reassort, Article article) {
