@@ -33,10 +33,12 @@ public class ReassortService {
 	@Transactional
 	public void reassort(List<Reassort> reassorts) {
 		for (Reassort reassort : reassorts) {
-			Article article = articleRepository.findOne(reassort.getId());
+			if (reassort.getQuantity() != 0) {
+				Article article = articleRepository.findOne(reassort.getId());
 
-			stockHistoryRepository.save(StockHistory.from(reassort, article));
-			eventPublisher.publishEvent(fromReassort(article, reassort.getQuantity()));
+				stockHistoryRepository.save(StockHistory.from(reassort, article));
+				eventPublisher.publishEvent(fromReassort(article, reassort.getQuantity()));
+			}
 		}
 	}
 
