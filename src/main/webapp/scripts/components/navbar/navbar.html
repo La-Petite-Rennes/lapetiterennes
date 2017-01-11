@@ -191,11 +191,10 @@
     
     <div id="basketPopover" class="hide">
     	<div data-ng-repeat="basket in baskets">
-    		<span>{{basket.adherentFullName}}</span><br/>
-    		<span>{{basket.date | date : 'dd/MM/yyyy' }}</span><br/>
-    		<span>{{basket.totalCost()}}&nbsp;€</span><br />
+   			<span>{{basket.adherentFullName}}&nbsp;({{basket.totalCost()}}&nbsp;€)</span>
+<!--     			<span>{{basket.date | date : 'dd/MM/yyyy' }}</span> -->
     		<a data-ui-sref="newSale({id: '{{basket.id}}'})">
-    			<button class="btn"><span class="glyphicon glyphicon-edit"></span></button>
+    			<span class="glyphicon glyphicon-edit"></span>
     		</a>
     	</div>
     </div>
