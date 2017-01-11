@@ -14,10 +14,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +28,7 @@ import fr.lpr.membership.domain.Article;
 import fr.lpr.membership.domain.stock.Reassort;
 import fr.lpr.membership.repository.ArticleRepository;
 import fr.lpr.membership.service.stock.ReassortService;
-import fr.lpr.membership.service.stock.StockQuantityChangedEvent;
+import fr.lpr.membership.service.stock.StockService;
 
 @RestController
 @RequestMapping("/api")
@@ -43,7 +41,7 @@ public class ArticleResource {
 	private ReassortService reassortService;
 
 	@Autowired
-	private ApplicationEventPublisher eventPublisher;
+	private StockService stockService;
 
 	@RequestMapping(value="/articles", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	@Timed
@@ -76,13 +74,12 @@ public class ArticleResource {
 	}
 
 	@RequestMapping(value="/articles/{id}/forRepairing", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-	@Transactional
 	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
 	public ResponseEntity<Article> forRepairing(@PathVariable(name = "id") Long articleId) {
 		Article article = articleRepository.findOne(articleId);
 		if (article != null) {
-			eventPublisher.publishEvent(StockQuantityChangedEvent.forRepairing(article));
+			stockService.forRepairing(article);
 			return new ResponseEntity<>(article, OK);
 		} else {
 			return new ResponseEntity<>(NOT_FOUND);

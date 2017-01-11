@@ -49,6 +49,10 @@ public class StockHistory {
 		return new StockHistory().event(StockEvent.SALE).quantity(quantity).article(article);
 	}
 
+	public static StockHistory forRepairing(Article article) {
+		return new StockHistory().event(StockEvent.FOR_REPAIRING).quantity(1).article(article);
+	}
+
 	protected StockHistory() {
 		this.createdAt = DateTime.now();
 	}
