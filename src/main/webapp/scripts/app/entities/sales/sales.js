@@ -35,7 +35,7 @@ angular.module('membershipApp')
     			parent: 'sales',
     			views: {
     				'sales': {
-    					templateUrl: 'scripts/app/entities/sale/statistics/statistics.html',
+    					templateUrl: 'scripts/app/entities/sales/statistics.html',
     					controller: 'SaleStatisticsController'
     				}
     			}
