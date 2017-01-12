@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 angular.module('membershipApp')
     .controller('NavbarController', function ($scope, $location, $state, Auth, Principal, TemporarySales) {
@@ -13,6 +13,11 @@ angular.module('membershipApp')
             $state.go('home');
         };
         
+        var toEuros = function(price) {
+			return parseInt(price / 100) + "," + ('0' + price % 100).slice(-2);
+		};
+        
+        
         $('[data-toggle="popover"]').popover({
         	container: 'body',
             html: true,
@@ -23,5 +28,6 @@ angular.module('membershipApp')
         }).click(function(e) {
             e.preventDefault();
         });
+        
         
     });

@@ -75,7 +75,7 @@ angular.module('membershipApp')
 		};
 		
 		$scope.toEuros = function(priceInCent) {
-			return parseInt(priceInCent / 100) + "," + (priceInCent % 100);
+			return parseInt(priceInCent / 100) + "," + ('0' + priceInCent % 100).slice(-2);
 		}
 		
 		$scope.loadAll();

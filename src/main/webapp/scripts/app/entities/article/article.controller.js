@@ -63,7 +63,7 @@ angular.module('membershipApp')
 		
 		// TODO A extraire dans une directive
 		$scope.toEuros = function(price) {
-			return parseInt(price / 100) + "," + (price % 100);
+			return parseInt(price / 100) + "," + ('0' + price % 100).slice(-2);
 		};
 		
 		$scope.forRepairing = function(article) {

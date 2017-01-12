@@ -29,7 +29,7 @@ angular.module('membershipApp')
 		};
 		
 		var toEuros = function(price) {
-			return parseInt(price / 100) + "," + (price % 100);
+			return parseInt(price / 100) + "," + ('0' + price % 100).slice(-2);
 		};
 		
 		$scope.exportDetails = function () {
