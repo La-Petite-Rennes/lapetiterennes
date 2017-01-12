@@ -107,6 +107,17 @@ angular.module('membershipApp')
 				$scope.basket.items.length !== 0;
 		}
 		
+		$scope.deleteSale = function() {
+			if ($scope.basket.id === null) {
+				return;
+			}
+			
+			Sale.remove({id: $scope.basket.id}, function () {
+				// TODO Afficher un message de confirmation
+				$scope.clearSale();
+			});
+		}
+		
 		$scope.clearSale();
 		$scope.loadAll($stateParams.id);
 	});
