@@ -23,6 +23,7 @@ public abstract class SaleMapper {
 	private ArticleRepository articleRepository;
 
 	@Mapping(source="date", target="createdAt")
+	@Mapping(ignore = true,  target="updatedAt")
 	@Mapping(source="adherentId", target="adherent")
 	public abstract Sale saleDtoToSale(SaleDTO saleDTO);
 
