@@ -42,6 +42,7 @@ public abstract class SaleMapper {
 		dto.setId(soldItem.getId());
 		dto.setPrice(soldItem.getPrice());
 		dto.setQuantity(soldItem.getQuantity());
+		dto.setName(soldItem.getArticle().getName());
 		return dto;
 	}
 

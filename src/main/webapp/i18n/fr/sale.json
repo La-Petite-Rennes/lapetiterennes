@@ -26,6 +26,30 @@
 			"save": "Enregistrer cette vente",
 			"temporary": "Sauvegarder"
 		},
+		"sales": {
+			"home": {
+				"title": "Historique des ventes"
+			},
+			"lastSales": {
+				"link": "Dernières ventes",
+				"title": "Dernières ventes validées",
+				"date": "Date",
+				"itemLabels" : "Items",
+				"adherent": "Adhérents",
+				"totalCost": "Montant total"
+			},
+			"statistics": {
+				"link" : "Statistiques",
+				"title": "Statistiques de ventes et adhésions",
+				"month": "Mois",
+				"amount": "Montant",
+				"total": "Grand Total",
+				"exportDetails": "Export détaillé (.xlsx)"
+			},
+			"bestSales": {
+				"link": "Meilleurs ventes"
+			}
+		},
 		"saleHistory": {
 			"home": {
 				"title": "Historique des ventes"
@@ -33,15 +57,6 @@
 			"bestSale": {
 				"since": "Les articles les plus vendus depuis :"
 			}
-		},
-		"statistics": {
-			"home": {
-				"title": "Statistiques de ventes et adhésions"
-			},
-			"month": "Mois",
-			"amount": "Montant",
-			"total": "Grand Total",
-			"exportDetails": "Export détaillé (.xlsx)"
 		}
 	}
 }

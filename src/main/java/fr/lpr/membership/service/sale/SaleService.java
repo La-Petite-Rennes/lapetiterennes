@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.querydsl.core.BooleanBuilder;
@@ -18,6 +22,7 @@ import fr.lpr.membership.domain.sale.QSale;
 import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.repository.sale.SaleRepository;
 import fr.lpr.membership.service.sale.event.SaleSavedEvent;
+import fr.lpr.membership.web.rest.util.PaginationUtil;
 
 @Service
 @Transactional
@@ -84,6 +89,13 @@ public class SaleService {
 		predicate.and(sale.finished.isFalse());
 
 		return saleRepository.findOne(predicate);
+	}
+
+	public Page<Sale> history(Integer offset, Integer limit) {
+		final Sort sort = new Sort(Direction.DESC, "createdAt");
+		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
+
+		return saleRepository.findAll(pageRequest);
 	}
 
 }
