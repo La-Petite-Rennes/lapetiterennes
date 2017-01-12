@@ -24,8 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -40,7 +39,6 @@ import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.Coordonnees;
-import fr.lpr.membership.domain.Genre;
 import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.SearchAdherentRepository;
@@ -51,9 +49,8 @@ import fr.lpr.membership.repository.SearchAdherentRepository;
  * @see AdherentResource
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringBootTest(classes = Application.class)
 @WebAppConfiguration
-@IntegrationTest
 public class AdherentResourceTest {
 
 	private static final String DEFAULT_PRENOM = "SAMPLE_TEXT";
@@ -65,8 +62,6 @@ public class AdherentResourceTest {
 	private static final Boolean UPDATED_BENEVOLE = true;
 	private static final String DEFAULT_REMARQUE_BENEVOLAT = "SAMPLE_TEXT";
 	private static final String UPDATED_REMARQUE_BENEVOLAT = "UPDATED_TEXT";
-	private static final Genre DEFAULT_GENRE = Genre.Autre;
-	private static final Genre UPDATED_GENRE = Genre.H;
 	private static final String DEFAULT_AUTRE_REMARQUE = "SAMPLE_TEXT";
 	private static final String UPDATED_AUTRE_REMARQUE = "UPDATED_TEXT";
 
@@ -99,7 +94,6 @@ public class AdherentResourceTest {
 		adherent.setNom(DEFAULT_NOM);
 		adherent.setBenevole(DEFAULT_BENEVOLE);
 		adherent.setRemarqueBenevolat(DEFAULT_REMARQUE_BENEVOLAT);
-		adherent.setGenre(DEFAULT_GENRE);
 		adherent.setAutreRemarque(DEFAULT_AUTRE_REMARQUE);
 	}
 
@@ -120,7 +114,6 @@ public class AdherentResourceTest {
 		assertThat(testAdherent.getNom()).isEqualTo(DEFAULT_NOM);
 		assertThat(testAdherent.getBenevole()).isEqualTo(DEFAULT_BENEVOLE);
 		assertThat(testAdherent.getRemarqueBenevolat()).isEqualTo(DEFAULT_REMARQUE_BENEVOLAT);
-		assertThat(testAdherent.getGenre()).isEqualTo(DEFAULT_GENRE);
 		assertThat(testAdherent.getAutreRemarque()).isEqualTo(DEFAULT_AUTRE_REMARQUE);
 	}
 
@@ -193,7 +186,6 @@ public class AdherentResourceTest {
 		.andExpect(jsonPath("$.[*].nom").value(hasItem(DEFAULT_NOM.toString())))
 		.andExpect(jsonPath("$.[*].benevole").value(hasItem(DEFAULT_BENEVOLE.booleanValue())))
 		.andExpect(jsonPath("$.[*].remarqueBenevolat").value(hasItem(DEFAULT_REMARQUE_BENEVOLAT.toString())))
-		.andExpect(jsonPath("$.[*].genre").value(hasItem(DEFAULT_GENRE.toString()))).andExpect(jsonPath("$.[*].statutAdhesion").value("NONE"))
 		.andExpect(jsonPath("$.[*].autreRemarque").value(hasItem(DEFAULT_AUTRE_REMARQUE.toString())));
 	}
 
@@ -209,7 +201,6 @@ public class AdherentResourceTest {
 		.andExpect(jsonPath("$.prenom").value(DEFAULT_PRENOM.toString())).andExpect(jsonPath("$.nom").value(DEFAULT_NOM.toString()))
 		.andExpect(jsonPath("$.benevole").value(DEFAULT_BENEVOLE.booleanValue()))
 		.andExpect(jsonPath("$.remarqueBenevolat").value(DEFAULT_REMARQUE_BENEVOLAT.toString()))
-		.andExpect(jsonPath("$.genre").value(DEFAULT_GENRE.toString())).andExpect(jsonPath("$.statutAdhesion").value("NONE"))
 		.andExpect(jsonPath("$.autreRemarque").value(DEFAULT_AUTRE_REMARQUE.toString()));
 	}
 
@@ -237,7 +228,6 @@ public class AdherentResourceTest {
 		adherent.setNom(UPDATED_NOM);
 		adherent.setBenevole(UPDATED_BENEVOLE);
 		adherent.setRemarqueBenevolat(UPDATED_REMARQUE_BENEVOLAT);
-		adherent.setGenre(UPDATED_GENRE);
 		adherent.setAutreRemarque(UPDATED_AUTRE_REMARQUE);
 		restAdherentMockMvc.perform(put("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
 		.andExpect(status().isOk());
@@ -250,7 +240,6 @@ public class AdherentResourceTest {
 		assertThat(testAdherent.getNom()).isEqualTo(UPDATED_NOM);
 		assertThat(testAdherent.getBenevole()).isEqualTo(UPDATED_BENEVOLE);
 		assertThat(testAdherent.getRemarqueBenevolat()).isEqualTo(UPDATED_REMARQUE_BENEVOLAT);
-		assertThat(testAdherent.getGenre()).isEqualTo(UPDATED_GENRE);
 		assertThat(testAdherent.getAutreRemarque()).isEqualTo(UPDATED_AUTRE_REMARQUE);
 	}
 

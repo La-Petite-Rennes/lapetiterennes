@@ -21,5 +21,7 @@
     <include file="classpath:config/liquibase/changelog/20161124_added_entity_Adhesion_paymentType.xml" relativeToChangelogFile="false"/>
     
     <include file="classpath:config/liquibase/changelog/20161208_added_entity_Sale.xml" relativeToChangelogFile="false" />
+    
+    <include file="classpath:config/liquibase/changelog/20170112_removed_genre_Adherent.xml" relativeToChangelogFile="false" />
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

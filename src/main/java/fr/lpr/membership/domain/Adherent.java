@@ -10,8 +10,6 @@ import java.util.TreeSet;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -85,10 +83,6 @@ public class Adherent implements Serializable {
 
 	@Column(name = "remarque_benevolat")
 	private String remarqueBenevolat;
-
-	@Column(name = "genre")
-	@Enumerated(EnumType.STRING)
-	private Genre genre;
 
 	@Column(name = "autre_remarque")
 	private String autreRemarque;
@@ -170,19 +164,6 @@ public class Adherent implements Serializable {
 
 	public Adherent remarqueBenevolat(String remarqueBenevolat) {
 		setRemarqueBenevolat(remarqueBenevolat);
-		return this;
-	}
-
-	public Genre getGenre() {
-		return genre;
-	}
-
-	public void setGenre(Genre genre) {
-		this.genre = genre;
-	}
-
-	public Adherent genre(Genre genre) {
-		setGenre(genre);
 		return this;
 	}
 
@@ -322,6 +303,6 @@ public class Adherent implements Serializable {
 	@Override
 	public String toString() {
 		return "Adherent{" + "id=" + id + ", prenom='" + prenom + "'" + ", nom='" + nom + "'" + ", benevole='" + benevole + "'" + ", remarqueBenevolat='"
-				+ remarqueBenevolat + "'" + ", genre='" + genre + "'" + ", autreRemarque='" + autreRemarque + "'" + '}';
+				+ remarqueBenevolat + "'" + ", autreRemarque='" + autreRemarque + "'" + '}';
 	}
 }
