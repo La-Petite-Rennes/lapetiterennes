@@ -35,6 +35,9 @@ angular.module('membershipApp')
 			var basket = new Basket();
 			for (var prop in jsonObject) {
 				basket[prop] = jsonObject[prop];
+				if (prop == 'date') {
+					basket[prop] = new Date(basket[prop]);
+				}
 			}
 			return basket;
 		}
