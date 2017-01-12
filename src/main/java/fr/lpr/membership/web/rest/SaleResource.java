@@ -1,5 +1,8 @@
 package fr.lpr.membership.web.rest;
 
+import static fr.lpr.membership.security.AuthoritiesConstants.ADMIN;
+import static fr.lpr.membership.security.AuthoritiesConstants.WORKSHOP_MANAGER;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,7 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.joda.time.YearMonth;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +32,6 @@ import com.codahale.metrics.annotation.Timed;
 
 import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.repository.sale.SaleRepository;
-import fr.lpr.membership.security.AuthoritiesConstants;
 import fr.lpr.membership.service.sale.ExportExcelService;
 import fr.lpr.membership.service.sale.SaleService;
 import fr.lpr.membership.service.sale.SaleStatistics;
@@ -39,7 +44,7 @@ import fr.lpr.membership.web.rest.dto.mapper.SaleMapper;
 @Timed
 public class SaleResource {
 
-	private static final String CONTENT_TYPE_HEADER = "Content-Type";
+	private final Logger log = LoggerFactory.getLogger(SaleResource.class);
 
 	@Autowired
 	private SaleRepository saleRepository;
@@ -93,10 +98,18 @@ public class SaleResource {
 
 	@RequestMapping(value = "/export", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
-	@RolesAllowed({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.WORKSHOP_MANAGER })
+	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
 	public void exportStatistics(HttpServletResponse response) throws IOException {
-		response.setHeader(CONTENT_TYPE_HEADER, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		response.setHeader(HttpHeaders.CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 		exportExcelService.export(response.getOutputStream());
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@Timed
+	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
+	public void delete(@PathVariable Long id) {
+		log.debug("REST request to delete Sale : {}", id);
+		saleRepository.delete(id);
 	}
 
 }
