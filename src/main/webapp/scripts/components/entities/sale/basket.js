@@ -20,6 +20,7 @@ angular.module('membershipApp')
 			if (basketItem === null) {
 				this.items.push({
 					id: article.id,
+					name: article.name,
 					quantity: quantity,
 					price: price
 				});
@@ -51,6 +52,7 @@ angular.module('membershipApp')
 		
 		Basket.prototype.setAdherent = function(adherent) {
 			this.adherentId = adherent.id;
+			this.adherentFullName = adherent.prenom + ' ' + adherent.nom;
 		};
 		
 		Basket.prototype.increment = function(item) {

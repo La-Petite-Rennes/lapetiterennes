@@ -6,7 +6,7 @@
 				<form name="searchAdherentForm" class="form-horizontal" role="form" novalidate>
 					<div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clearSearchAdherent()">&times;</button>
-                        <h4 class="modal-title" id="searchAdherentLabel" data-translate="membershipApp.newSale.adherent.search">SearchAdherent</h4>
+                        <h4 class="modal-title" id="searchAdherentLabel" data-translate="membershipApp.sale.adherent.search">SearchAdherent</h4>
                     </div>
 					<div class="modal-body">
 						<div class="form-group">
@@ -31,7 +31,7 @@
 				                		<td class="statut-{{adherent.statutAdhesion}}">{{adherent.nom}}</td>
 				                		<td>
 				                			<button type="submit" data-ng-click="selectAdherent(adherent)" class="btn btn-primary btn-sm">
-				                				<span class="glyphicon glyphicon-ok"></span>&nbsp;<span data-translate="membershipApp.newSale.adherent.select"> View</span>
+				                				<span class="glyphicon glyphicon-ok"></span>&nbsp;<span data-translate="membershipApp.sale.adherent.select"> View</span>
 				                			</button>
 				                		</td>
 				                	</tr>
@@ -47,22 +47,22 @@
 
 	<div class="row">
 		<div class="col-md-8">
-			<h2 data-translate="membershipApp.newSale.home.title">Nouvelle vente</h2>
+			<h2 data-translate="membershipApp.sale.new.title">Nouvelle vente</h2>
 			
 			<form class="form-horizontal" data-ng-submit="addItem()">
 				<div id="adherent">
 					<div class="form-group" data-ng-show="adherent">
-						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.adherent.label">Adherent</label>
-						<span class="form-control-static col-sm-7">{{adherent.name}}</span>
+						<label class="control-label col-sm-4" data-translate="membershipApp.sale.adherent.label">Adherent</label>
+						<span class="form-control-static col-sm-7">{{basket.adherentFullName}}</span>
 					</div>
 					<button type="button" class="btn col-sm-offset-4" data-ng-click="openAdherentModal()">
-						<span class="glyphicon glyphicon-search"></span>&nbsp;<span data-translate="membershipApp.newSale.adherent.search">SearchAdherent</span>
+						<span class="glyphicon glyphicon-search"></span>&nbsp;<span data-translate="membershipApp.sale.adherent.search">SearchAdherent</span>
 					</button>
 				</div>
 				
 				<div id="saleInfos">
-					<div class="form-group">
-						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.date">DateVente</label>
+					<div class="form-group required">
+						<label class="control-label col-sm-4" data-translate="membershipApp.sale.date">DateVente</label>
 						<div class="col-sm-7">
 							<input type="date" class="form-control" name="saleDate" data-ng-model="basket.date">
 						</div>
@@ -73,16 +73,16 @@
 			
 				<div id="selectItem">
 					<div class="form-group">
-						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.name">Article</label>
+						<label class="control-label col-sm-4" data-translate="membershipApp.sale.item.name">Article</label>
 						<div class="col-sm-7">
 							<select class="form-control placeholder" data-ng-model="newItem.article" data-ng-options="article as article.name for article in articles | orderBy: article.name">
-								<option value="" disabled selected>{{ 'membershipApp.newSale.item.choose' | translate }}</option>
+								<option value="" disabled selected>{{ 'membershipApp.sale.item.choose' | translate }}</option>
 							</select>
 						</div>
 					</div>
 					
 					<div class="form-group">
-						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.quantity">Quantité</label>
+						<label class="control-label col-sm-4" data-translate="membershipApp.sale.item.quantity">Quantité</label>
 						<div class="col-sm-7">
 							<input type="number" min="1" data-ng-model="newItem.quantity" class="form-control">
 						</div>
@@ -90,14 +90,14 @@
 					
 					<!-- Champ de saisie "Prix libre". Affiché uniquement pour les articles sans prix -->
 					<div class="form-group" data-ng-show="newItem.article && !newItem.article.salePrice">
-						<label class="control-label col-sm-4" data-translate="membershipApp.newSale.item.freePrice">FreePrice</label>
+						<label class="control-label col-sm-4" data-translate="membershipApp.sale.item.freePrice">FreePrice</label>
 						<div class="col-sm-7">
 							<input type="number" min="0" step="any" data-ng-model="newItem.freePrice" class="form-control">
 						</div>
 					</div>
 					
 					<button type="submit" class="btn">
-						<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.newSale.item.add">Ajouter cet article</span>
+						<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.sale.item.add">Ajouter cet article</span>
 					</button>
 				</div>
 			</form>
@@ -109,7 +109,7 @@
 			<ul class="list-group">
 				<li class="list-group-item" data-ng-repeat="item in basket.items">
 					<div style="display:flex; justify-content: space-between;">
-						<small style="margin-right: 0px;">{{getArticle(item.id).name}}</small>
+						<small style="margin-right: 0px;">{{item.name}}</small>
 						<span style="text-align: right;">
 							<span class="glyphicon glyphicon-minus" data-ng-click="basket.decrement(item)"></span>
 							<span class="glyphicon glyphicon-plus" data-ng-click="basket.increment(item)"></span>
@@ -125,13 +125,13 @@
 			
 			<div>
 				<button class="btn btn-primary" data-ng-click="saveSale(true)" data-ng-disabled="!canSaveSale()">
-					<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.newSale.save">Enregistrer cette vente</span>
+					<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.sale.save">Enregistrer cette vente</span>
 				</button>
 			</div>
 			
 			<div style="margin-top: 10px;">
 				<button class="btn" data-ng-click="saveSale(false)" data-ng-show="!basket.finished" data-ng-disabled="!canSaveSale()">
-					<span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;<span data-translate="membershipApp.newSale.temporary">Sauvegarder</span>
+					<span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;<span data-translate="membershipApp.sale.temporary">Sauvegarder</span>
 				</button>
 			</div>
 			

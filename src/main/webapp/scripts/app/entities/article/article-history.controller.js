@@ -12,12 +12,13 @@ angular.module('membershipApp')
 		// View Functions
 		
 		$scope.load = function(id) {
+			$scope.clear();
+			
 			$scope.articleId = id;
 			Article.get({id: id}, function(result) {
 				$scope.article = result;
+				$scope.loadPage($scope.page);
 			});
-			
-			$scope.loadPage($scope.page);
 		}
 		
 		$scope.loadPage = function(page) {
@@ -36,6 +37,12 @@ angular.module('membershipApp')
                 }
 			});
         };
+		
+		$scope.clear = function() {
+			$scope.article = {};
+			$scope.history = [];
+			$scope.page = 1;
+		}
 		
 		$scope.load($stateParams.id);
 		

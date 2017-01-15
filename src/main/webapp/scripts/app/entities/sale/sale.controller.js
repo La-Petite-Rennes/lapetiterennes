@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('membershipApp')
-	.controller('NewSaleController', function ($scope, $stateParams, Sale, Article, Adherent, Basket) {
+	.controller('SaleController', function ($scope, $stateParams, Sale, Article, Adherent, Basket) {
 		$scope.articles = [];
 		
 		$scope.clearSale = function() {
@@ -23,8 +23,11 @@ angular.module('membershipApp')
 				Sale.get({id: saleId}, function(result) {
 					$scope.basket = Basket.fromJson(result);
 					// FIXME setAdherent
-					// FIXME Récupérer nom article
+					Adherent.get({id: $scope.basket.adherentId}, function(adherent) {
+						$scope.adherent = adherent;
+					})
 				});
+				
 			}
 		};
 		
@@ -46,7 +49,7 @@ angular.module('membershipApp')
 		
 		$scope.selectAdherent = function(adherent) {
 			$scope.adherent = adherent;
-			$scope.adherent.name = $scope.adherent.prenom + ' ' + $scope.adherent.nom;
+			$scope.adherent.fullName = $scope.adherent.prenom + ' ' + $scope.adherent.nom;
 			$scope.basket.setAdherent($scope.adherent);
 			
 			$('#searchAdherentModal').modal('hide');

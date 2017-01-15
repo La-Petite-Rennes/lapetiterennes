@@ -1,7 +1,7 @@
 {
 	"membershipApp": {
-		"newSale": {
-			"home": {
+		"sale": {
+			"new": {
 				"title": "Nouvelle vente"
 			},
 			"item": {

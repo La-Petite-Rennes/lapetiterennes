@@ -27,7 +27,7 @@
                 </li>
                 
                 <li data-ui-sref-active="active" data-ng-switch-when="true" data-has-role="ROLE_WORKSHOP_MANAGER">
-                    <a data-ui-sref="saleStatistics">
+                    <a data-ui-sref="sales">
                         <span class="glyphicon glyphicon-piggy-bank"></span>
                         <span data-translate="global.menu.entities.saleHistory">saleHistory</span>
                     </a>
@@ -193,7 +193,7 @@
     	<div data-ng-repeat="basket in baskets">
    			<span>{{basket.adherentFullName}}&nbsp;({{basket.totalCost()}}&nbsp;€)</span>
 <!--     			<span>{{basket.date | date : 'dd/MM/yyyy' }}</span> -->
-    		<a data-ui-sref="newSale({id: '{{basket.id}}'})">
+    		<a data-ui-sref="sale({id: basket.id})">
     			<span class="glyphicon glyphicon-edit"></span>
     		</a>
     	</div>

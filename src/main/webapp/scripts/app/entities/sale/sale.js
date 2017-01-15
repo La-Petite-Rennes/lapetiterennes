@@ -3,17 +3,17 @@
 angular.module('membershipApp')
     .config(function ($stateProvider) {
     	$stateProvider
-    		.state('newSale', {
+    		.state('sale', {
     			parent: 'entity',
-    			url: '/newSale',
+    			url: '/sale/:id',
     			data: {
-    				roles: ['ROLE_USER'],
-    				pageTitle: 'membershipApp.newSale.home.title'
+    				roles: ['ROLE_ADMIN', 'ROLE_WORKSHOP_MANAGER'],
+    				pageTitle: 'membershipApp.sale.update.title'
     			},
     			views: {
     				'content@': {
-    					templateUrl: 'scripts/app/entities/sale/newSale/newSale.html',
-    					controller: 'NewSaleController'
+    					templateUrl: 'scripts/app/entities/sale/sale.html',
+    					controller: 'SaleController'
     				}
     			},
     			resolve: {
@@ -25,8 +25,12 @@ angular.module('membershipApp')
                     }]
     			}
     		})
-    		.state('sale/:id', {
-    			parent: 'newSale',
-    			url: '/sale/:id'
+    		.state('newSale', {
+    			parent: 'sale',
+    			url: 'new',
+    			data: {
+    				roles: ['ROLE_USER'],
+    				pageTitle: 'membershipApp.sale.new.title'
+    			},
     		});
     });
