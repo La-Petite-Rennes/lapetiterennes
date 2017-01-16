@@ -88,7 +88,7 @@ public class SaleResource {
 
 	@RequestMapping(value = "/statistics", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 	public SaleStatistics<YearMonth> statistics() {
-		DateTime from = DateTime.now().minusMonths(12).withDayOfMonth(1).withTimeAtStartOfDay();
+		DateTime from = DateTime.now().withMonthOfYear(1).withDayOfMonth(1).withTimeAtStartOfDay();
 		return statisticsService.statsByMonths(from);
 	}
 
