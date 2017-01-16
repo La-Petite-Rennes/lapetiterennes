@@ -1,5 +1,6 @@
 package fr.lpr.membership.service.sale;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
 import com.querydsl.core.BooleanBuilder;
 
 import fr.lpr.membership.domain.Adherent;
@@ -96,6 +98,10 @@ public class SaleService {
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
 		return saleRepository.findAll(pageRequest);
+	}
+
+	public List<Sale> getTemporarySales() {
+		return Lists.newArrayList(saleRepository.findAll(QSale.sale.finished.isFalse()));
 	}
 
 }

@@ -17,6 +17,11 @@ angular.module('membershipApp')
 				method: 'GET',
 				url: 'api/sales/history',
 				isArray: true
+			},
+			'temporary': {
+				method: 'GET',
+				url: 'api/sales/temporary',
+				isArray: true
 			}
 		});
 	});

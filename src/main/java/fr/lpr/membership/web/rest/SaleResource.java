@@ -128,4 +128,11 @@ public class SaleResource {
 		return new ResponseEntity<>(page.getContent().stream().map(saleMapper::saleToSaleDto).collect(Collectors.toList()), headers, OK);
 	}
 
+	@RequestMapping(value = "/temporary", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+	@Timed
+	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
+	public List<SaleDTO> getTemporarySales() {
+		return saleService.getTemporarySales().stream().map(saleMapper::saleToSaleDto).collect(Collectors.toList());
+	}
+
 }

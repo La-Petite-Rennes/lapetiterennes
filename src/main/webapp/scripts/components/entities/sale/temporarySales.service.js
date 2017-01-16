@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('membershipApp')
-	.factory('TemporarySales', function($q, $timeout, Basket) {
+	.factory('TemporarySales', function($q, $timeout, Basket, Sale) {
 		
 		// Constants
 		var RECONNECT_TIMEOUT = 30000;
@@ -27,7 +27,6 @@ angular.module('membershipApp')
 			// FIXME Si déjà présent, supprimer puis ajouter
 			// FIXME Ordonner par date
 			TemporarySales.baskets.push(temporarySale);
-			console.log(TemporarySales.baskets.length);
 		};
 		
 		var reconnect = function() {
@@ -43,6 +42,12 @@ angular.module('membershipApp')
 		};
 		
 		var initialize = function() {
+			Sale.temporary(function(result) {
+				for (var sale of result) {
+					TemporarySales.baskets.push(Basket.fromJson(sale));
+				}
+			});
+			
 			socket.client = new SockJS(SOCKET_URL);
 			socket.stomp = Stomp.over(socket.client);
 			socket.stomp.connect({}, startListener);
