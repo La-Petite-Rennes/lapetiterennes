@@ -22,7 +22,6 @@ angular.module('membershipApp')
 			if (saleId !== null && saleId !== "") {
 				Sale.get({id: saleId}, function(result) {
 					$scope.basket = Basket.fromJson(result);
-					// FIXME setAdherent
 					Adherent.get({id: $scope.basket.adherentId}, function(adherent) {
 						$scope.adherent = adherent;
 					})
