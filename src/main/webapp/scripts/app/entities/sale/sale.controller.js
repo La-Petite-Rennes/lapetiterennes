@@ -98,10 +98,21 @@ angular.module('membershipApp')
 		
 		$scope.saveSale = function(finished) {
 			$scope.basket.finished = finished;
-			Sale.save($scope.basket, function(result) {
-				// TODO Afficher un message de confirmation
-				$scope.clearSale();
-			});
+			
+			// If finished, create a new sale
+			if (finished) {
+				Sale.save($scope.basket, function(result) {
+					// TODO Afficher un message de confirmation
+					$scope.clearSale();
+				});
+			} 
+			// Otherwise, update the sale
+			else {
+				Sale.update($scope.basket, function(result) {
+					// TODO Afficher un message de confirmation
+					$scope.clearSale();
+				});
+			}
 		}
 		
 		$scope.canSaveSale = function() {

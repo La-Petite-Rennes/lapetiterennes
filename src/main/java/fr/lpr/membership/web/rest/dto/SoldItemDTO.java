@@ -5,7 +5,6 @@ import javax.validation.constraints.NotNull;
 
 public class SoldItemDTO {
 
-	@NotNull
 	private Long id;
 
 	@NotNull
@@ -15,6 +14,9 @@ public class SoldItemDTO {
 	@NotNull
 	@Min(1)
 	private Integer price;
+
+	@NotNull
+	private Long articleId;
 
 	private String name;
 
@@ -40,6 +42,14 @@ public class SoldItemDTO {
 
 	public void setPrice(Integer price) {
 		this.price = price;
+	}
+
+	public Long getArticleId() {
+		return articleId;
+	}
+
+	public void setArticleId(Long articleId) {
+		this.articleId = articleId;
 	}
 
 	public String getName() {

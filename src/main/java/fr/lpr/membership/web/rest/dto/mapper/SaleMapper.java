@@ -33,13 +33,18 @@ public abstract class SaleMapper {
 	public abstract SaleDTO saleToSaleDto(Sale sale);
 
 	public SoldItem soldItemToStockHistory(SoldItemDTO soldItemDTO) {
-		Article article = articleFromId(soldItemDTO.getId());
-		return new SoldItem(article, soldItemDTO.getQuantity(), soldItemDTO.getPrice());
+		Article article = articleFromId(soldItemDTO.getArticleId());
+
+		SoldItem soldItem = new SoldItem(article, soldItemDTO.getQuantity(), soldItemDTO.getPrice());
+		soldItem.setId(soldItemDTO.getId());
+
+		return soldItem;
 	}
 
 	public SoldItemDTO soldItemToDto(SoldItem soldItem) {
 		SoldItemDTO dto = new SoldItemDTO();
 		dto.setId(soldItem.getId());
+		dto.setArticleId(soldItem.getArticle().getId());
 		dto.setPrice(soldItem.getPrice());
 		dto.setQuantity(soldItem.getQuantity());
 		dto.setName(soldItem.getArticle().getName());

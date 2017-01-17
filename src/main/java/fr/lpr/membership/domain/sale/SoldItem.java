@@ -107,4 +107,10 @@ public class SoldItem {
 		return stockHistory.getQuantity();
 	}
 
+	public int changeQuantity(int quantity) {
+		int previousQuantity = stockHistory.getQuantity();
+		stockHistory.setQuantity(quantity);
+		return quantity - previousQuantity;
+	}
+
 }

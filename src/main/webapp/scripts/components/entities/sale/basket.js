@@ -19,7 +19,7 @@ angular.module('membershipApp')
 			// If item does not already exists, add it
 			if (basketItem === null) {
 				this.items.push({
-					id: article.id,
+					articleId: article.id,
 					name: article.name,
 					quantity: quantity,
 					price: price
@@ -81,7 +81,7 @@ angular.module('membershipApp')
 		Basket.prototype.getBasketItem = function(articleId) {
 			for (var index in this.items) {
 				var basketItem = this.items[index];
-				if (basketItem.id === articleId) {
+				if (basketItem.articleId === articleId) {
 					return basketItem;
 				}
 			}

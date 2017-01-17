@@ -17,13 +17,13 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
-import com.querydsl.core.BooleanBuilder;
 
-import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.sale.QSale;
 import fr.lpr.membership.domain.sale.Sale;
+import fr.lpr.membership.domain.sale.SoldItem;
 import fr.lpr.membership.repository.sale.SaleRepository;
 import fr.lpr.membership.service.sale.event.SaleSavedEvent;
+import fr.lpr.membership.service.stock.StockQuantityChangedEvent;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
 @Service
@@ -45,20 +45,8 @@ public class SaleService {
 	 * @return
 	 */
 	public Sale newSale(Sale sale) {
-		Sale savedSale = null;
-
-		Sale existingSale = findTemporarySaleForMember(sale.getAdherent());
-
-		// If the sale is temporary and another one already exists for the same member, merge the sales
-		if (!sale.isFinished() && existingSale != null) {
-			sale.getSoldItems().forEach(item -> existingSale.addSoldItem(item.getArticle(), item.getQuantity(), item.getPrice()));
-			savedSale = update(existingSale);
-		}
-		// Otherwise, create a new one
-		else {
-			sale.updatedAt(sale.getCreatedAt());
-			savedSale = save(sale);
-		}
+		sale.updatedAt(sale.getCreatedAt());
+		Sale savedSale = save(sale);
 
 		LOGGER.info("Enregistrement d'une vente pour {} : \n\t\t{}", sale.getAdherent().getFullName(),
 				sale.getSoldItems().stream().map(item -> item.getQuantity() + " * " + item.getArticle().getName()).collect(Collectors.joining(", \n\t\t")));
@@ -73,24 +61,43 @@ public class SaleService {
 	 * @return
 	 */
 	public Sale update(Sale sale) {
-		sale.updatedAt(DateTime.now());
-		return save(sale);
+		Sale existingSale = saleRepository.findOne(sale.getId());
+		if (existingSale == null) {
+			// FIXME Exception
+			return null;
+		}
+
+		// TODO Code à placer dans l'entité Sale ?
+		for (SoldItem item : sale.getSoldItems()) {
+			// Add new sold item to the sale
+			if (item.getId() == null) {
+				existingSale.getSoldItems().add(item);
+				eventPublisher.publishEvent(StockQuantityChangedEvent.fromSale(item.getArticle(), item.getQuantity()));
+			} else {
+				// FIXME Changer le type d'exception
+				SoldItem existingItem = existingSale.getSoldItems().stream()
+						.filter(i -> i.getId().equals(item.getId()))
+						.findFirst()
+						.orElseThrow(() -> new RuntimeException());
+
+				if (existingItem.getPrice() != item.getPrice()) {
+					existingSale.addSoldItem(item.getArticle(), item.getQuantity(), item.getPrice());
+					eventPublisher.publishEvent(StockQuantityChangedEvent.fromSale(item.getArticle(), item.getQuantity()));
+				} else {
+					int quantityDiff = existingItem.changeQuantity(item.getQuantity());
+					eventPublisher.publishEvent(StockQuantityChangedEvent.fromSale(item.getArticle(), quantityDiff));
+				}
+			}
+		}
+
+		existingSale.updatedAt(DateTime.now());
+		return saleRepository.save(existingSale);
 	}
 
 	private Sale save(Sale sale) {
 		Sale savedSale = saleRepository.save(sale);
 		eventPublisher.publishEvent(new SaleSavedEvent(savedSale));
 		return savedSale;
-	}
-
-	private Sale findTemporarySaleForMember(Adherent adherent) {
-		QSale sale = QSale.sale;
-
-		BooleanBuilder predicate = new BooleanBuilder();
-		predicate.and(sale.adherent.id.eq(adherent.getId()));
-		predicate.and(sale.finished.isFalse());
-
-		return saleRepository.findOne(predicate);
 	}
 
 	public Page<Sale> history(Integer offset, Integer limit) {

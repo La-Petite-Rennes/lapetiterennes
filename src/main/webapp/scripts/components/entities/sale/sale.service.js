@@ -6,6 +6,9 @@ angular.module('membershipApp')
 			'save' : { 
 				method: 'POST' 
 			},
+			'update': {
+				method: 'PUT'
+			},
 			'statistics': {
 				method: 'GET',
 				url: 'api/sales/statistics'
