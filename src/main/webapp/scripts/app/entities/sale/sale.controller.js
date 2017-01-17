@@ -99,7 +99,7 @@ angular.module('membershipApp')
 			$scope.basket.finished = finished;
 			
 			// If finished, create a new sale
-			if (finished) {
+			if ($scope.basket.id === null) {
 				Sale.save($scope.basket, function(result) {
 					// TODO Afficher un message de confirmation
 					$scope.clearSale();
@@ -108,7 +108,6 @@ angular.module('membershipApp')
 			} 
 			// Otherwise, update the sale
 			else {
-				$scope.basket.paymentType = 'Waiting';
 				Sale.update($scope.basket, function(result) {
 					// TODO Afficher un message de confirmation
 					$scope.clearSale();
