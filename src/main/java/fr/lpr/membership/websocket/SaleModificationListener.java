@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import fr.lpr.membership.domain.sale.Sale;
-import fr.lpr.membership.service.sale.event.SaleSavedEvent;
+import fr.lpr.membership.service.sale.event.AbstractSaleEvent;
 import fr.lpr.membership.web.rest.dto.SaleDTO;
 import fr.lpr.membership.web.rest.dto.mapper.SaleMapper;
 
@@ -20,7 +20,7 @@ public class SaleModificationListener {
 	private SaleMapper saleMapper;
 
 	@TransactionalEventListener
-	public void handleSaleSavedEvent(SaleSavedEvent event) {
+	public void handleSaleEvent(AbstractSaleEvent event) {
 		Sale sale = event.getSale();
 
 		if (!sale.isFinished()) {

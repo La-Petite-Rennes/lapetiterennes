@@ -23,6 +23,7 @@ import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.domain.sale.SoldItem;
 import fr.lpr.membership.repository.sale.SaleRepository;
 import fr.lpr.membership.service.sale.event.SaleSavedEvent;
+import fr.lpr.membership.service.sale.event.SaleUpdatedEvent;
 import fr.lpr.membership.service.stock.StockQuantityChangedEvent;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 
@@ -91,6 +92,7 @@ public class SaleService {
 		}
 
 		existingSale.updatedAt(DateTime.now());
+		eventPublisher.publishEvent(new SaleUpdatedEvent(existingSale));
 		return saleRepository.save(existingSale);
 	}
 

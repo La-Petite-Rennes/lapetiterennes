@@ -2,9 +2,9 @@ package fr.lpr.membership.service.sale.event;
 
 import fr.lpr.membership.domain.sale.Sale;
 
-public class SaleSavedEvent extends AbstractSaleEvent {
+public class SaleUpdatedEvent extends AbstractSaleEvent {
 
-	public SaleSavedEvent(Sale sale) {
+	public SaleUpdatedEvent(Sale sale) {
 		super(sale);
 	}
 

@@ -24,9 +24,18 @@ angular.module('membershipApp')
 		
 		var getMessage = function(data) {
 			var temporarySale = Basket.fromJson(JSON.parse(data));
-			// FIXME Si déjà présent, supprimer puis ajouter
-			// FIXME Ordonner par date
-			TemporarySales.baskets.push(temporarySale);
+	
+			var alreadyExists = false;
+			for (var index in TemporarySales.baskets) {
+				if (TemporarySales.baskets[index].id === temporarySale.id) {
+					TemporarySales.baskets[index] = temporarySale;
+					alreadyExists = true;
+				}
+			}
+			
+			if (!alreadyExists) {
+				TemporarySales.baskets.push(temporarySale);
+			}
 		};
 		
 		var reconnect = function() {
