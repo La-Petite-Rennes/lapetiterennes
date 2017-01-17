@@ -22,7 +22,8 @@ import fr.lpr.membership.domain.sale.QSale;
 import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.domain.sale.SoldItem;
 import fr.lpr.membership.repository.sale.SaleRepository;
-import fr.lpr.membership.service.sale.event.SaleSavedEvent;
+import fr.lpr.membership.service.sale.event.SaleCreatedEvent;
+import fr.lpr.membership.service.sale.event.SaleDeletedEvent;
 import fr.lpr.membership.service.sale.event.SaleUpdatedEvent;
 import fr.lpr.membership.service.stock.StockQuantityChangedEvent;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
@@ -98,7 +99,7 @@ public class SaleService {
 
 	private Sale save(Sale sale) {
 		Sale savedSale = saleRepository.save(sale);
-		eventPublisher.publishEvent(new SaleSavedEvent(savedSale));
+		eventPublisher.publishEvent(new SaleCreatedEvent(savedSale));
 		return savedSale;
 	}
 
@@ -111,6 +112,12 @@ public class SaleService {
 
 	public List<Sale> getTemporarySales() {
 		return Lists.newArrayList(saleRepository.findAll(QSale.sale.finished.isFalse()));
+	}
+
+	public void delete(Long saleId) {
+		Sale sale = saleRepository.findOne(saleId);
+		saleRepository.delete(sale);
+		eventPublisher.publishEvent(new SaleDeletedEvent(sale));
 	}
 
 }

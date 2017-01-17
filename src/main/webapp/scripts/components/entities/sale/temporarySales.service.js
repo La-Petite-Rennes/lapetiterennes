@@ -7,6 +7,7 @@ angular.module('membershipApp')
 		var RECONNECT_TIMEOUT = 30000;
 		var SOCKET_URL = "/lpr-websocket";
 		var TEMPORARY_SALES_TOPIC = "/topic/temporarySales";
+		var DELETE_SALES_TOPIC = "/topic/deletedSale";
 		
 		// Fonctions WebSocket
 		var socket = {
@@ -38,6 +39,16 @@ angular.module('membershipApp')
 			}
 		};
 		
+		var deletedSale = function(saleId) {
+			var index = TemporarySales.baskets.findIndex(function(basket) {
+				return basket.id === parseInt(saleId);
+			});
+			
+			if (index !== -1) {
+				TemporarySales.baskets.splice(index, 1);
+			}
+		}
+		
 		var reconnect = function() {
 			$timeout(function() {
 				initialize();
@@ -47,6 +58,9 @@ angular.module('membershipApp')
 		var startListener = function() {
 			socket.stomp.subscribe(TEMPORARY_SALES_TOPIC, function(data) {
 				listener.notify(getMessage(data.body));
+			});
+			socket.stomp.subscribe(DELETE_SALES_TOPIC, function(data) {
+				listener.notify(deletedSale(data.body));
 			});
 		};
 		

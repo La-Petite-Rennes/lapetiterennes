@@ -127,14 +127,14 @@
 			<h4>Total : {{saleCost()}}&nbsp;€</h4>
 
 			<div style="margin-top: 10px;">
-				<button class="btn" data-ng-click="saveSale(false)" data-ng-show="!basket.finished" data-ng-disabled="!canSaveSale() || basket.paymentType === 'Waiting'">
+				<button class="btn" data-ng-click="saveSale(false)" data-ng-show="!basket.finished" data-ng-disabled="!canSaveSale()">
 					<span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;<span data-translate="membershipApp.sale.temporary">Sauvegarder</span>
 				</button>
 			</div>
 			
 			
 			<div style="margin-top: 10px;">
-				<button class="btn btn-primary" data-ng-click="saveSale(true)" data-ng-disabled="!canSaveSale()">
+				<button class="btn btn-primary" data-ng-click="saveSale(true)" data-ng-disabled="!canSaveSale() || basket.paymentType === 'Waiting'">
 					<span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="membershipApp.sale.save">Enregistrer cette vente</span>
 				</button>
 			</div>
@@ -145,8 +145,6 @@
 					<span class="glyphicon glyphicon-remove"></span>&nbsp;<span data-translate="entity.action.delete"> Delete</span>
 				</button>
 			</div>
-			
-		
 			
 		</div>
 	</div>

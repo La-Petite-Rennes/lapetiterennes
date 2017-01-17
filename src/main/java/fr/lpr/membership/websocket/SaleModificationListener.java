@@ -7,6 +7,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.service.sale.event.AbstractSaleEvent;
+import fr.lpr.membership.service.sale.event.SaleCreatedEvent;
+import fr.lpr.membership.service.sale.event.SaleUpdatedEvent;
 import fr.lpr.membership.web.rest.dto.SaleDTO;
 import fr.lpr.membership.web.rest.dto.mapper.SaleMapper;
 
@@ -20,7 +22,16 @@ public class SaleModificationListener {
 	private SaleMapper saleMapper;
 
 	@TransactionalEventListener
-	public void handleSaleEvent(AbstractSaleEvent event) {
+	public void handleSaleEvent(SaleCreatedEvent event) {
+		handleSaleModificationEvent(event);
+	}
+
+	@TransactionalEventListener
+	public void handleSaleEvent(SaleUpdatedEvent event) {
+		handleSaleModificationEvent(event);
+	}
+
+	private void handleSaleModificationEvent(AbstractSaleEvent event) {
 		Sale sale = event.getSale();
 
 		if (!sale.isFinished()) {

@@ -21,6 +21,10 @@ public class StockQuantityChangedEvent {
 		return new StockQuantityChangedEvent(article, quantity * -1);
 	}
 
+	public static StockQuantityChangedEvent deletedSale(Article article, int quantity) {
+		return new StockQuantityChangedEvent(article, quantity);
+	}
+
 	public static StockQuantityChangedEvent forRepairing(Article article) {
 		return new StockQuantityChangedEvent(article, -1);
 	}

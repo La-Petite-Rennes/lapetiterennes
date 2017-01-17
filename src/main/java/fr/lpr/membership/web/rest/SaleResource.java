@@ -114,7 +114,7 @@ public class SaleResource {
 	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
 	public void delete(@PathVariable Long id) {
 		log.debug("REST request to delete Sale : {}", id);
-		saleRepository.delete(id);
+		saleService.delete(id);
 	}
 
 	@RequestMapping(value = "/history", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
