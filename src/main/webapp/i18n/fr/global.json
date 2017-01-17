@@ -10,8 +10,8 @@
                 "adhesion": "Adhésions",
                 "adherent": "Adhérents",
                 "article": "Articles",
-                "newSale": "Nouvelle vente",
-                "saleHistory": "Ventes",
+                "newSale": "Nouvelle Vente",
+                "saleHistory": "Historique des Ventes",
                 "additionalEntity": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

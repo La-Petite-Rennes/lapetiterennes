@@ -23,8 +23,8 @@
 				"cheque": "Chèque"
 			},
 			"date": "Date de la vente",
-			"save": "Enregistrer cette vente",
-			"temporary": "Sauvegarder"
+			"save": "Terminer la vente",
+			"temporary": "Mémoriser la vente"
 		},
 		"sales": {
 			"home": {
@@ -34,7 +34,7 @@
 				"link": "Dernières ventes",
 				"title": "Dernières ventes validées",
 				"date": "Date",
-				"itemLabels" : "Items",
+				"itemLabels" : "Articles",
 				"adherent": "Adhérents",
 				"totalCost": "Montant total"
 			},
