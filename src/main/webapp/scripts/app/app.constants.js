@@ -4,6 +4,6 @@ angular.module('membershipApp')
 
 .constant('ENV', 'dev')
 
-.constant('VERSION', '1.2-SNAPSHOT')
+.constant('VERSION', '2.0')
 
 ;
