@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('membershipApp')
-	.controller('SaleController', function ($scope, $stateParams, Sale, Article, Adherent, Basket) {
+	.controller('SaleController', function ($scope, $state, $stateParams, Sale, Article, Adherent, Basket) {
 		$scope.articles = [];
 		
 		$scope.clearSale = function() {
@@ -104,6 +104,7 @@ angular.module('membershipApp')
 				Sale.save($scope.basket, function(result) {
 					// TODO Afficher un message de confirmation
 					$scope.clearSale();
+					$state.go('newSale');
 				});
 			} 
 			// Otherwise, update the sale
@@ -111,6 +112,7 @@ angular.module('membershipApp')
 				Sale.update($scope.basket, function(result) {
 					// TODO Afficher un message de confirmation
 					$scope.clearSale();
+					$state.go('newSale');
 				});
 			}
 		}
@@ -129,6 +131,7 @@ angular.module('membershipApp')
 			Sale.remove({id: $scope.basket.id}, function () {
 				// TODO Afficher un message de confirmation
 				$scope.clearSale();
+				$state.go('newSale');
 			});
 		}
 		
