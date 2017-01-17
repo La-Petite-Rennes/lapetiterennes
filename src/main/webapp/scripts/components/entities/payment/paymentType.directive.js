@@ -6,7 +6,11 @@ angular.module('membershipApp')
 			restrict: 'E',
 		    scope: {
 		    	labelSize: '=labelSize',
-		    	payment: '=model'
+		    	payment: '=model',
+		    	waiting: '=waiting'
+		    },
+		    controller: function($scope){
+		    	$scope.payment = angular.isDefined($scope.waiting) ? 'Waiting' : $scope.payment;
 		    },
             templateUrl: 'scripts/components/entities/payment/paymentType.html'
         };

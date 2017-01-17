@@ -108,6 +108,7 @@ angular.module('membershipApp')
 			} 
 			// Otherwise, update the sale
 			else {
+				$scope.basket.paymentType = 'Waiting';
 				Sale.update($scope.basket, function(result) {
 					// TODO Afficher un message de confirmation
 					$scope.clearSale();
