@@ -14,14 +14,14 @@
 				<tbody>
 					<tr data-ng-repeat="stat in salesAmountByMonth">
 						<td>{{stat.month | date:'MMMM yyyy'}}</td>
-						<td>{{stat.amount}}&nbsp;€</td>
+						<td><euros cents="stat.amount" /></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 		
 		<div>
-			<strong><span data-translate="membershipApp.sales.statistics.total">Total</span>&nbsp;:&nbsp;<span>{{total}}&nbsp;€</span></strong>
+			<strong><span data-translate="membershipApp.sales.statistics.total">Total</span>&nbsp;:&nbsp;<euros cents="total" /></strong>
 		</div>
 		
 		<button data-ng-click="exportDetails()" class="btn btn-primary" data-translate="membershipApp.sales.statistics.exportDetails">ExportDetails</button>

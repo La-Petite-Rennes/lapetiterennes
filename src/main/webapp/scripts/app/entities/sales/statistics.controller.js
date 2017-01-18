@@ -14,22 +14,16 @@ angular.module('membershipApp')
 		
 		var computeSalesAmountByMonth = function() {
 			$scope.salesAmountByMonth = [];
-			var total = 0;
+			$scope.total = 0;
 
 			for (var month in $scope.salesByMonth) {
 				var amount = $scope.salesByMonth[month].reduce(function(total, sale) { return total + sale.totalPrice }, 0);
 				$scope.salesAmountByMonth.push({
 					month: new Date(month),
-					amount: toEuros(amount)
+					amount: amount
 				});
-				total += amount;
+				$scope.total += amount;
 			}
-			
-			$scope.total = toEuros(total);
-		};
-		
-		var toEuros = function(price) {
-			return parseInt(price / 100) + "," + ('0' + price % 100).slice(-2);
 		};
 		
 		$scope.exportDetails = function () {

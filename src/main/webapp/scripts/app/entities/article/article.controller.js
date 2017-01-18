@@ -61,11 +61,6 @@ angular.module('membershipApp')
 			$scope.propertyName = propertyName;
 		};
 		
-		// TODO A extraire dans une directive
-		$scope.toEuros = function(price) {
-			return parseInt(price / 100) + "," + ('0' + price % 100).slice(-2);
-		};
-		
 		$scope.forRepairing = function(article) {
 			Article.forRepairing({articleId: article.id}, function(updatedArticle) {
 				article.quantity = updatedArticle.quantity;

@@ -77,10 +77,6 @@ angular.module('membershipApp')
 			return price;
 		}
 		
-		$scope.saleCost = function() {
-			return $scope.toEuros($scope.basket.totalCost());
-		}
-		
 		$scope.getArticle = function(articleId) {
 			for (var index in $scope.articles) {
 				var article = $scope.articles[index];
@@ -89,10 +85,6 @@ angular.module('membershipApp')
 				}
 			}
 			return null;
-		}
-		
-		$scope.toEuros = function(priceInCent) {
-			return parseInt(priceInCent / 100) + "," + ('0' + priceInCent % 100).slice(-2);
 		}
 		
 		$scope.saveSale = function(finished) {

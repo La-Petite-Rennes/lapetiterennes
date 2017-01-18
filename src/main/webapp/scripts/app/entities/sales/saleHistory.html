@@ -24,16 +24,16 @@
 					<tbody>
 						<tr data-ng-repeat="item in history | orderBy:propertyName:reverse">
 							<td>{{item.label}}</td>
-							<td>{{toEuros(item.unitPrice)}} €</td>
+							<td><euros cents="item.unitPrice" /></td>
 							<td>{{item.nbSales}}</td>
-							<td>{{toEuros(item.totalPrice)}} €</td>
+							<td><euros cents="item.totalPrice" /></td>
 						</tr>
 					</tbody>
 				</table>	
 			</div>
 			
 			<div class="history-totalPrice">
-				<span><strong>Total : </strong></span><span>{{toEuros(totalPrice())}} €</span>
+				<span><strong>Total : </strong></span><span><euros cents="totalPrice()" /></span>
 			</div>
 		</div>
 	</div>

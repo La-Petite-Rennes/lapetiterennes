@@ -119,12 +119,12 @@
 							<span class="glyphicon glyphicon-remove" data-ng-click="basket.removeItem(item)"></span>
 						</span>
 					</div>
-					<div>P.U. : <b>{{toEuros(item.price)}}&nbsp;€</b></div>
+					<div>P.U. : <b><euros cents="item.price" /></b></div>
 					<div>Qté : <b>{{item.quantity}}</b></div>
 				</li>
 			</ul>
 			
-			<h4>Total : {{saleCost()}}&nbsp;€</h4>
+			<h4>Total : <euros cents="basket.totalCost()" /></h4>
 
 			<div style="margin-top: 10px;">
 				<button class="btn" data-ng-click="saveSale(false)" data-ng-show="!basket.finished" data-ng-disabled="!canSaveSale()">

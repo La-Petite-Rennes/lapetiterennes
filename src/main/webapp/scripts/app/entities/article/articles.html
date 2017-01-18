@@ -18,9 +18,9 @@
 				<tr data-ng-repeat="article in articles | orderBy:propertyName:reverse" data-ng-class="stockLevel(article)">
 					<td>{{article.name}}</td>
 					<td>{{article.quantity}}</td>
-					<td>{{toEuros(article.salePrice)}} €</td>
+					<td><euros cents="article.salePrice" /></td>
 					<td>{{article.provider.name}}</td>
-					<td>{{toEuros(article.unitPrice)}} €</td>
+					<td><euros cents="article.unitPrice" /></td>
 					<td>
                         <button type="submit" data-ng-click="forRepairing(article)" class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-wrench"></span>
