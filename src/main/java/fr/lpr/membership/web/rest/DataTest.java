@@ -11,9 +11,11 @@ import javax.annotation.PostConstruct;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import fr.lpr.membership.config.Constants;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.Article;
@@ -28,6 +30,7 @@ import fr.lpr.membership.repository.sale.SaleRepository;
 
 // FIXME A Supprimer
 @Component
+@Profile(Constants.SPRING_PROFILE_DEVELOPMENT)
 public class DataTest {
 
 	@Autowired
