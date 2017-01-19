@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('membershipApp')
-	.factory('TemporarySales', function($q, $timeout, Basket, Sale) {
+	.factory('TemporarySales', function($q, $rootScope, $timeout, Basket, Sale) {
 		
 		// Constants
 		var RECONNECT_TIMEOUT = 30000;
@@ -23,7 +23,7 @@ angular.module('membershipApp')
 		// List of temporary sales
 		TemporarySales.baskets = [];
 		
-		var getMessage = function(data) {
+		var saleReceived = function(data) {
 			var temporarySale = Basket.fromJson(JSON.parse(data));
 	
 			var alreadyExists = false;
@@ -37,6 +37,9 @@ angular.module('membershipApp')
 			if (!alreadyExists) {
 				TemporarySales.baskets.push(temporarySale);
 			}
+			
+			// Refresh the scope to apply the modiciation in the view
+			$rootScope.$apply();
 		};
 		
 		var deletedSale = function(saleId) {
@@ -47,6 +50,9 @@ angular.module('membershipApp')
 			if (index !== -1) {
 				TemporarySales.baskets.splice(index, 1);
 			}
+
+			// Refresh the scope to apply the modiciation in the view
+			$rootScope.$apply();
 		}
 		
 		var reconnect = function() {
@@ -57,7 +63,7 @@ angular.module('membershipApp')
 		
 		var startListener = function() {
 			socket.stomp.subscribe(TEMPORARY_SALES_TOPIC, function(data) {
-				listener.notify(getMessage(data.body));
+				listener.notify(saleReceived(data.body));
 			});
 			socket.stomp.subscribe(DELETE_SALES_TOPIC, function(data) {
 				listener.notify(deletedSale(data.body));
