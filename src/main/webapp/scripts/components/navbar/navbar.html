@@ -180,7 +180,7 @@
                 </li>
                 
                 <li data-ui-sref-active="active" class="pointer">
-					<a data-container="body" data-toggle="popover" data-placement="bottom" data-popover-content="#basketPopover">
+					<a uib-popover-template="dynamicPopover.templateUrl" data-popover-placement="bottom">
                      	<span class="glyphicon glyphicon-shopping-cart"></span>
                      	<span class="badge">{{baskets.length}}</span>
                     </a>
@@ -189,12 +189,15 @@
         </div>
     </div>
     
-    <div id="basketPopover" class="hide">
-    	<div data-ng-repeat="basket in baskets">
-   			<span>{{basket.adherentFullName}}&nbsp;(<euros cents="basket.totalCost()" />)</span>
-    		<a data-ui-sref="sale({id: basket.id})">
-    			<span class="glyphicon glyphicon-edit"></span>
-    		</a>
+    <script type="text/ng-template" id="basketPopoverTemplate.html">
+	    <div id="basketPopover" style="min-width: 250px;">
+ 		   	<div data-ng-repeat="basket in baskets">
+   				<span>{{basket.adherentFullName}}&nbsp;(<euros cents="basket.totalCost()" />)</span>
+    			<a data-ui-sref="sale({id: basket.id})">
+    				<span class="glyphicon glyphicon-edit"></span>
+    			</a>
+    		</div>
     	</div>
-    </div>
+	</script>
+    
 </nav>

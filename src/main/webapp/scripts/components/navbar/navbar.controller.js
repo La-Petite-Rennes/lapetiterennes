@@ -8,20 +8,13 @@ angular.module('membershipApp')
         
         $scope.baskets = TemporarySales.baskets;
         
+        $scope.dynamicPopover = {
+		    templateUrl: 'basketPopoverTemplate.html'
+		};
+        
         $scope.logout = function () {
             Auth.logout();
             $state.go('home');
         };
-        
-        $('[data-toggle="popover"]').popover({
-        	container: 'body',
-            html: true,
-            content: function () {
-                var clone = $($(this).data('popover-content')).clone(true).removeClass('hide');
-                return clone;
-            }
-        }).click(function(e) {
-            e.preventDefault();
-        });
         
     });
