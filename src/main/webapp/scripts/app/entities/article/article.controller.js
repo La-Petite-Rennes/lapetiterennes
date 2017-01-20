@@ -71,6 +71,11 @@ angular.module('membershipApp')
 			});
 		};
 		
+		$scope.update = function(article) {
+			$scope.newArticle = angular.copy(article);
+			$('#articleModal').modal('show');
+		}
+		
 		$scope.createArticle = function() {
 			Article.save($scope.newArticle, function(result) {
 				$('#articleModal').modal('hide');
