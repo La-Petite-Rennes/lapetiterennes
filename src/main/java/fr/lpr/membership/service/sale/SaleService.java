@@ -93,6 +93,10 @@ public class SaleService {
 		}
 
 		existingSale.updatedAt(DateTime.now());
+		existingSale.setAdherent(sale.getAdherent());
+		existingSale.setFinished(sale.isFinished());
+		existingSale.setPaymentType(sale.getPaymentType());
+
 		eventPublisher.publishEvent(new SaleUpdatedEvent(existingSale));
 		return saleRepository.save(existingSale);
 	}
@@ -107,7 +111,7 @@ public class SaleService {
 		final Sort sort = new Sort(Direction.DESC, "createdAt");
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
-		return saleRepository.findAll(pageRequest);
+		return saleRepository.findAll(QSale.sale.finished.isTrue(), pageRequest);
 	}
 
 	public List<Sale> getTemporarySales() {
