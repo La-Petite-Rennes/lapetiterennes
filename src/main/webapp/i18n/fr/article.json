@@ -2,11 +2,16 @@
 	"membershipApp": {
 		"article": {
 			"home": {
-				"title": "Articles"
+				"title": "Articles",
+				"createArticle": "Créer un nouvel article",
+				"createOrEditLabel": "Créer ou modifier un article"
 			},
 			"reassort": "Réassort",
 			"name": "Nom",
 			"quantity": "Quantité",
+			"salePrice": "Prix de vente",
+			"provider": "Fournisseur",
+			"unitPrice": "Prix d'achat unitaire",
 			"history": {
 				"title": "Historique du stock",
 				"event": "Type",

@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('membershipApp')
-	.controller('ArticleController', function ($scope, Article) {
+	.controller('ArticleController', function ($scope, Article, Provider) {
 		$scope.articles = [];
 		$scope.reverse = false;
 		$scope.propertyName= 'name';
@@ -17,7 +17,11 @@ angular.module('membershipApp')
 				$scope.reverse = false;
 				$scope.propertyName= 'name';
 				$scope.clearReassort();
-			})
+			});
+			
+			Provider.query(function(result) {
+				$scope.providers = result;
+			});
 		};
 		
 		$scope.stockLevel = function(article) {
@@ -65,7 +69,18 @@ angular.module('membershipApp')
 			Article.forRepairing({articleId: article.id}, function(updatedArticle) {
 				article.quantity = updatedArticle.quantity;
 			});
-		}
+		};
+		
+		$scope.createArticle = function() {
+			Article.save($scope.newArticle, function(result) {
+				$('#articleModal').modal('hide');
+				$scope.loadAll();
+			});
+		};
+		
+		$scope.clearArticleModal = function() {
+			$scope.newArticle = {};
+		};
 		
 		$scope.loadAll();
 		

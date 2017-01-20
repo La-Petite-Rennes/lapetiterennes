@@ -15,11 +15,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name="PROVIDER")
 @Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Provider {
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
+	@NotNull
 	private Long id;
-	
+
 	@NotNull
 	@Column(nullable=false, unique=true)
 	private String name;
@@ -31,12 +32,12 @@ public class Provider {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public Provider id(Long id) {
 		setId(id);
 		return this;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -44,7 +45,7 @@ public class Provider {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Provider name(String name) {
 		setName(name);
 		return this;
