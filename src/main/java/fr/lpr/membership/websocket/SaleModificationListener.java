@@ -37,6 +37,8 @@ public class SaleModificationListener {
 		if (!sale.isFinished()) {
 			SaleDTO dto = saleMapper.saleToSaleDto(sale);
 			this.template.convertAndSend("/topic/temporarySales", dto);
+		} else {
+			this.template.convertAndSend("/topic/finishedSale", sale.getId());
 		}
 	}
 

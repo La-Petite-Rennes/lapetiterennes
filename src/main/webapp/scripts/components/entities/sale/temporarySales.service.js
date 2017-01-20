@@ -8,6 +8,7 @@ angular.module('membershipApp')
 		var SOCKET_URL = "/lpr-websocket";
 		var TEMPORARY_SALES_TOPIC = "/topic/temporarySales";
 		var DELETE_SALES_TOPIC = "/topic/deletedSale";
+		var FINISHED_SALE_TOPIC = "/topic/finishedSale";
 		
 		// Fonctions WebSocket
 		var socket = {
@@ -66,6 +67,9 @@ angular.module('membershipApp')
 				listener.notify(saleReceived(data.body));
 			});
 			socket.stomp.subscribe(DELETE_SALES_TOPIC, function(data) {
+				listener.notify(deletedSale(data.body));
+			});
+			socket.stomp.subscribe(FINISHED_SALE_TOPIC, function(data) {
 				listener.notify(deletedSale(data.body));
 			});
 		};
