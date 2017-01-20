@@ -137,11 +137,11 @@ angular.module('membershipApp')
                 file: $scope.importAdherentFile
             }).progress(function (evt) {
                 var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
             }).success(function (data, status, headers, config) {
             	$('#importerModal').modal('hide');
             	$scope.reset();
             }).error(function (data, status, headers, config) {
+            	// FIXME A remplacer par un message d'erreur
                 console.log('error status: ' + status);
             });
         };
