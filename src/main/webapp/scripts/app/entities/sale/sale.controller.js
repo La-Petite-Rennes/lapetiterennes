@@ -3,6 +3,7 @@
 angular.module('membershipApp')
 	.controller('SaleController', function ($scope, $state, $stateParams, Sale, Article, Adherent, Basket) {
 		$scope.articles = [];
+		$scope.alerts = [];
 		
 		$scope.clearSale = function() {
 			$scope.basket = new Basket();
@@ -14,7 +15,7 @@ angular.module('membershipApp')
 			};
 		}
 		
-		$scope.loadAll = function(saleId) {
+		$scope.load = function(saleId, alert) {
 			Article.query(function(result) {
 				$scope.articles = result;
 			})
@@ -26,7 +27,10 @@ angular.module('membershipApp')
 						$scope.adherent = adherent;
 					})
 				});
-				
+			}
+
+			if (alert != null) {
+				$scope.alerts.push(alert);
 			}
 		};
 		
@@ -91,19 +95,25 @@ angular.module('membershipApp')
 			$scope.basket.finished = finished;
 			
 			// If finished, create a new sale
-			if ($scope.basket.id === null) {
+			if ($scope.basket.id == null) {
 				Sale.save($scope.basket, function(result) {
-					// TODO Afficher un message de confirmation
-					$scope.clearSale();
-					$state.go('newSale');
+					// TODO Gérer les cas d'erreurs
+					var alert = {
+						type: 'success',
+						message: 'La vente a été enregistrée avec succès'
+					};
+					$state.go('newSale', {id: null, alert: alert}, {reload: true});
 				});
 			} 
 			// Otherwise, update the sale
 			else {
 				Sale.update($scope.basket, function(result) {
-					// TODO Afficher un message de confirmation
-					$scope.clearSale();
-					$state.go('newSale');
+					// TODO Gérer les cas d'erreurs
+					var alert = {
+						type: 'success',
+						message: 'La vente a été mise à jour avec succès'
+					};
+					$state.go('newSale', {id: null, alert: alert}, {reload: true});
 				});
 			}
 		}
@@ -120,12 +130,19 @@ angular.module('membershipApp')
 			}
 			
 			Sale.remove({id: $scope.basket.id}, function () {
-				// TODO Afficher un message de confirmation
-				$scope.clearSale();
-				$state.go('newSale');
+				// TODO Gérer les cas d'erreurs
+				var alert = {
+					type: 'success',
+					message: 'La vente a été supprimée avec succès'
+				};
+				$state.go('newSale', {id: null, alert: alert}, {reload: true});
 			});
 		}
 		
+		$scope.closeAlert = function() {
+			$scope.alerts = [];
+		}
+		
 		$scope.clearSale();
-		$scope.loadAll($stateParams.id);
+		$scope.load($stateParams.id, $stateParams.alert);
 	});

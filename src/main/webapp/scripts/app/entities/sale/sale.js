@@ -6,6 +6,9 @@ angular.module('membershipApp')
     		.state('sale', {
     			parent: 'entity',
     			url: '/sale/:id',
+    			params: {
+    				alert: null
+    			},
     			data: {
     				roles: ['ROLE_ADMIN', 'ROLE_WORKSHOP_MANAGER'],
     				pageTitle: 'membershipApp.sale.update.title'
@@ -27,7 +30,7 @@ angular.module('membershipApp')
     		})
     		.state('newSale', {
     			parent: 'sale',
-    			url: 'new',
+    			url: '',
     			data: {
     				roles: ['ROLE_USER'],
     				pageTitle: 'membershipApp.sale.new.title'

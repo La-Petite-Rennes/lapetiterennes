@@ -193,7 +193,7 @@
 	    <div id="basketPopover" style="min-width: 250px;">
  		   	<div data-ng-repeat="basket in baskets">
    				<span>{{basket.adherentFullName}}&nbsp;(<euros cents="basket.totalCost()" />)</span>
-    			<a data-ui-sref="sale({id: basket.id})">
+    			<a data-ui-sref="sale({id: basket.id, alert: null})">
     				<span class="glyphicon glyphicon-edit"></span>
     			</a>
     		</div>

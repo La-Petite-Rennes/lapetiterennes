@@ -146,6 +146,8 @@
 				</button>
 			</div>
 			
+			<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert()" dismiss-on-timeout="5000" style="margin-top: 10px;">{{alert.message}}</uib-alert>
+			
 		</div>
 	</div>
 </div>
