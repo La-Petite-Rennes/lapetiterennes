@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.querydsl.core.BooleanBuilder;
+
 import fr.lpr.membership.domain.QAdhesion;
 import fr.lpr.membership.domain.sale.QSale;
 import fr.lpr.membership.repository.AdhesionRepository;
@@ -27,13 +29,19 @@ public class SaleStatisticsService {
 	private AdhesionRepository adhesionRepository;
 
 	public SaleStatistics<YearMonth> statsByMonths(DateTime from) {
+		// Search finished sales created after 'from' date
+		BooleanBuilder salePredicate = new BooleanBuilder();
+		salePredicate.and(QSale.sale.createdAt.between(from, DateTime.now()));
+		salePredicate.and(QSale.sale.finished.isTrue());
+
 		Map<YearMonth, List<SalableItem>> soldItemsByMonth =
 				StreamSupport
-						.stream(saleRepository.findAll(QSale.sale.createdAt.between(from, DateTime.now())).spliterator(), false)
+						.stream(saleRepository.findAll(salePredicate).spliterator(), false)
 						.flatMap(s -> s.getSoldItems().stream())
 						.map(SoldItemProxy::new)
 						.collect(Collectors.groupingBy(item -> new YearMonth(item.getSaleDate())));
 
+		// Search adhesions created after 'from' date
 		Map<YearMonth, List<SalableItem>> adhesionsByMonth =
 				StreamSupport
 						.stream(adhesionRepository.findAll(
