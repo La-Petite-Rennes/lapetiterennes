@@ -18,7 +18,6 @@ public class Provider {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@NotNull
 	private Long id;
 
 	@NotNull

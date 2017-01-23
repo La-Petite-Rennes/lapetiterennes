@@ -74,12 +74,12 @@ public class DataTest {
 
 		List<Article> articles = new ArrayList<>(5);
 		articles.add(new Article().name("Dérailleur arrière Shimano Tiagra 4700 10v")
-				.salePrice(3199).quantity(15).provider(p1).unitPrice(2599));
+				.salePrice(3199).quantity(15).provider(p1).unitPrice(2599).reference("11111"));
 		articles.add(new Article().name("Cassette Route Shimano Ultegra 6800 11 vitesses")
-				.salePrice(5399).quantity(8).provider(p1).unitPrice(4599));
-		articles.add(new Article().name("Frein Shimano Dura-Ace 9000").salePrice(11799).quantity(3).provider(p2).unitPrice(11000));
-		articles.add(new Article().name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").salePrice(6999).provider(p2).unitPrice(5150).quantity(25));
-		articles.add(new Article().name("Cable de frein").quantity(47));
+				.salePrice(5399).quantity(8).provider(p1).unitPrice(4599).reference("22222"));
+		articles.add(new Article().name("Frein Shimano Dura-Ace 9000").salePrice(11799).quantity(3).provider(p2).unitPrice(11000).reference("3333"));
+		articles.add(new Article().name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").salePrice(6999).provider(p2).unitPrice(5150).quantity(25).reference("44444"));
+		articles.add(new Article().name("Cable de frein").quantity(47).reference("55555"));
 		articleRepository.save(articles);
 
 		// Enregistrement des ventes
