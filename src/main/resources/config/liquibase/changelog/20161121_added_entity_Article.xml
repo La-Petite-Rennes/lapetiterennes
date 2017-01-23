@@ -21,9 +21,7 @@
             <column name="salePrice" type="integer"/>
             <column name="provider_id" type="bigint"/>
             <column name="unitPrice" type="integer"/>
-            <column name="reference" type="varchar(50)">
-            	<constraints nullable="false" />
-            </column>
+            <column name="reference" type="varchar(50)"/>
         </createTable>
         
         <addForeignKeyConstraint baseColumnNames="provider_id"

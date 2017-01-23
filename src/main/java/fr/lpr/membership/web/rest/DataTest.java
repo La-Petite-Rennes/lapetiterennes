@@ -79,7 +79,7 @@ public class DataTest {
 				.salePrice(5399).quantity(8).provider(p1).unitPrice(4599).reference("22222"));
 		articles.add(new Article().name("Frein Shimano Dura-Ace 9000").salePrice(11799).quantity(3).provider(p2).unitPrice(11000).reference("3333"));
 		articles.add(new Article().name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").salePrice(6999).provider(p2).unitPrice(5150).quantity(25).reference("44444"));
-		articles.add(new Article().name("Cable de frein").quantity(47).reference("55555"));
+		articles.add(new Article().name("Cable de frein").quantity(47));
 		articleRepository.save(articles);
 
 		// Enregistrement des ventes

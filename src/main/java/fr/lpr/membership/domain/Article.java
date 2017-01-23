@@ -34,7 +34,6 @@ public class Article {
 
 	private Integer unitPrice;
 
-	@Column(nullable=false)
 	private String reference;
 
 	public Long getId() {
