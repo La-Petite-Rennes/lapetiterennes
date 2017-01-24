@@ -4,8 +4,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-	<changeSet id="20161208_added_entity_Sale" author="glebreton">
-		<dropColumn tableName="Adherent" columnName="genre" />
+	<changeSet id="20170112_removed_genre_Adherent" author="glebreton">
+		<dropColumn tableName="ADHERENT" columnName="genre" />
 	</changeSet>
     
 </databaseChangeLog>
