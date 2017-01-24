@@ -40,6 +40,7 @@ import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.Coordonnees;
 import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.domain.sale.PaymentType;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.SearchAdherentRepository;
 
@@ -180,7 +181,7 @@ public class AdherentResourceTest {
 		adherentRepository.saveAndFlush(adherent);
 
 		// Get all the adherents
-		restAdherentMockMvc.perform(get("/api/adherents")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		restAdherentMockMvc.perform(get("/api/adherents")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 		.andExpect(jsonPath("$.[*].id").value(hasItem(adherent.getId().intValue())))
 		.andExpect(jsonPath("$.[*].prenom").value(hasItem(DEFAULT_PRENOM.toString())))
 		.andExpect(jsonPath("$.[*].nom").value(hasItem(DEFAULT_NOM.toString())))
@@ -197,7 +198,7 @@ public class AdherentResourceTest {
 
 		// Get the adherent
 		restAdherentMockMvc.perform(get("/api/adherents/{id}", adherent.getId())).andExpect(status().isOk())
-		.andExpect(content().contentType(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.id").value(adherent.getId().intValue()))
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$.id").value(adherent.getId().intValue()))
 		.andExpect(jsonPath("$.prenom").value(DEFAULT_PRENOM.toString())).andExpect(jsonPath("$.nom").value(DEFAULT_NOM.toString()))
 		.andExpect(jsonPath("$.benevole").value(DEFAULT_BENEVOLE.booleanValue()))
 		.andExpect(jsonPath("$.remarqueBenevolat").value(DEFAULT_REMARQUE_BENEVOLAT.toString()))
@@ -215,9 +216,8 @@ public class AdherentResourceTest {
 	@Transactional
 	public void updateAdherent() throws Exception {
 		// Initialize the database
-		final Adhesion uneAdhesion = new Adhesion();
-		uneAdhesion.setTypeAdhesion(TypeAdhesion.Simple);
-		uneAdhesion.setDateAdhesion(LocalDate.now());
+		final Adhesion uneAdhesion = new Adhesion().typeAdhesion(TypeAdhesion.Simple)
+				.dateAdhesion(LocalDate.now()).paymentType(PaymentType.Cash);
 		adherent.setAdhesions(Sets.newHashSet(uneAdhesion));
 		adherentRepository.saveAndFlush(adherent);
 

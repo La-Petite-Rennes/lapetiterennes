@@ -1,16 +1,25 @@
 package fr.lpr.membership.web.rest;
 
-import fr.lpr.membership.Application;
-import fr.lpr.membership.domain.Coordonnees;
-import fr.lpr.membership.repository.CoordonneesRepository;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -19,13 +28,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import fr.lpr.membership.Application;
+import fr.lpr.membership.domain.Coordonnees;
+import fr.lpr.membership.repository.CoordonneesRepository;
 
 /**
  * Test class for the CoordonneesResource REST controller.
@@ -33,9 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see CoordonneesResource
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringBootTest(classes = Application.class)
 @WebAppConfiguration
-@IntegrationTest
 public class CoordonneesResourceTest {
 
     private static final String DEFAULT_ADRESSE1 = "SAMPLE_TEXT";
@@ -109,7 +113,7 @@ public class CoordonneesResourceTest {
         // Get all the coordonneess
         restCoordonneesMockMvc.perform(get("/api/coordonneess"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(coordonnees.getId().intValue())))
                 .andExpect(jsonPath("$.[*].adresse1").value(hasItem(DEFAULT_ADRESSE1.toString())))
                 .andExpect(jsonPath("$.[*].adresse2").value(hasItem(DEFAULT_ADRESSE2.toString())))
@@ -128,7 +132,7 @@ public class CoordonneesResourceTest {
         // Get the coordonnees
         restCoordonneesMockMvc.perform(get("/api/coordonneess/{id}", coordonnees.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.id").value(coordonnees.getId().intValue()))
             .andExpect(jsonPath("$.adresse1").value(DEFAULT_ADRESSE1.toString()))
             .andExpect(jsonPath("$.adresse2").value(DEFAULT_ADRESSE2.toString()))

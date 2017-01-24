@@ -20,8 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -34,6 +33,7 @@ import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.domain.sale.PaymentType;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.AdhesionRepository;
 
@@ -43,9 +43,8 @@ import fr.lpr.membership.repository.AdhesionRepository;
  * @see AdhesionResource
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringBootTest(classes = Application.class)
 @WebAppConfiguration
-@IntegrationTest
 public class AdhesionResourceTest {
 
 	private static final TypeAdhesion DEFAULT_TYPE_ADHESION = TypeAdhesion.Simple;
@@ -53,6 +52,8 @@ public class AdhesionResourceTest {
 
 	private static final LocalDate DEFAULT_DATE_ADHESION = new LocalDate(0L);
 	private static final LocalDate UPDATED_DATE_ADHESION = new LocalDate();
+
+	private static final PaymentType DEFAUlT_PAYMENT_TYPE = PaymentType.Cash;
 
 	@Inject
 	private AdhesionRepository adhesionRepository;
@@ -79,6 +80,7 @@ public class AdhesionResourceTest {
 		adhesion = new Adhesion();
 		adhesion.setTypeAdhesion(DEFAULT_TYPE_ADHESION);
 		adhesion.setDateAdhesion(DEFAULT_DATE_ADHESION);
+		adhesion.setPaymentType(DEFAUlT_PAYMENT_TYPE);
 
 		adherent = new Adherent();
 		adherent.setPrenom("firstName");
@@ -129,7 +131,7 @@ public class AdhesionResourceTest {
 		adhesionRepository.saveAndFlush(adhesion);
 
 		// Get all the adhesions
-		restAdhesionMockMvc.perform(get("/api/adhesions")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		restAdhesionMockMvc.perform(get("/api/adhesions")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.[*].id").value(hasItem(adhesion.getId().intValue())))
 				.andExpect(jsonPath("$.[*].typeAdhesion").value(hasItem(DEFAULT_TYPE_ADHESION.toString())))
 				.andExpect(jsonPath("$.[*].dateAdhesion").value(hasItem(DEFAULT_DATE_ADHESION.toString("dd/MM/yyyy"))));
@@ -143,7 +145,7 @@ public class AdhesionResourceTest {
 
 		// Get the adhesion
 		restAdhesionMockMvc.perform(get("/api/adhesions/{id}", adhesion.getId())).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.id").value(adhesion.getId().intValue()))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$.id").value(adhesion.getId().intValue()))
 				.andExpect(jsonPath("$.typeAdhesion").value(DEFAULT_TYPE_ADHESION.toString()))
 				.andExpect(jsonPath("$.dateAdhesion").value(DEFAULT_DATE_ADHESION.toString("dd/MM/yyyy")));
 	}
