@@ -13,13 +13,13 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="adherent_id" type="bigint" />
-            <column name="paymentType" type="varchar(50)">
+            <column name="paymenttype" type="varchar(50)">
             	<constraints nullable="false" />
             </column>
-            <column name="createdAt" type="datetime">
+            <column name="createdat" type="datetime">
             	<constraints nullable="false" />
             </column>
-            <column name="updatedAt" type="datetime">
+            <column name="updatedat" type="datetime">
             	<constraints nullable="false" />
             </column>
             <column name="finished" type="boolean">
@@ -40,7 +40,7 @@
             <column name="sale_id" type="bigint">
             	<constraints nullable="false" />
             </column>
-            <column name="stockHistory_id" type="bigint">
+            <column name="stockhistory_id" type="bigint">
             	<constraints nullable="false" />
             </column>
             <column name="price" type="integer">
@@ -50,13 +50,13 @@
 		
 		<addForeignKeyConstraint baseColumnNames="sale_id"
                                  baseTableName="SOLD_ITEM"
-                                 constraintName="fk_soldItem_sale_id"
+                                 constraintName="fk_solditem_sale_id"
                                  referencedColumnNames="id"
                                  referencedTableName="SALE"/>
 		
-		<addForeignKeyConstraint baseColumnNames="stockHistory_id"
+		<addForeignKeyConstraint baseColumnNames="stockhistory_id"
                                  baseTableName="SOLD_ITEM"
-                                 constraintName="fk_soldItem_stockHistory_id"
+                                 constraintName="fk_solditem_stockhistory_id"
                                  referencedColumnNames="id"
                                  referencedTableName="STOCK_HISTORY"/>
 		

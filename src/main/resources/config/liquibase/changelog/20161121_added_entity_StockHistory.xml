@@ -15,7 +15,7 @@
             <column name="event" type="varchar(50)">
             	<constraints nullable="false" />
             </column>
-            <column name="createdAt" type="datetime">
+            <column name="createdat" type="datetime">
             	<constraints nullable="false" />
             </column>
             <column name="quantity" type="integer">
@@ -26,7 +26,7 @@
         
         <addForeignKeyConstraint baseColumnNames="article_id"
                                  baseTableName="STOCK_HISTORY"
-                                 constraintName="fk_stockHistory_article_id"
+                                 constraintName="fk_stockhistory_article_id"
                                  referencedColumnNames="id"
                                  referencedTableName="ARTICLE"/>
 

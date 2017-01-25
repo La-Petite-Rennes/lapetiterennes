@@ -18,9 +18,9 @@
             <column name="quantity" type="integer">
             	<constraints nullable="false" />
             </column>
-            <column name="salePrice" type="integer"/>
+            <column name="saleprice" type="integer"/>
             <column name="provider_id" type="bigint"/>
-            <column name="unitPrice" type="integer"/>
+            <column name="unitprice" type="integer"/>
             <column name="reference" type="varchar(50)"/>
         </createTable>
         
