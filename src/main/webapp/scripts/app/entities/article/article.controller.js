@@ -40,7 +40,9 @@ angular.module('membershipApp')
 				items: []
 			};
 			
-			for (var article of $scope.articles) {
+			// TODO ES6 for (var article of $scope.articles) {
+			for (var index in $scope.articles) {
+				var article = $scope.articles[index];
 				$scope.reassort.items.push({
 					id: article.id,
 					name: article.name,

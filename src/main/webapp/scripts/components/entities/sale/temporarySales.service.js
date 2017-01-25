@@ -76,7 +76,9 @@ angular.module('membershipApp')
 		
 		var initialize = function() {
 			Sale.temporary(function(result) {
-				for (var sale of result) {
+				// TODO ES6 for (var sale of result) {
+				for (var index in result) {
+					var sale = result[index];
 					TemporarySales.baskets.push(Basket.fromJson(sale));
 				}
 			});
