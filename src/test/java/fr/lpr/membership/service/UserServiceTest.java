@@ -1,26 +1,26 @@
 package fr.lpr.membership.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
 import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.PersistentToken;
 import fr.lpr.membership.domain.User;
 import fr.lpr.membership.repository.PersistentTokenRepository;
 import fr.lpr.membership.repository.UserRepository;
-import org.joda.time.DateTime;
 import fr.lpr.membership.service.util.RandomUtil;
-import org.joda.time.LocalDate;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
-import javax.inject.Inject;
-import java.util.Optional;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
 
 /**
  * Test class for the UserResource REST controller.
@@ -28,9 +28,7 @@ import static org.assertj.core.api.Assertions.*;
  * @see UserService
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@IntegrationTest
+@SpringBootTest(classes = Application.class)
 @Transactional
 public class UserServiceTest {
 
@@ -57,7 +55,7 @@ public class UserServiceTest {
 
     @Test
     public void assertThatUserMustExistToResetPassword() {
-        
+
         Optional<User> maybeUser = userService.requestPasswordReset("john.doe@localhost");
         assertThat(maybeUser.isPresent()).isFalse();
 
@@ -67,12 +65,12 @@ public class UserServiceTest {
         assertThat(maybeUser.get().getEmail()).isEqualTo("admin@localhost");
         assertThat(maybeUser.get().getResetDate()).isNotNull();
         assertThat(maybeUser.get().getResetKey()).isNotNull();
-        
+
     }
 
     @Test
     public void assertThatResetKeyMustNotBeOlderThan24Hours() {
-        
+
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
@@ -88,12 +86,12 @@ public class UserServiceTest {
         assertThat(maybeUser.isPresent()).isFalse();
 
         userRepository.delete(user);
-        
+
     }
 
     @Test
     public void assertThatResetKeyMustBeValid() {
-        
+
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
@@ -108,12 +106,12 @@ public class UserServiceTest {
         assertThat(maybeUser.isPresent()).isFalse();
 
         userRepository.delete(user);
-        
+
     }
 
     @Test
     public void assertThatUserCanResetPassword() {
-        
+
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
 
         String oldPassword = user.getPassword();
@@ -134,7 +132,7 @@ public class UserServiceTest {
         assertThat(maybeUser.get().getPassword()).isNotEqualTo(oldPassword);
 
         userRepository.delete(user);
-        
+
     }
 
     @Test
