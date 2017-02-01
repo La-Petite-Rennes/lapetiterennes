@@ -23,5 +23,7 @@
     <include file="classpath:config/liquibase/changelog/20161208_added_entity_Sale.xml" relativeToChangelogFile="false" />
     
     <include file="classpath:config/liquibase/changelog/20170112_removed_genre_Adherent.xml" relativeToChangelogFile="false" />
+    
+    <include file="classpath:config/liquibase/changelog/20170201_migration_hibernate_5.xml" relativeToChangelogFile="false" />
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

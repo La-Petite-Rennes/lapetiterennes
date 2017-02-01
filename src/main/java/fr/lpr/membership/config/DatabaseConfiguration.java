@@ -1,10 +1,9 @@
 package fr.lpr.membership.config;
 
-import com.codahale.metrics.MetricRegistry;
-import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import liquibase.integration.spring.SpringLiquibase;
+import java.util.Arrays;
+
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 
-import javax.sql.DataSource;
-import java.util.Arrays;
+import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import liquibase.integration.spring.SpringLiquibase;
 
 @Configuration
 @EnableJpaRepositories("fr.lpr.membership.repository")
@@ -48,7 +51,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
         this.liquiBasePropertyResolver = new RelaxedPropertyResolver(env, "liquiBase.");
     }
 
-    @Bean(destroyMethod = "shutdown")
+    @Bean(destroyMethod = "close")
     @ConditionalOnMissingClass("fr.lpr.membership.config.HerokuDatabaseConfiguration")
     @Profile("!" + Constants.SPRING_PROFILE_CLOUD)
     public DataSource dataSource() {
@@ -98,7 +101,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
     }
 
     @Bean
-    public Hibernate4Module hibernate4Module() {
-        return new Hibernate4Module();
+    public Hibernate5Module hibernate5Module() {
+        return new Hibernate5Module();
     }
 }

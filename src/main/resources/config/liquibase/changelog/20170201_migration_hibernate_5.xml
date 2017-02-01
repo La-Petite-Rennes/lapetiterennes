@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet id="20170201_migration_hibernate_5" author="glebreton">
+		<renameColumn tableName="ADHESION" oldColumnName="paymenttype" newColumnName="payment_type" />
+		
+		<renameColumn tableName="ARTICLE" oldColumnName="saleprice" newColumnName="sale_price" />
+		<renameColumn tableName="ARTICLE" oldColumnName="unitprice" newColumnName="unit_price" />
+		
+		<renameColumn tableName="SALE" oldColumnName="createdat" newColumnName="created_at"/>
+		<renameColumn tableName="SALE" oldColumnName="updatedat" newColumnName="updated_at"/>
+		<renameColumn tableName="SALE" oldColumnName="paymenttype" newColumnName="payment_type"/>
+		
+		<renameColumn tableName="SOLD_ITEM" oldColumnName="stockhistory_id" newColumnName="stock_history_id"/>
+		
+		<renameColumn tableName="STOCK_HISTORY" oldColumnName="createdat" newColumnName="created_at"/>
+	</changeSet>
+    
+</databaseChangeLog>
