@@ -10,7 +10,7 @@ angular.module('membershipApp')
     				alert: null
     			},
     			data: {
-    				roles: ['ROLE_ADMIN', 'ROLE_WORKSHOP_MANAGER'],
+    				roles: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_WORKSHOP_MANAGER'],
     				pageTitle: 'membershipApp.sale.update.title'
     			},
     			views: {
