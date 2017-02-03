@@ -10,7 +10,7 @@ angular.module('membershipApp')
 		    	waiting: '=waiting'
 		    },
 		    controller: function($scope){
-		    	$scope.payment = angular.isDefined($scope.waiting) ? 'Waiting' : $scope.payment;
+		    	$scope.payment = $scope.payment != null ? $scope.payment : 'Cash';
 		    },
             templateUrl: 'scripts/components/entities/payment/paymentType.html'
         };
