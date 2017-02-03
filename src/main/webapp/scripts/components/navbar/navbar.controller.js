@@ -6,7 +6,9 @@ angular.module('membershipApp')
     	$scope.isAuthenticated = Principal.isAuthenticated;
         $scope.$state = $state;
         
-        $scope.baskets = TemporarySales.baskets;
+        $scope.baskets = function() {
+        	return TemporarySales.baskets;
+        };
         
         $scope.dynamicPopover = {
 		    templateUrl: 'basketPopoverTemplate.html'
