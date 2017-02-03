@@ -29,7 +29,7 @@ public class SoldItem {
 	@ManyToOne(optional = false)
 	private Sale sale;
 
-	@OneToOne(cascade = CascadeType.PERSIST, optional = false, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
 	private StockHistory stockHistory;
 
 	@Column(nullable = false)
