@@ -7,7 +7,6 @@ angular.module('membershipApp')
     			parent: 'entity',
     			url: '/sales',
     			data: {
-    				roles: ['ROLE_ADMIN', 'ROLE_WORKSHOP_MANAGER'],
     				pageTitle: 'membershipApp.sales.home.title'
     			},
     			views: {
