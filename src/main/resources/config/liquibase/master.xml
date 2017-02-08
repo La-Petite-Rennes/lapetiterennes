@@ -4,26 +4,26 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+	<!-- v1.0 -->
     <include file="classpath:config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150506085429_added_entity_Coordonnees.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150506101045_added_entity_Adherent.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150506122401_added_entity_Adhesion.xml" relativeToChangelogFile="false"/>
-    
     <include file="classpath:config/liquibase/changelog/20151002_added_entity_Adherent_reminderEmail.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151116_added_entity_Adherent_lastAdhesion.xml" relativeToChangelogFile="false"/>
     
+    <!-- v2.0 -->
     <include file="classpath:config/liquibase/changelog/20161115_addWorkshopManagerRole.xml" relativeToChangelogFile="false"/>
-    
     <include file="classpath:config/liquibase/changelog/20161121_added_entity_Provider.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161121_added_entity_Article.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161121_added_entity_StockHistory.xml" relativeToChangelogFile="false"/>
-    
     <include file="classpath:config/liquibase/changelog/20161124_added_entity_Adhesion_paymentType.xml" relativeToChangelogFile="false"/>
-    
     <include file="classpath:config/liquibase/changelog/20161208_added_entity_Sale.xml" relativeToChangelogFile="false" />
-    
     <include file="classpath:config/liquibase/changelog/20170112_removed_genre_Adherent.xml" relativeToChangelogFile="false" />
-    
     <include file="classpath:config/liquibase/changelog/20170201_migration_hibernate_5.xml" relativeToChangelogFile="false" />
+
+    <!-- v2.1 -->
+    <include file="classpath:config/liquibase/changelog/20170208_added_entity_Article_stockWarningLevel.xml" relativeToChangelogFile="false" />
+    
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

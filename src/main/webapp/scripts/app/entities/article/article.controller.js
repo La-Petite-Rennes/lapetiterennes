@@ -27,7 +27,7 @@ angular.module('membershipApp')
 		$scope.stockLevel = function(article) {
 			if (article.quantity <= 0) {
 				return 'article-outOfStock';
-			} else if (article.quantity <= 5) {
+			} else if (article.quantity <= article.stockWarningLevel) {
 				return 'article-insufficientStock';
 			} else {
 				return 'article-sufficientStock';

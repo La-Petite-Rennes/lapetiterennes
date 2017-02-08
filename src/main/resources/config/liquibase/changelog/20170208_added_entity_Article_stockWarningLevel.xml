@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet id="20170208_added_entity_Article_stockWarningLevel" author="glebreton">
+		<addColumn tableName="ARTICLE">
+			<column name="stock_warning_level" type="integer" defaultValueNumeric="5">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+    
+</databaseChangeLog>
