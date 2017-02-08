@@ -11,7 +11,7 @@
 
     <groupId>fr.lpr.membership</groupId>
     <artifactId>membership</artifactId>
-    <version>2.1-SNAPSHOT</version>
+    <version>2.0.2-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>membership</name>
@@ -35,8 +35,7 @@
         <gatling.version>2.1.5</gatling.version>
         <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
-        <joda-time-hibernate.version>1.3</joda-time-hibernate.version>
-        <liquibase-hibernate4.version>3.5</liquibase-hibernate4.version>
+        <liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
         <liquibase-slf4j.version>1.2.1</liquibase-slf4j.version>
         <mapstruct.version>1.1.0.Final</mapstruct.version>
         <maven-sortpom-plugin.version>2.3.0</maven-sortpom-plugin.version>
@@ -47,7 +46,8 @@
         <run.addResources>false</run.addResources>
         <sonar-maven-plugin.version>2.3</sonar-maven-plugin.version>
         <swagger-springmvc.version>0.9.5</swagger-springmvc.version>
-        <usertype-core.version>3.2.0.GA</usertype-core.version>
+        <usertype-core.version>5.0.0.GA</usertype-core.version>
+        <hibernate-search.version>5.5.6.Final</hibernate-search.version>
     </properties>
 
     <dependencies>
@@ -57,7 +57,7 @@
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-hibernate4</artifactId>
+            <artifactId>jackson-datatype-hibernate5</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -242,11 +242,6 @@
             <artifactId>joda-time</artifactId>
         </dependency>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time-hibernate</artifactId>
-            <version>${joda-time-hibernate.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>3.15</version>
@@ -274,7 +269,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search-orm</artifactId>
-            <version>5.3.0.Final</version>
+            <version>${hibernate-search.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -641,8 +636,8 @@
                     </dependency>
                     <dependency>
                         <groupId>org.liquibase.ext</groupId>
-                        <artifactId>liquibase-hibernate4</artifactId>
-                        <version>${liquibase-hibernate4.version}</version>
+                        <artifactId>liquibase-hibernate5</artifactId>
+                        <version>${liquibase-hibernate5.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.springframework.boot</groupId>

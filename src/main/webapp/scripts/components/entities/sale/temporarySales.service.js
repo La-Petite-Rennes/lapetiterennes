@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('membershipApp')
-	.factory('TemporarySales', function($q, $rootScope, $timeout, Basket, Sale) {
+	.factory('TemporarySales', function($q, $rootScope, $timeout, Basket, Sale, Principal) {
 		
 		// Constants
 		var RECONNECT_TIMEOUT = 30000;
@@ -75,11 +75,11 @@ angular.module('membershipApp')
 		};
 		
 		var initialize = function() {
-			Sale.temporary(function(result) {
-				// TODO ES6 for (var sale of result) {
-				for (var index in result) {
-					var sale = result[index];
-					TemporarySales.baskets.push(Basket.fromJson(sale));
+			$rootScope.$watch(Principal.isAuthenticated, function(newValue, oldValue) {
+				if (newValue) {
+					loadSavedTemporaryBaskets();
+				} else {
+					TemporarySales.baskets = [];
 				}
 			});
 			
@@ -88,6 +88,14 @@ angular.module('membershipApp')
 			socket.stomp.connect({}, startListener);
 			socket.stomp.onclose = reconnect;
 	    };
+	    
+	    var loadSavedTemporaryBaskets = function() {
+	    	Sale.temporary(function(results) {
+				angular.forEach(results, function (sale) {
+					TemporarySales.baskets.push(Basket.fromJson(sale));
+			    });
+			});
+	    }
 	    
 	    initialize();
 	    

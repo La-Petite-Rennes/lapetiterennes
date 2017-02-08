@@ -26,7 +26,7 @@
                     </a>
                 </li>
                 
-                <li data-ui-sref-active="active" data-ng-switch-when="true" data-has-role="ROLE_WORKSHOP_MANAGER">
+                <li data-ui-sref-active="active" data-ng-switch-when="true" data-has-role="ROLE_USER">
                     <a data-ui-sref="sales">
                         <span class="glyphicon glyphicon-piggy-bank"></span>
                         <span data-translate="global.menu.entities.saleHistory">saleHistory</span>
@@ -182,7 +182,7 @@
                 <li data-ui-sref-active="active" class="pointer">
 					<a uib-popover-template="dynamicPopover.templateUrl" data-popover-placement="bottom">
                      	<span class="glyphicon glyphicon-shopping-cart"></span>
-                     	<span class="badge">{{baskets.length}}</span>
+                     	<span class="badge">{{baskets().length}}</span>
                     </a>
                 </li>
             </ul>
@@ -191,7 +191,7 @@
     
     <script type="text/ng-template" id="basketPopoverTemplate.html">
 	    <div id="basketPopover" style="min-width: 250px;">
- 		   	<div data-ng-repeat="basket in baskets">
+ 		   	<div data-ng-repeat="basket in baskets()">
    				<span>{{basket.adherentFullName}}&nbsp;(<euros cents="basket.totalCost()" />)</span>
     			<a data-ui-sref="sale({id: basket.id, alert: null})">
     				<span class="glyphicon glyphicon-edit"></span>

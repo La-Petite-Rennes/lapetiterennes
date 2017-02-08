@@ -119,8 +119,7 @@ public class SaleResource {
 
 	@RequestMapping(value = "/history", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 	@Timed
-	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
-	public ResponseEntity<List<SaleDTO>> stockHistory(@RequestParam(value = "page", required = false) Integer offset,
+	public ResponseEntity<List<SaleDTO>> history(@RequestParam(value = "page", required = false) Integer offset,
 			@RequestParam(value = "per_page", required = false) Integer limit) throws URISyntaxException {
 		Page<Sale> page = saleService.history(offset, limit);
 
@@ -130,7 +129,6 @@ public class SaleResource {
 
 	@RequestMapping(value = "/temporary", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 	@Timed
-	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
 	public List<SaleDTO> getTemporarySales() {
 		return saleService.getTemporarySales().stream().map(saleMapper::saleToSaleDto).collect(Collectors.toList());
 	}
