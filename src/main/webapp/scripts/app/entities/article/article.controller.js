@@ -12,6 +12,8 @@ angular.module('membershipApp')
 		};
 		
 		$scope.loadAll = function() {
+			$scope.clearArticleModal()
+			
 			Article.query(function(result) {
 				$scope.articles = result;
 				$scope.reverse = false;
