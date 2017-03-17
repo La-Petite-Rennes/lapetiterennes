@@ -21,7 +21,7 @@ angular.module('membershipApp')
         // View functions
         $scope.export = function () {
         	$http.post('api/adherents/export', {format: $scope.format, adhesionState: $scope.adhesionState, properties: $scope.properties})
-        		.success(function(result, status, headers) {
+        		.then(function(result, status, headers) {
         			downloadFile(result, headers);
         		}
         	);

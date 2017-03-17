@@ -1,18 +1,15 @@
 package fr.lpr.membership.web.rest;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Optional;
-
-import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.codahale.metrics.annotation.Timed;
+import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.repository.SearchAdherentRepository;
+import fr.lpr.membership.security.AuthoritiesConstants;
+import fr.lpr.membership.service.AdherentService;
+import fr.lpr.membership.service.ExportService;
+import fr.lpr.membership.service.ImportService;
+import fr.lpr.membership.web.rest.dto.ExportRequest;
+import fr.lpr.membership.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -23,25 +20,21 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.codahale.metrics.annotation.Timed;
-
-import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.repository.AdherentRepository;
-import fr.lpr.membership.repository.SearchAdherentRepository;
-import fr.lpr.membership.security.AuthoritiesConstants;
-import fr.lpr.membership.service.AdherentService;
-import fr.lpr.membership.service.ExportService;
-import fr.lpr.membership.service.ImportService;
-import fr.lpr.membership.web.rest.dto.ExportRequest;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
+import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 /**
  * REST controller for managing Adherent.
@@ -154,7 +147,7 @@ public class AdherentResource {
 		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
-		Page<Adherent> page = null;
+		Page<Adherent> page;
 		if (criteria == null || criteria.isEmpty()) {
 			page = adherentRepository.findAll(pageRequest);
 		} else {
@@ -208,7 +201,7 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/export", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
-	public void exportAll(@RequestBody ExportRequest request, HttpServletResponse response) throws Exception {
+	public void exportAll(@RequestBody ExportRequest request, HttpServletResponse response) {
 		final List<String> properties = new ArrayList<>();
 		for (final Entry<String, Boolean> entry : request.getProperties().entrySet()) {
 			if (entry.getValue()) {
@@ -230,7 +223,7 @@ public class AdherentResource {
 	@RequestMapping(value = "/adherents/import", method = RequestMethod.POST)
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
-	public void importAdherents(@RequestParam("file") MultipartFile file) throws Exception {
+	public void importAdherents(@RequestParam("file") MultipartFile file) throws IOException {
 		if (!file.isEmpty()) {
 			try (InputStream inputStream = file.getInputStream()) {
 				importService.importCsv(inputStream);

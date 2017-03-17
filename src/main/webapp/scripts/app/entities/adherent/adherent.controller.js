@@ -5,18 +5,18 @@ angular.module('membershipApp')
         $scope.adherents = [];
         $scope.coordonneess = Coordonnees.query();
         $scope.adhesions = Adhesion.query();
-        
+
         $scope.page = 1;
         $scope.searchCriteria;
         $scope.sort = 'id';
         $scope.sortOrder = 'ASC';
-        
+
         $scope.editAdherent = false;
         $scope.nouvelleAdhesion = {
         	dateAdhesion : new Date(),
         	paymentType: 'Cash'
         }
-        
+
         $scope.search = function(sort) {
         	// Sort order
         	if (sort === $scope.sort) {
@@ -24,16 +24,16 @@ angular.module('membershipApp')
         	} else {
         		$scope.sortOrder = 'ASC';
         	}
-        	
+
         	// Sort property
         	if (sort !== undefined) {
         		$scope.sort = sort;
         	}
-        	
+
         	// Reload
         	$scope.reset();
         }
-        
+
         $scope.loadAll = function() {
         	var query = {
     			page: $scope.page,
@@ -42,7 +42,7 @@ angular.module('membershipApp')
     			sort: $scope.sort,
     			sortOrder: $scope.sortOrder
         	};
-        	
+
             Adherent.search(query, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
                 for (var i = 0; i < result.length; i++) {
@@ -50,13 +50,13 @@ angular.module('membershipApp')
                 }
             });
         };
-        
+
         $scope.reset = function() {
             $scope.page = 1;
             $scope.adherents = [];
             $scope.loadAll();
         };
-        
+
         $scope.loadPage = function(page) {
             $scope.page = page;
             $scope.loadAll();
@@ -98,7 +98,7 @@ angular.module('membershipApp')
                     $scope.clear();
                 });
         };
-        
+
         $scope.renouvelerAdherent = function (id) {
         	$scope.clear();
         	Adherent.get({id: id}, function(result) {
@@ -107,7 +107,7 @@ angular.module('membershipApp')
             	$('#renouvelerAdhesionModal').modal({ show: true, backdrop: 'static' });
             });
         };
-        
+
         $scope.ajouterAdhesion = function() {
         	Adhesion.update($scope.nouvelleAdhesion, function() {
             	$scope.reset();
@@ -118,31 +118,30 @@ angular.module('membershipApp')
 
         $scope.clear = function () {
             $scope.adherent = {prenom: null, nom: null, benevole: null, remarqueBenevolat: null, autreRemarque: null, id: null, coordonnees: {}};
-            $scope.nouvelleAdhesion = { 
+            $scope.nouvelleAdhesion = {
             		dateAdhesion : new Date(),
                 	paymentType: 'Cash'
             };
             $scope.editAdherent = false;
-            
+
             $scope.renouvelerAdhesionForm.$setPristine();
             $scope.renouvelerAdhesionForm.$setUntouched();
-            
+
             $scope.editForm.$setPristine();
             $scope.editForm.$setUntouched();
         };
-        
+
         $scope.uploadImport = function () {
             Upload.upload({
                 url: 'api/adherents/import',
                 file: $scope.importAdherentFile
-            }).progress(function (evt) {
-                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            }).success(function (data, status, headers, config) {
-            	$('#importerModal').modal('hide');
-            	$scope.reset();
-            }).error(function (data, status, headers, config) {
-            	// FIXME A remplacer par un message d'erreur
-                console.log('error status: ' + status);
-            });
+            }).then(function (data, status, headers, config) {
+	            	$('#importerModal').modal('hide');
+	            	$scope.reset();
+	            }, function (data, status, headers, config) {
+	            	// FIXME A remplacer par un message d'erreur
+	                console.log('error status: ' + status);
+	            }
+	        );
         };
     });

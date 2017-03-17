@@ -10,8 +10,8 @@ angular.module('membershipApp')
             '=';
         this.encode = function (input) {
             var output = '',
-                chr1, chr2, chr3 = '',
-                enc1, enc2, enc3, enc4 = '',
+                chr1, chr2, chr3,
+                enc1, enc2, enc3, enc4,
                 i = 0;
 
             while (i < input.length) {

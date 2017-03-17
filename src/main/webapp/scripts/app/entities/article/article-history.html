@@ -14,7 +14,7 @@
                     <th data-translate="membershipApp.article.history.date">Date</th>
                 </tr>
             </thead>
-            <tbody data-infinite-scroll="loadPage(page + 1)" data-infinite-scroll-disabled="links['last'] == page">
+            <tbody data-infinite-scroll="loadPage(page + 1)" data-infinite-scroll-disabled="links['last'] == page || !$scope.article">
                 <tr data-ng-repeat="hist in history">
                     <td>{{hist.event}}</td>
                     <td>{{hist.quantity}}</td>

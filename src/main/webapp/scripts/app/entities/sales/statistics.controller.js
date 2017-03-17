@@ -33,7 +33,7 @@ angular.module('membershipApp')
                 headers: {'Content-type': 'application/json'},
                 responseType: 'arraybuffer'
                 })
-        		.success(function(result, status, headers) {
+        		.then(function(result, status, headers) {
         			downloadFile(new Blob([result], { type: headers('Content-Type')} ));
         		}
         	);
