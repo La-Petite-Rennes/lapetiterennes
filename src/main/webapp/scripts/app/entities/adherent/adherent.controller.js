@@ -136,12 +136,10 @@ angular.module('membershipApp')
                 url: 'api/adherents/import',
                 file: $scope.importAdherentFile
             }).then(function (data, status, headers, config) {
-	            	$('#importerModal').modal('hide');
-	            	$scope.reset();
-	            }, function (data, status, headers, config) {
-	            	// FIXME A remplacer par un message d'erreur
-	                console.log('error status: ' + status);
-	            }
-	        );
+                $('#importerModal').modal('hide');
+                $scope.reset();
+	        }, function (data, status, headers, config) {
+	            // FIXME A remplacer par un message d'erreur
+	        });
         };
     });
