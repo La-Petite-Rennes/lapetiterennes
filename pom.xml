@@ -48,6 +48,12 @@
         <swagger-springmvc.version>0.9.5</swagger-springmvc.version>
         <usertype-core.version>5.0.0.GA</usertype-core.version>
         <hibernate-search.version>5.5.6.Final</hibernate-search.version>
+
+        <sonar.projectKey>fr.lpr:membership</sonar.projectKey>
+        <sonar.projectName>Gestion des adhérents de La Petite Rennes</sonar.projectName>
+        <sonar.branch>develop</sonar.branch>
+        <sonar.sources>src/main/java,src/main/webapp/scripts</sonar.sources>
+        <sonar.organization>glebreton-github</sonar.organization>
     </properties>
 
     <dependencies>
