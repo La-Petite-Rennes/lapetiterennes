@@ -161,9 +161,9 @@ public class ExportService {
 		objectMapper.writeValue(response.getOutputStream(), dtos);
 	}
 
-	@Getter
+    @Getter
     @Setter
-	@JsonInclude(Include.NON_NULL)
+    @JsonInclude(Include.NON_NULL)
 	static class AdherentDto implements Serializable {
 
 		private Long id;
@@ -191,7 +191,7 @@ public class ExportService {
 
 	@Getter
     @Setter
-	static class AdhesionDto {
+	static class AdhesionDto implements Serializable {
 
 		private TypeAdhesion typeAdhesion;
 
