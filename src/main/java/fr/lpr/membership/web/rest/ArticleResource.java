@@ -16,6 +16,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,7 +59,7 @@ public class ArticleResource {
 	@RequestMapping(value="/articles", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public List<Article> getAll() {
-		return articleRepository.findAll();
+		return articleRepository.findAll(new Sort("name"));
 	}
 
 	@RequestMapping(value = "/articles/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
