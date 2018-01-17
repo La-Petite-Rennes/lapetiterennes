@@ -3,15 +3,15 @@
 angular.module('membershipApp')
 	.factory('Sale', function ($resource) {
 		return $resource('api/sales/:id', {}, {
-			'save' : { 
-				method: 'POST' 
+			'save' : {
+				method: 'POST'
 			},
 			'update': {
 				method: 'PUT'
 			},
 			'statistics': {
 				method: 'GET',
-				url: 'api/sales/statistics'
+				url: 'api/sales/statistics/:year'
 			},
 			'get': {
 				method: 'GET'

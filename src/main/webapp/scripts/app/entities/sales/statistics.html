@@ -2,7 +2,21 @@
 
 	<div class="row">
 		<h2 data-translate="membershipApp.sales.statistics.title">Statistiques de ventes</h2>
-		
+
+        <form class="form-horizontal" data-ng-submit="loadAll()">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="year" data-translate="membershipApp.sales.statistics.year">Année</label>
+                <div class="col-sm-2">
+                    <input type="text" data-ng-model="year" name="year" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <button type="submit" class="btn">
+                        <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Rechercher</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
 		<div class="table-responsive">
 			<table class="table table-striped">
 				<thead>
@@ -19,11 +33,11 @@
 				</tbody>
 			</table>
 		</div>
-		
+
 		<div>
 			<strong><span data-translate="membershipApp.sales.statistics.total">Total</span>&nbsp;:&nbsp;<euros cents="total" /></strong>
 		</div>
-		
+
 		<button data-ng-click="exportDetails()" class="btn btn-primary" data-translate="membershipApp.sales.statistics.exportDetails">ExportDetails</button>
 	</div>
 

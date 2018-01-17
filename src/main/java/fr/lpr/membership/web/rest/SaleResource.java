@@ -86,9 +86,9 @@ public class SaleResource {
 		return ResponseEntity.ok().build();
 	}
 
-	@RequestMapping(value = "/statistics", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-	public SaleStatistics<YearMonth> statistics() {
-		DateTime from = DateTime.now().withMonthOfYear(1).withDayOfMonth(1).withTimeAtStartOfDay();
+	@RequestMapping(value = "/statistics/{year}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+	public SaleStatistics<YearMonth> statistics(@PathVariable Integer year) {
+		DateTime from = DateTime.now().withYear(year).withMonthOfYear(1).withDayOfMonth(1).withTimeAtStartOfDay();
 		return statisticsService.statsByMonths(from);
 	}
 
