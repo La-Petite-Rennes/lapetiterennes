@@ -46,7 +46,7 @@ angular.module('membershipApp')
                     },
                     getColor: function (s) {
 
-                        var idx = 0;
+                        var idx;
                         if (s <= 10) {
                             idx = 0;
                         }

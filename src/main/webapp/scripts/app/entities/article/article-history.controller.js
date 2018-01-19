@@ -4,7 +4,7 @@ angular.module('membershipApp')
 	.controller('ArticleHistoryController', function ($scope, $stateParams, Article, ParseLinks) {
 		
 		// View Model
-		$scope.article = {};
+		$scope.article = null;
 		$scope.history = [];
 		
 		$scope.page = 1;
@@ -17,7 +17,7 @@ angular.module('membershipApp')
 			$scope.articleId = id;
 			Article.get({id: id}, function(result) {
 				$scope.article = result;
-				$scope.loadPage($scope.page);
+				$scope.loadPage(1);
 			});
 		}
 		
@@ -39,7 +39,7 @@ angular.module('membershipApp')
         };
 		
 		$scope.clear = function() {
-			$scope.article = {};
+			$scope.article = null;
 			$scope.history = [];
 			$scope.page = 1;
 		}

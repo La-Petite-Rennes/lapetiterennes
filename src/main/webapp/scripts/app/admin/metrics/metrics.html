@@ -8,7 +8,7 @@
 <h3 data-translate="metrics.jvm.title">JVM Metrics</h3>
 <div class="row" data-ng-hide="updatingMetrics">
     <div class="col-md-4">
-        <b data-translate="metrics.jvm.memory.title">Memory</b>
+        <strong data-translate="metrics.jvm.memory.title">Memory</strong>
         <p><span data-translate="metrics.jvm.memory.total">Total Memory</span> ({{metrics.gauges['jvm.memory.total.used'].value / 1000000 | number:0}}M / {{metrics.gauges['jvm.memory.total.max'].value / 1000000 | number:0}}M)</p>
         <div class="progress progress-striped">
             <div class="progress-bar progress-bar-success" role="progressbar"
@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <b data-translate="metrics.jvm.threads.title">Threads</b> (Total: {{metrics.gauges['jvm.threads.count'].value}}) <a class="hand" data-ng-click="refreshThreadDumpData()" data-toggle="modal" data-target="#threadDump"><i class="glyphicon glyphicon-eye-open"></i></a>
+        <strong data-translate="metrics.jvm.threads.title">Threads</strong> (Total: {{metrics.gauges['jvm.threads.count'].value}}) <a class="hand" data-ng-click="refreshThreadDumpData()" data-toggle="modal" data-target="#threadDump"><em class="glyphicon glyphicon-eye-open"></em></a>
         <p><span data-translate="metrics.jvm.threads.runnable">Runnable</span> {{metrics.gauges['jvm.threads.runnable.count'].value}}</p>
         <div class="progress progress-striped">
             <div class="progress-bar progress-bar-success" role="progressbar"
@@ -84,7 +84,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <b data-translate="metrics.jvm.gc.title">Garbage collections</b>
+        <strong data-translate="metrics.jvm.gc.title">Garbage collections</strong>
         <div class="row">
             <div class="col-md-9" data-translate="metrics.jvm.gc.marksweepcount">Mark Sweep count</div>
             <div class="col-md-3 text-right">{{metrics.gauges['jvm.garbage.PS-MarkSweep.count'].value}}</div>
@@ -106,7 +106,7 @@
 <div class="well well-lg" data-ng-show="updatingMetrics" data-translate="metrics.updating">Updating...</div>
 
 <h3 data-translate="metrics.jvm.http.title">HTTP requests (events per second)</h3>
-    <p><span data-translate="metrics.jvm.http.active">Active requests</span> <b>{{metrics.counters['com.codahale.metrics.servlet.InstrumentedFilter.activeRequests'].count | number:0}}</b> - <span data-translate="metrics.jvm.http.total">Total requests</span> <b>{{metrics.timers['com.codahale.metrics.servlet.InstrumentedFilter.requests'].count | number:0}}</b></p>
+    <p><span data-translate="metrics.jvm.http.active">Active requests</span> <strong>{{metrics.counters['com.codahale.metrics.servlet.InstrumentedFilter.activeRequests'].count | number:0}}</strong> - <span data-translate="metrics.jvm.http.total">Total requests</span> <strong>{{metrics.timers['com.codahale.metrics.servlet.InstrumentedFilter.requests'].count | number:0}}</strong></p>
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>

@@ -6,7 +6,7 @@ import fr.lpr.membership.domain.stock.StockEvent;
 import fr.lpr.membership.domain.stock.StockHistory;
 import fr.lpr.membership.web.rest.dto.StockHistoryDTO;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public abstract class StockMapper {
 
 	public abstract StockHistoryDTO stockHistoryToDto(StockHistory stockHistory);

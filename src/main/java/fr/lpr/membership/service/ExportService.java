@@ -1,13 +1,27 @@
 package fr.lpr.membership.service;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.ImmutableMap;
+import com.opencsv.CSVWriter;
+import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.StatutAdhesion;
+import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
+import fr.lpr.membership.domain.util.LocalDateAdapter;
+import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.service.exception.ExportException;
+import fr.lpr.membership.web.rest.dto.ExportRequest.AdhesionState;
+import fr.lpr.membership.web.rest.util.PaginationUtil;
+import lombok.Getter;
+import lombok.Setter;
+import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
@@ -16,28 +30,14 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.google.common.collect.ImmutableMap;
-import com.opencsv.CSVWriter;
-
-import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.StatutAdhesion;
-import fr.lpr.membership.domain.TypeAdhesion;
-import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
-import fr.lpr.membership.domain.util.LocalDateAdapter;
-import fr.lpr.membership.repository.AdherentRepository;
-import fr.lpr.membership.web.rest.dto.ExportRequest.AdhesionState;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 @Service
 public class ExportService {
@@ -79,31 +79,34 @@ public class ExportService {
 	 * @throws Exception
 	 *             if an error occurs
 	 */
-	public void export(final String format, final List<String> properties, final AdhesionState adhesionState, final HttpServletResponse response)
-			throws Exception {
-		final List<AdherentDto> adherents = new ArrayList<>();
+	public void export(final String format, final List<String> properties, final AdhesionState adhesionState, final HttpServletResponse response) {
+		try {
+            final List<AdherentDto> adherents = new ArrayList<>();
 
-		Page<Adherent> page = null;
-		do {
-			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
+            Page<Adherent> page = null;
+            do {
+                page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
 
-			adherents.addAll(page.getContent().stream().filter(ad -> filterAdhesionState(ad, adhesionState)).map(ad -> mapDto(ad, properties))
-					.collect(Collectors.toList()));
-		} while (page.hasNext());
+                adherents.addAll(page.getContent().stream().filter(ad -> filterAdhesionState(ad, adhesionState)).map(ad -> mapDto(ad, properties))
+                    .collect(Collectors.toList()));
+            } while (page.hasNext());
 
-		switch (format) {
-		case CSV:
-			exportCsv(adherents, properties, response);
-			break;
-		case XML:
-			exportXml(adherents, response);
-			break;
-		case JSON:
-			exportJson(adherents, response);
-			break;
-		default:
-			exportCsv(adherents, properties, response);
-		}
+            switch (format) {
+                case CSV:
+                    exportCsv(adherents, properties, response);
+                    break;
+                case XML:
+                    exportXml(adherents, response);
+                    break;
+                case JSON:
+                    exportJson(adherents, response);
+                    break;
+                default:
+                    exportCsv(adherents, properties, response);
+            }
+        } catch (IOException | JAXBException ex) {
+		    throw new ExportException("Export failed", ex);
+        }
 	}
 
 	private AdherentDto mapDto(Adherent adherent, final List<String> properties) {
@@ -158,22 +161,24 @@ public class ExportService {
 		objectMapper.writeValue(response.getOutputStream(), dtos);
 	}
 
+	@Getter
+    @Setter
 	@JsonInclude(Include.NON_NULL)
-	static class AdherentDto {
+	static class AdherentDto implements Serializable {
 
-		public Long id;
-		public String nom;
-		public String prenom;
-		public Boolean estBenevole;
-		public String adresse;
-		public String codePostal;
-		public String ville;
-		public String email;
-		public String telephone;
-		public List<AdhesionDto> adhesions;
+		private Long id;
+        private String nom;
+        private String prenom;
+        private Boolean estBenevole;
+        private String adresse;
+        private String codePostal;
+        private String ville;
+        private String email;
+        private String telephone;
+        private List<AdhesionDto> adhesions;
 		@JsonIgnore
 		@XmlTransient
-		public LocalDate lastAdhesion;
+        private LocalDate lastAdhesion;
 
 		public String formatLastAdhesion() {
 			if (lastAdhesion != null) {
@@ -184,13 +189,15 @@ public class ExportService {
 
 	}
 
+	@Getter
+    @Setter
 	static class AdhesionDto {
 
-		public TypeAdhesion typeAdhesion;
+		private TypeAdhesion typeAdhesion;
 
 		@JsonSerialize(using = CustomLocalDateSerializer.class)
 		@XmlJavaTypeAdapter(LocalDateAdapter.class)
-		public LocalDate dateAdhesion;
+		private LocalDate dateAdhesion;
 
 		public AdhesionDto(TypeAdhesion typeAdhesion, LocalDate dateAdhesion) {
 			super();

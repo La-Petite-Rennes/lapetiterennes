@@ -25,16 +25,16 @@ public class Article {
 	@Column(nullable=false, unique=true)
 	private String name;
 
-	private int quantity;
-
-	private Integer salePrice;
-
 	@ManyToOne
 	private Provider provider;
 
-	private Integer unitPrice;
-
 	private String reference;
+
+	private int quantity;
+	private int stockWarningLevel;
+
+	private Integer salePrice;
+	private Integer unitPrice;
 
 	public Long getId() {
 		return id;
@@ -72,6 +72,19 @@ public class Article {
 
 	public Article quantity(int quantity) {
 		setQuantity(quantity);
+		return this;
+	}
+
+	public int getStockWarningLevel() {
+		return stockWarningLevel;
+	}
+
+	public void setStockWarningLevel(int stockWarningLevel) {
+		this.stockWarningLevel = stockWarningLevel;
+	}
+
+	public Article stockWarningLevel(int stockWarningLevel) {
+		setStockWarningLevel(stockWarningLevel);
 		return this;
 	}
 

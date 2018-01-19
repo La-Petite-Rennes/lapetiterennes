@@ -12,6 +12,8 @@ angular.module('membershipApp')
 		};
 		
 		$scope.loadAll = function() {
+			$scope.clearArticleModal()
+			
 			Article.query(function(result) {
 				$scope.articles = result;
 				$scope.reverse = false;
@@ -27,7 +29,7 @@ angular.module('membershipApp')
 		$scope.stockLevel = function(article) {
 			if (article.quantity <= 0) {
 				return 'article-outOfStock';
-			} else if (article.quantity <= 5) {
+			} else if (article.quantity <= article.stockWarningLevel) {
 				return 'article-insufficientStock';
 			} else {
 				return 'article-sufficientStock';

@@ -2,6 +2,7 @@
 # Project Specific
 ######################
 /src/main/webapp/dist
+/src/main/webapp/bower_components
 
 ######################
 # Node
@@ -103,6 +104,7 @@ Desktop.ini
 /bin/**
 /spring_loaded/**
 /deploy/**
+/bower_components/**
 
 ######################
 # Logs
@@ -116,6 +118,7 @@ Desktop.ini
 *.*~
 *~
 .merge_file*
+.sonar
 
 ######################
 # Gradle Wrapper

@@ -8,6 +8,8 @@
 			},
 			"reassort": "Réassort",
 			"name": "Nom",
+			"reference": "Référence",
+			"stockWarningLevel": "Seuil d'alerte du stock",
 			"quantity": "Quantité",
 			"salePrice": "Prix de vente",
 			"provider": "Fournisseur",

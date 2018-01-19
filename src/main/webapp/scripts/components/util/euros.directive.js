@@ -10,4 +10,18 @@ angular.module('membershipApp')
 			    });
 		    },
 		};
+	})	
+	.directive('euros', function() {
+		return {
+			restrict: 'A',
+			require: 'ngModel',
+			link: function (scope, element, attrs, ctrl) {
+				ctrl.$formatters.unshift(function(model) {
+					return model / 100;
+				});
+				ctrl.$parsers.push(function(view) {
+					return parseInt(view * 100);
+				});
+		    }
+		};
 	});

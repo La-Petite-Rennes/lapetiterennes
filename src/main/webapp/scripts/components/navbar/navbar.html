@@ -9,7 +9,7 @@
             </button>
             <a class="navbar-brand" href="#/"><span data-translate="global.title">jhipster</span> <span class="navbar-version">v{{VERSION}}</span></a>
         </div>
-        
+
         <div class="collapse navbar-collapse" id="navbar-collapse" data-ng-switch="isAuthenticated()">
             <ul class="nav navbar-nav nav-pills navbar-right">
                 <li data-ui-sref-active="active">
@@ -18,40 +18,40 @@
                         <span data-translate="global.menu.home">Home</span>
                     </a>
                 </li>
-                
+
                 <li data-ui-sref-active="active" data-ng-switch-when="true" data-has-role="ROLE_WORKSHOP_MANAGER">
                     <a data-ui-sref="article">
                         <span class="glyphicon glyphicon-th-list"></span>
                         <span data-translate="global.menu.entities.article">Articles</span>
                     </a>
                 </li>
-                
+
                 <li data-ui-sref-active="active" data-ng-switch-when="true" data-has-role="ROLE_USER">
                     <a data-ui-sref="sales">
                         <span class="glyphicon glyphicon-piggy-bank"></span>
                         <span data-translate="global.menu.entities.saleHistory">saleHistory</span>
                     </a>
                 </li>
-                
+
                 <li data-ui-sref-active="active" data-ng-switch-when="true">
                     <a data-ui-sref="newSale">
                         <span class="glyphicon glyphicon-credit-card"></span>
                         <span data-translate="global.menu.entities.newSale">NewSale</span>
                     </a>
                 </li>
-                
+
                 <li data-ui-sref-active="active" data-ng-switch-when="true">
                 	<a data-ui-sref="adherent">
                     	<span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span data-translate="global.menu.entities.adherent">adherent</span>
                     </a>
                 </li>
-                
+
                 <li data-ui-sref-active="active" data-has-role="ROLE_ADMIN" class="dropdown pointer" data-ng-hide="true">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">
                     	<span>
                     		<span class="glyphicon glyphicon-th-list"></span>
                     		<span class="hidden-tablet" data-translate="global.menu.entities.main">Entities</span>
-                    		<b class="caret"></b>
+                    		<strong class="caret"></strong>
                     	</span>
                     </a>
                     <ul class="dropdown-menu">
@@ -73,13 +73,13 @@
                         <!-- JHipster will add entities to the menu here -->
                     </ul>
                 </li>
-                
+
                 <li data-ng-class="{active: $state.includes('account')}" class="dropdown pointer">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">
-                    	<span>	
+                    	<span>
                     		<span class="glyphicon glyphicon-user"></span>
                     		<span class="hidden-tablet" data-translate="global.menu.account.main">Account</span>
-                    		<b class="caret"></b>
+                    		<strong class="caret"></strong>
                     	</span>
                     </a>
                     <ul class="dropdown-menu">
@@ -116,13 +116,13 @@
                         </li>
                     </ul>
                 </li>
-                
+
                 <li data-ng-class="{active: $state.includes('admin')}" data-ng-switch-when="true" data-has-role="ROLE_ADMIN" class="dropdown pointer">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">
                     	<span>
                     		<span class="glyphicon glyphicon-tower"></span>
                     		<span class="hidden-tablet" data-translate="global.menu.admin.main">Admin</span>
-                    		<b class="caret"></b>
+                    		<strong class="caret"></strong>
                     	</span>
                     </a>
                     <ul class="dropdown-menu">
@@ -163,13 +163,13 @@
                         </li>
                     </ul>
                 </li>
-                
+
                 <li data-ui-sref-active="active" class="dropdown pointer" data-ng-controller="LanguageController" data-ng-show="false">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">
                     	<span>
                     	<span class="glyphicon glyphicon-flag"></span>
                     	<span class="hidden-tablet" data-translate="global.menu.language">Language</span>
-                    		<b class="caret"></b>
+                    		<strong class="caret"></strong>
                     	</span>
                     </a>
                     <ul class="dropdown-menu">
@@ -178,7 +178,7 @@
                         </li>
                     </ul>
                 </li>
-                
+
                 <li data-ui-sref-active="active" class="pointer">
 					<a uib-popover-template="dynamicPopover.templateUrl" data-popover-placement="bottom">
                      	<span class="glyphicon glyphicon-shopping-cart"></span>
@@ -188,7 +188,7 @@
             </ul>
         </div>
     </div>
-    
+
     <script type="text/ng-template" id="basketPopoverTemplate.html">
 	    <div id="basketPopover" style="min-width: 250px;">
  		   	<div data-ng-repeat="basket in baskets()">
@@ -199,5 +199,5 @@
     		</div>
     	</div>
 	</script>
-    
+
 </nav>

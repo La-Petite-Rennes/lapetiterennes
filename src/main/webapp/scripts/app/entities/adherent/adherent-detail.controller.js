@@ -47,7 +47,7 @@ angular.module('membershipApp')
         
         $scope.sendReminderEmail = function () {
         	$http.post('api/adherents/reminderEmail/' + $scope.adherent.id)
-        		.success(function() {
+        		.then(function() {
         			$scope.clear();
         		});
         };

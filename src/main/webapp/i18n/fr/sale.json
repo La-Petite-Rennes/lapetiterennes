@@ -16,7 +16,7 @@
 				"renew": "Renouvellement",
 				"search": "Rechercher un adhérent",
 				"select": "Sélectionner"
-			},				
+			},
 			"paymentType": {
 				"label": "Règlement",
 				"cash": "Espèces",
@@ -41,6 +41,7 @@
 			"statistics": {
 				"link" : "Statistiques",
 				"title": "Statistiques de ventes et adhésions",
+                "year": "Année",
 				"month": "Mois",
 				"amount": "Montant",
 				"total": "Grand Total",

@@ -13,7 +13,7 @@ import fr.lpr.membership.repository.ArticleRepository;
 import fr.lpr.membership.web.rest.dto.SaleDTO;
 import fr.lpr.membership.web.rest.dto.SoldItemDTO;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public abstract class SaleMapper {
 
 	@Autowired

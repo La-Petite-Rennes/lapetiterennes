@@ -29,9 +29,11 @@ public class SaleStatisticsService {
 	private AdhesionRepository adhesionRepository;
 
 	public SaleStatistics<YearMonth> statsByMonths(DateTime from) {
+        DateTime to = from.plusYears(1);
+
 		// Search finished sales created after 'from' date
 		BooleanBuilder salePredicate = new BooleanBuilder();
-		salePredicate.and(QSale.sale.createdAt.between(from, DateTime.now()));
+		salePredicate.and(QSale.sale.createdAt.between(from, to));
 		salePredicate.and(QSale.sale.finished.isTrue());
 
 		Map<YearMonth, List<SalableItem>> soldItemsByMonth =
@@ -45,7 +47,7 @@ public class SaleStatisticsService {
 		Map<YearMonth, List<SalableItem>> adhesionsByMonth =
 				StreamSupport
 						.stream(adhesionRepository.findAll(
-								QAdhesion.adhesion.dateAdhesion.between(from.toLocalDate(), DateTime.now().toLocalDate()))
+								QAdhesion.adhesion.dateAdhesion.between(from.toLocalDate(), to.toLocalDate()))
 								.spliterator(), false)
 						.map(AdhesionProxy::new)
 						.collect(Collectors.groupingBy(a -> new YearMonth(a.getSaleDate())));

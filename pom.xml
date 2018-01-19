@@ -11,7 +11,7 @@
 
     <groupId>fr.lpr.membership</groupId>
     <artifactId>membership</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.0.2</version>
     <packaging>war</packaging>
 
     <name>membership</name>
@@ -33,6 +33,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <gatling-maven-plugin.version>2.1.5</gatling-maven-plugin.version>
         <gatling.version>2.1.5</gatling.version>
+        <hibernate-search.version>5.5.6.Final</hibernate-search.version>
         <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
         <liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
@@ -44,10 +45,15 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <metrics-spark-reporter.version>1.2</metrics-spark-reporter.version>
         <run.addResources>false</run.addResources>
-        <sonar-maven-plugin.version>2.3</sonar-maven-plugin.version>
+        <sonar-maven-plugin.version>3.3</sonar-maven-plugin.version>
+        <sonar.branch>develop</sonar.branch>
+        <sonar.organization>glebreton-github</sonar.organization>
+
+        <sonar.projectKey>fr.lpr:membership</sonar.projectKey>
+        <sonar.projectName>Gestion des adhérents de La Petite Rennes</sonar.projectName>
+        <sonar.sources>src/main/java,src/main/webapp/scripts</sonar.sources>
         <swagger-springmvc.version>0.9.5</swagger-springmvc.version>
         <usertype-core.version>5.0.0.GA</usertype-core.version>
-        <hibernate-search.version>5.5.6.Final</hibernate-search.version>
     </properties>
 
     <dependencies>
@@ -296,8 +302,19 @@
             <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -589,7 +606,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-Xmx256m</argLine>
                     <!-- Force alphabetical order to have a reproducible build -->
                     <runOrder>alphabetical</runOrder>
                 </configuration>
@@ -618,11 +634,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>${sonar-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.liquibase</groupId>
@@ -657,6 +668,11 @@
                     <verbose>true</verbose>
                     <logging>debug</logging>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
