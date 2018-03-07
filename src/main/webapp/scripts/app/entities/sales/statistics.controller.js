@@ -30,7 +30,7 @@ angular.module('membershipApp')
 
 		$scope.exportDetails = function () {
         	$http({
-                url: 'api/sales/export',
+                url: 'api/sales/export/' + $scope.year,
                 method: "POST",
                 headers: {'Content-type': 'application/json'},
                 responseType: 'arraybuffer'

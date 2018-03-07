@@ -37,13 +37,12 @@ public class ExportExcelService {
 	@Autowired
 	private SaleStatisticsService saleStatisticsService;
 
-	public void export(OutputStream outputStream) {
+	public void export(DateTime from, OutputStream outputStream) {
 		// Create the Excel file (format XSLX)
 		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 			Sheet sheet = workbook.createSheet("Statistiques");
 
 			// Get statistics by month
-			DateTime from = DateTime.now().minusYears(1).withDayOfMonth(1).withMonthOfYear(1);
 			SaleStatistics<YearMonth> itemsByMonth = saleStatisticsService.statsByMonths(from);
 
 			List<String> columnNames = getItemNames();
