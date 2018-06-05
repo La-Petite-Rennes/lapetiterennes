@@ -11,10 +11,14 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name="ARTICLE")
 @Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@SQLDelete(sql = "UPDATE article SET disabled = true where id = ?")
+@Where(clause = "disabled = false")
 public class Article {
 
 	@Id
@@ -35,6 +39,8 @@ public class Article {
 
 	private Integer salePrice;
 	private Integer unitPrice;
+
+	private boolean disabled;
 
 	public Long getId() {
 		return id;
@@ -144,4 +150,11 @@ public class Article {
 		return salePrice == null;
 	}
 
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
 }

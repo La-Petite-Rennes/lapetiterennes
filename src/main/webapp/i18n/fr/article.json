@@ -19,7 +19,10 @@
 				"event": "Type",
 				"quantity": "Quantité",
 				"date": "Date"
-			}
+			},
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer l'article '{{ name }}' ?"
+            }
 		}
 	}
 }
