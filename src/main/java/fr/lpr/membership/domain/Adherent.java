@@ -226,7 +226,7 @@ public class Adherent implements Serializable {
 	}
 
 	@JsonIgnore
-	private Optional<Adhesion> lastAdhesion() {
+	public Optional<Adhesion> lastAdhesion() {
 		if (this.adhesions == null || this.adhesions.isEmpty()) {
 			return Optional.empty();
 		} else {
