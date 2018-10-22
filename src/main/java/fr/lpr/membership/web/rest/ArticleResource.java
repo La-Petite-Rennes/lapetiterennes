@@ -1,35 +1,6 @@
 package fr.lpr.membership.web.rest;
 
-import static fr.lpr.membership.security.AuthoritiesConstants.WORKSHOP_MANAGER;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.codahale.metrics.annotation.Timed;
-
 import fr.lpr.membership.domain.Article;
 import fr.lpr.membership.domain.stock.Reassort;
 import fr.lpr.membership.domain.stock.StockHistory;
@@ -39,22 +10,40 @@ import fr.lpr.membership.service.stock.StockService;
 import fr.lpr.membership.web.rest.dto.StockHistoryDTO;
 import fr.lpr.membership.web.rest.dto.mapper.StockMapper;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static fr.lpr.membership.security.AuthoritiesConstants.WORKSHOP_MANAGER;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ArticleResource {
 
-	@Autowired
-	private ArticleRepository articleRepository;
+	private final ArticleRepository articleRepository;
 
-	@Autowired
-	private ReassortService reassortService;
+	private final ReassortService reassortService;
 
-	@Autowired
-	private StockService stockService;
+	private final StockService stockService;
 
-	@Autowired
-	private StockMapper stockMapper;
+	private final StockMapper stockMapper;
 
 	@RequestMapping(value="/articles", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	@Timed

@@ -5,6 +5,8 @@ import org.joda.time.LocalDate;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.sale.PaymentType;
 
+import javax.validation.constraints.NotNull;
+
 public interface SalableItem extends Comparable<SalableItem> {
 
 	Long getId();
@@ -26,7 +28,7 @@ public interface SalableItem extends Comparable<SalableItem> {
 	Adherent getAdherent();
 
 	@Override
-	default int compareTo(SalableItem o) {
+	default int compareTo(@NotNull SalableItem o) {
 		if (getClass().equals(o.getClass())) {
 			return getId().compareTo(o.getId());
 		} else {

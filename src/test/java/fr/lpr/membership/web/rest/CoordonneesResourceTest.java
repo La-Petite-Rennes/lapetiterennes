@@ -65,7 +65,7 @@ public class CoordonneesResourceTest {
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        CoordonneesResource coordonneesResource = new CoordonneesResource();
+        CoordonneesResource coordonneesResource = new CoordonneesResource(coordonneesRepository);
         ReflectionTestUtils.setField(coordonneesResource, "coordonneesRepository", coordonneesRepository);
         this.restCoordonneesMockMvc = MockMvcBuilders.standaloneSetup(coordonneesResource).build();
     }

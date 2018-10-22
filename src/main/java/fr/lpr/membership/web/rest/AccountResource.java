@@ -1,32 +1,6 @@
 package fr.lpr.membership.web.rest;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.codahale.metrics.annotation.Timed;
-
 import fr.lpr.membership.domain.Authority;
 import fr.lpr.membership.domain.PersistentToken;
 import fr.lpr.membership.domain.User;
@@ -37,27 +11,40 @@ import fr.lpr.membership.security.SecurityUtils;
 import fr.lpr.membership.service.MailService;
 import fr.lpr.membership.service.UserService;
 import fr.lpr.membership.web.rest.dto.UserDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing the current user's account.
  */
 @RestController
 @RequestMapping("/api")
+@Slf4j
+@RequiredArgsConstructor
 public class AccountResource {
 
-	private final Logger log = LoggerFactory.getLogger(AccountResource.class);
+	private final UserRepository userRepository;
 
-	@Inject
-	private UserRepository userRepository;
+	private final UserService userService;
 
-	@Inject
-	private UserService userService;
+	private final PersistentTokenRepository persistentTokenRepository;
 
-	@Inject
-	private PersistentTokenRepository persistentTokenRepository;
-
-	@Inject
-	private MailService mailService;
+	private final MailService mailService;
 
 	/**
 	 * POST /register -&gt; register the user.
@@ -202,10 +189,8 @@ public class AccountResource {
 	public void invalidateSession(@PathVariable String series) throws UnsupportedEncodingException {
 		final String decodedSeries = URLDecoder.decode(series, "UTF-8");
 		userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).ifPresent(
-				u -> {
-					persistentTokenRepository.findByUser(u).stream().filter(persistentToken -> StringUtils.equals(persistentToken.getSeries(), decodedSeries))
-					.findAny().ifPresent(t -> persistentTokenRepository.delete(decodedSeries));
-				});
+				u -> persistentTokenRepository.findByUser(u).stream().filter(persistentToken -> StringUtils.equals(persistentToken.getSeries(), decodedSeries))
+                .findAny().ifPresent(t -> persistentTokenRepository.delete(decodedSeries)));
 	}
 
 	@RequestMapping(value = "/account/reset_password/init", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)

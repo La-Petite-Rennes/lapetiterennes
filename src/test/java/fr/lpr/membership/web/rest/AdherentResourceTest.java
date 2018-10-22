@@ -1,22 +1,14 @@
 package fr.lpr.membership.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-
+import com.google.common.collect.Sets;
+import fr.lpr.membership.Application;
+import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Adhesion;
+import fr.lpr.membership.domain.Coordonnees;
+import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.domain.sale.PaymentType;
+import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.repository.SearchAdherentRepository;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.joda.time.LocalDate;
@@ -28,21 +20,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Sets;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import java.util.List;
 
-import fr.lpr.membership.Application;
-import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.Adhesion;
-import fr.lpr.membership.domain.Coordonnees;
-import fr.lpr.membership.domain.TypeAdhesion;
-import fr.lpr.membership.domain.sale.PaymentType;
-import fr.lpr.membership.repository.AdherentRepository;
-import fr.lpr.membership.repository.SearchAdherentRepository;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the AdherentResource REST controller.
@@ -82,9 +73,7 @@ public class AdherentResourceTest {
 	@PostConstruct
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		final AdherentResource adherentResource = new AdherentResource();
-		ReflectionTestUtils.setField(adherentResource, "adherentRepository", adherentRepository);
-		ReflectionTestUtils.setField(adherentResource, "searchAdherentRepository", searchAdherentRepository);
+		final AdherentResource adherentResource = new AdherentResource(adherentRepository, searchAdherentRepository, null, null, null);
 		this.restAdherentMockMvc = MockMvcBuilders.standaloneSetup(adherentResource).build();
 	}
 
@@ -183,11 +172,11 @@ public class AdherentResourceTest {
 		// Get all the adherents
 		restAdherentMockMvc.perform(get("/api/adherents")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 		.andExpect(jsonPath("$.[*].id").value(hasItem(adherent.getId().intValue())))
-		.andExpect(jsonPath("$.[*].prenom").value(hasItem(DEFAULT_PRENOM.toString())))
-		.andExpect(jsonPath("$.[*].nom").value(hasItem(DEFAULT_NOM.toString())))
-		.andExpect(jsonPath("$.[*].benevole").value(hasItem(DEFAULT_BENEVOLE.booleanValue())))
-		.andExpect(jsonPath("$.[*].remarqueBenevolat").value(hasItem(DEFAULT_REMARQUE_BENEVOLAT.toString())))
-		.andExpect(jsonPath("$.[*].autreRemarque").value(hasItem(DEFAULT_AUTRE_REMARQUE.toString())));
+		.andExpect(jsonPath("$.[*].prenom").value(hasItem(DEFAULT_PRENOM)))
+		.andExpect(jsonPath("$.[*].nom").value(hasItem(DEFAULT_NOM)))
+		.andExpect(jsonPath("$.[*].benevole").value(hasItem(DEFAULT_BENEVOLE)))
+		.andExpect(jsonPath("$.[*].remarqueBenevolat").value(hasItem(DEFAULT_REMARQUE_BENEVOLAT)))
+		.andExpect(jsonPath("$.[*].autreRemarque").value(hasItem(DEFAULT_AUTRE_REMARQUE)));
 	}
 
 	@Test
@@ -199,10 +188,10 @@ public class AdherentResourceTest {
 		// Get the adherent
 		restAdherentMockMvc.perform(get("/api/adherents/{id}", adherent.getId())).andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$.id").value(adherent.getId().intValue()))
-		.andExpect(jsonPath("$.prenom").value(DEFAULT_PRENOM.toString())).andExpect(jsonPath("$.nom").value(DEFAULT_NOM.toString()))
-		.andExpect(jsonPath("$.benevole").value(DEFAULT_BENEVOLE.booleanValue()))
-		.andExpect(jsonPath("$.remarqueBenevolat").value(DEFAULT_REMARQUE_BENEVOLAT.toString()))
-		.andExpect(jsonPath("$.autreRemarque").value(DEFAULT_AUTRE_REMARQUE.toString()));
+		.andExpect(jsonPath("$.prenom").value(DEFAULT_PRENOM)).andExpect(jsonPath("$.nom").value(DEFAULT_NOM))
+		.andExpect(jsonPath("$.benevole").value(DEFAULT_BENEVOLE))
+		.andExpect(jsonPath("$.remarqueBenevolat").value(DEFAULT_REMARQUE_BENEVOLAT))
+		.andExpect(jsonPath("$.autreRemarque").value(DEFAULT_AUTRE_REMARQUE));
 	}
 
 	@Test

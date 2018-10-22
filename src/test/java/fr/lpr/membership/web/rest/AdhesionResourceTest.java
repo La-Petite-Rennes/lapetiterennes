@@ -1,20 +1,12 @@
 package fr.lpr.membership.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
+import fr.lpr.membership.Application;
+import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Adhesion;
+import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.domain.sale.PaymentType;
+import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.repository.AdhesionRepository;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,18 +16,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import fr.lpr.membership.Application;
-import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.Adhesion;
-import fr.lpr.membership.domain.TypeAdhesion;
-import fr.lpr.membership.domain.sale.PaymentType;
-import fr.lpr.membership.repository.AdherentRepository;
-import fr.lpr.membership.repository.AdhesionRepository;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the AdhesionResource REST controller.
@@ -69,9 +61,7 @@ public class AdhesionResourceTest {
 	@PostConstruct
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		final AdhesionResource adhesionResource = new AdhesionResource();
-		ReflectionTestUtils.setField(adhesionResource, "adhesionRepository", adhesionRepository);
-		ReflectionTestUtils.setField(adhesionResource, "adherentRepository", adherentRepository);
+		final AdhesionResource adhesionResource = new AdhesionResource(adhesionRepository, adherentRepository);
 		this.restAdhesionMockMvc = MockMvcBuilders.standaloneSetup(adhesionResource).build();
 	}
 

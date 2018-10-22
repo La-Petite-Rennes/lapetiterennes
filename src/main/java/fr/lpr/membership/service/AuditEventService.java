@@ -1,17 +1,15 @@
 package fr.lpr.membership.service;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
+import fr.lpr.membership.config.audit.AuditEventConverter;
+import fr.lpr.membership.domain.PersistentAuditEvent;
+import fr.lpr.membership.repository.PersistenceAuditEventRepository;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.LocalDateTime;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fr.lpr.membership.config.audit.AuditEventConverter;
-import fr.lpr.membership.domain.PersistentAuditEvent;
-import fr.lpr.membership.repository.PersistenceAuditEventRepository;
+import java.util.List;
 
 /**
  * <p>
@@ -23,13 +21,12 @@ import fr.lpr.membership.repository.PersistenceAuditEventRepository;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AuditEventService {
 
-	@Inject
-	private PersistenceAuditEventRepository persistenceAuditEventRepository;
+	private final PersistenceAuditEventRepository persistenceAuditEventRepository;
 
-	@Inject
-	private AuditEventConverter auditEventConverter;
+	private final AuditEventConverter auditEventConverter;
 
 	public List<AuditEvent> findAll() {
 		return auditEventConverter.convertToAuditEvent(persistenceAuditEventRepository.findAll());

@@ -1,11 +1,7 @@
 package fr.lpr.membership.domain;
 
 import java.io.Serializable;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -215,7 +211,7 @@ public class Adherent implements Serializable {
 	}
 
 	private void resetLastAdhesion() {
-		this.lastAdhesion = lastAdhesion().map(ad -> ad.getDateAdhesion()).orElse(null);
+		this.lastAdhesion = lastAdhesion().map(Adhesion::getDateAdhesion).orElse(null);
 	}
 
 	/**
@@ -234,7 +230,7 @@ public class Adherent implements Serializable {
 		if (this.adhesions == null || this.adhesions.isEmpty()) {
 			return Optional.empty();
 		} else {
-			final SortedSet<Adhesion> orderedAdhesions = new TreeSet<>((a1, a2) -> a2.getDateAdhesion().compareTo(a1.getDateAdhesion()));
+			final SortedSet<Adhesion> orderedAdhesions = new TreeSet<>(Comparator.comparing(Adhesion::getDateAdhesion).reversed());
 			orderedAdhesions.addAll(adhesions);
 			return Optional.of(orderedAdhesions.first());
 		}
@@ -288,12 +284,8 @@ public class Adherent implements Serializable {
 
 		final Adherent adherent = (Adherent) o;
 
-		if (!Objects.equals(id, adherent.id)) {
-			return false;
-		}
-
-		return true;
-	}
+        return Objects.equals(id, adherent.id);
+    }
 
 	@Override
 	public int hashCode() {

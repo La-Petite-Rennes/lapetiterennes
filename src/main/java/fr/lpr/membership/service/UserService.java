@@ -1,21 +1,5 @@
 package fr.lpr.membership.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.inject.Inject;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import fr.lpr.membership.domain.Authority;
 import fr.lpr.membership.domain.User;
 import fr.lpr.membership.repository.AuthorityRepository;
@@ -23,27 +7,36 @@ import fr.lpr.membership.repository.PersistentTokenRepository;
 import fr.lpr.membership.repository.UserRepository;
 import fr.lpr.membership.security.SecurityUtils;
 import fr.lpr.membership.service.util.RandomUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service class for managing users.
  */
 @Service
 @Transactional
+@Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
-	private final Logger log = LoggerFactory.getLogger(UserService.class);
+	private final PasswordEncoder passwordEncoder;
 
-	@Inject
-	private PasswordEncoder passwordEncoder;
+	private final UserRepository userRepository;
 
-	@Inject
-	private UserRepository userRepository;
+	private final PersistentTokenRepository persistentTokenRepository;
 
-	@Inject
-	private PersistentTokenRepository persistentTokenRepository;
-
-	@Inject
-	private AuthorityRepository authorityRepository;
+	private final AuthorityRepository authorityRepository;
 
 	public Optional<User> activateRegistration(String key) {
 		log.debug("Activating user for activation key {}", key);
@@ -145,7 +138,7 @@ public class UserService {
 	@Scheduled(cron = "0 0 0 * * ?")
 	public void removeOldPersistentTokens() {
 		final LocalDate now = new LocalDate();
-		persistentTokenRepository.findByTokenDateBefore(now.minusMonths(1)).stream().forEach(token -> {
+		persistentTokenRepository.findByTokenDateBefore(now.minusMonths(1)).forEach(token -> {
 			log.debug("Deleting token {}", token.getSeries());
 			final User user = token.getUser();
 			user.getPersistentTokens().remove(token);

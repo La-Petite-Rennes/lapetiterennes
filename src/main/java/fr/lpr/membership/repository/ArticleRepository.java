@@ -11,7 +11,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 	/**
 	 * Change the quantity of an article by adding the given quantity
 	 *
-	 * @param articleId the identifier of the article
+	 * @param id the identifier of the article
 	 * @param quantity the quantity to add, can be negative
 	 */
 	@Modifying
