@@ -46,13 +46,13 @@ public class ArticleResource {
 
 	private final StockMapper stockMapper;
 
-    @RequestMapping(value="/articles", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value="/articles", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public List<Article> getAll() {
 		return articleRepository.findAll(new Sort("name"));
 	}
 
-	@RequestMapping(value = "/articles/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/articles/{id}", produces = APPLICATION_JSON_VALUE)
 	@Timed
 	public ResponseEntity<Article> get(@PathVariable Long id) {
 		return Optional.ofNullable(articleRepository.findOne(id))
@@ -60,7 +60,7 @@ public class ArticleResource {
 				.orElse(new ResponseEntity<>(NOT_FOUND));
 	}
 
-	@RequestMapping(value = "/articles", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/articles", produces = APPLICATION_JSON_VALUE)
 	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
 	public ResponseEntity<Void> create(@Valid @RequestBody Article article) throws URISyntaxException {
@@ -68,7 +68,7 @@ public class ArticleResource {
 		return ResponseEntity.created(new URI("/api/articles/" + savedArticle.getId())).build();
 	}
 
-	@RequestMapping(value = "/articles/reassort", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/articles/reassort", produces = APPLICATION_JSON_VALUE)
 	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
 	public ResponseEntity<Void> reassort(@RequestBody List<Reassort> reassorts) {
@@ -76,7 +76,7 @@ public class ArticleResource {
 		return ResponseEntity.ok().build();
 	}
 
-	@RequestMapping(value = "/articles/{id}/forRepairing", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/articles/{id}/forRepairing", produces = APPLICATION_JSON_VALUE)
 	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
 	public ResponseEntity<Article> forRepairing(@PathVariable(name = "id") Long articleId) {
@@ -89,7 +89,7 @@ public class ArticleResource {
 		}
 	}
 
-	@RequestMapping(value = "/articles/{id}/history", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/articles/{id}/history", produces = APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<StockHistoryDTO>> stockHistory(@PathVariable(name = "id") Long articleId,
 			@RequestParam(value = "page", required = false) Integer offset,
 			@RequestParam(value = "per_page", required = false) Integer limit) throws URISyntaxException {
@@ -105,7 +105,7 @@ public class ArticleResource {
 		return new ResponseEntity<>(page.getContent().stream().map(stockMapper::stockHistoryToDto).collect(Collectors.toList()), headers, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/articles/{articleId}", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/articles/{articleId}")
 	@RolesAllowed({AuthoritiesConstants.ADMIN, AuthoritiesConstants.WORKSHOP_MANAGER})
     public void delete(@PathVariable Long articleId) {
         articleRepository.delete(articleId);
