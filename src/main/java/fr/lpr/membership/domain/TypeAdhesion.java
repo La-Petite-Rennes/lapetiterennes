@@ -4,7 +4,8 @@ package fr.lpr.membership.domain;
 public enum TypeAdhesion {
 	Simple("Adhésion simple", 2000),
 	Famille("Adhésion famille", 4000),
-	Soutien("Adhésion soutien", 0);
+	Soutien("Adhésion soutien", 0),
+    Mensuelle("Adhésion mensuelle", 0);
 
 	private final String label;
 

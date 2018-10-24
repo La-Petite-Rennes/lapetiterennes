@@ -1,11 +1,10 @@
 package fr.lpr.membership.web.rest;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.codahale.metrics.annotation.Timed;
+import fr.lpr.membership.domain.User;
+import fr.lpr.membership.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,22 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codahale.metrics.annotation.Timed;
-
-import fr.lpr.membership.domain.User;
-import fr.lpr.membership.repository.UserRepository;
+import java.util.List;
 
 /**
  * REST controller for managing users.
  */
 @RestController
 @RequestMapping("/api")
+@Slf4j
+@RequiredArgsConstructor
 public class UserResource {
 
-	private final Logger log = LoggerFactory.getLogger(UserResource.class);
-
-	@Inject
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	/**
 	 * GET /users -&gt; get all users.

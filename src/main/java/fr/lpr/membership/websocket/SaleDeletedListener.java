@@ -1,17 +1,16 @@
 package fr.lpr.membership.websocket;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import fr.lpr.membership.service.sale.event.SaleDeletedEvent;
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import fr.lpr.membership.service.sale.event.SaleDeletedEvent;
-
 @Component
+@RequiredArgsConstructor
 public class SaleDeletedListener {
 
-	@Autowired
-	private SimpMessagingTemplate template;
+	private final SimpMessagingTemplate template;
 
 	@TransactionalEventListener
 	public void handleSaleDeleted(SaleDeletedEvent event) {

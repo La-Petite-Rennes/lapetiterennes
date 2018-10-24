@@ -1,32 +1,29 @@
 package fr.lpr.membership.service.sale;
 
+import com.querydsl.core.BooleanBuilder;
+import fr.lpr.membership.domain.QAdhesion;
+import fr.lpr.membership.domain.sale.QSale;
+import fr.lpr.membership.repository.AdhesionRepository;
+import fr.lpr.membership.repository.sale.SaleRepository;
+import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
+import org.joda.time.YearMonth;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.joda.time.DateTime;
-import org.joda.time.YearMonth;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.querydsl.core.BooleanBuilder;
-
-import fr.lpr.membership.domain.QAdhesion;
-import fr.lpr.membership.domain.sale.QSale;
-import fr.lpr.membership.repository.AdhesionRepository;
-import fr.lpr.membership.repository.sale.SaleRepository;
-
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class SaleStatisticsService {
 
-	@Autowired
-	private SaleRepository saleRepository;
+	private final SaleRepository saleRepository;
 
-	@Autowired
-	private AdhesionRepository adhesionRepository;
+	private final AdhesionRepository adhesionRepository;
 
 	public SaleStatistics<YearMonth> statsByMonths(DateTime from) {
         DateTime to = from.plusYears(1);

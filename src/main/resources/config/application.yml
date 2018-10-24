@@ -12,7 +12,7 @@ jhipster.security.rememberme.key: 0967e4154fe22d114184fba3e9e1691c79045949
 server:
     connection-timeout: -1
     session:
-        timeout: 240
+        timeout: 14400
 
 async:
     corePoolSize: 2
@@ -39,3 +39,16 @@ swagger:
     licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
 
 survey: https://docs.google.com/forms/d/1W2ZiV0TbJlfZ_WCQkGnGQPy-RX8nGsVLrhpIQvDEDGA/viewform
+
+
+metrics:
+    jmx.enabled: true
+    spark:
+        enabled: false
+        host: localhost
+        port: 9999
+    graphite:
+        enabled: false
+        host: localhost
+        port: 2003
+        prefix: membership

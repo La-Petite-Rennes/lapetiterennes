@@ -17,9 +17,9 @@ import fr.lpr.membership.service.exception.ExportException;
 import fr.lpr.membership.web.rest.dto.ExportRequest.AdhesionState;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +40,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ExportService {
 
     public static final String CSV = "csv";
@@ -60,11 +61,9 @@ public class ExportService {
             dto.lastAdhesion = a.getLastAdhesion();
         }).build();
 
-    @Autowired
-    private AdherentRepository adherentRepository;
+	private final AdherentRepository adherentRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
     /**
      * Export adherents.
@@ -105,11 +104,11 @@ public class ExportService {
         }
     }
 
-    private AdherentDto mapDto(Adherent adherent, final List<String> properties) {
-        final AdherentDto adherentDto = new AdherentDto();
-        properties.stream().forEach(p -> DTO_MAPPER.get(p).accept(adherent, adherentDto));
-        return adherentDto;
-    }
+	private AdherentDto mapDto(Adherent adherent, final List<String> properties) {
+		final AdherentDto adherentDto = new AdherentDto();
+		properties.forEach(p -> DTO_MAPPER.get(p).accept(adherent, adherentDto));
+		return adherentDto;
+	}
 
     private boolean filterAdhesionState(Adherent ad, AdhesionState adhesionState) {
         if (adhesionState == AdhesionState.all) {

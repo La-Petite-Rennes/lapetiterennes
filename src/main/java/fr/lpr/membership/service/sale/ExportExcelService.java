@@ -1,41 +1,32 @@
 package fr.lpr.membership.service.sale;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import fr.lpr.membership.domain.Article;
+import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.repository.ArticleRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.joda.time.DateTime;
 import org.joda.time.YearMonth;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
-import fr.lpr.membership.domain.Article;
-import fr.lpr.membership.domain.TypeAdhesion;
-import fr.lpr.membership.repository.ArticleRepository;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class ExportExcelService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExportExcelService.class);
+	private final ArticleRepository articleRepository;
 
-	@Autowired
-	private ArticleRepository articleRepository;
-
-	@Autowired
-	private SaleStatisticsService saleStatisticsService;
+	private final SaleStatisticsService saleStatisticsService;
 
 	public void export(DateTime from, OutputStream outputStream) {
 		// Create the Excel file (format XSLX)
@@ -75,13 +66,13 @@ public class ExportExcelService {
 
 			workbook.write(outputStream);
 		} catch (IOException ex) {
-			LOGGER.error("Failed to export sale statistics", ex);
+			log.error("Failed to export sale statistics", ex);
 		}
 	}
 
 	private List<String> getItemNames() {
 		List<String> itemNames = new ArrayList<>();
-		itemNames.addAll(Arrays.asList(TypeAdhesion.values()).stream().map(TypeAdhesion::getLabel).collect(Collectors.toList()));
+		itemNames.addAll(Arrays.stream(TypeAdhesion.values()).map(TypeAdhesion::getLabel).collect(Collectors.toList()));
 		itemNames.addAll(articleRepository.findAll().stream().map(Article::getName).collect(Collectors.toList()));
 
 		itemNames.sort(Comparator.naturalOrder());

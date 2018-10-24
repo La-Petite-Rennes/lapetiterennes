@@ -1,42 +1,37 @@
 package fr.lpr.membership.service.stock;
 
-import static fr.lpr.membership.service.stock.StockQuantityChangedEvent.fromReassort;
-
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import fr.lpr.membership.domain.Article;
 import fr.lpr.membership.domain.stock.Reassort;
 import fr.lpr.membership.domain.stock.StockHistory;
 import fr.lpr.membership.repository.ArticleRepository;
 import fr.lpr.membership.repository.stock.StockHistoryRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static fr.lpr.membership.service.stock.StockQuantityChangedEvent.fromReassort;
 
 /**
  * Service de réapprovisionnement du stock.
  */
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class ReassortService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReassortService.class);
+	private final ArticleRepository articleRepository;
 
-	@Autowired
-	private ArticleRepository articleRepository;
+	private final StockHistoryRepository stockHistoryRepository;
 
-	@Autowired
-	private StockHistoryRepository stockHistoryRepository;
-
-	@Autowired
-	private ApplicationEventPublisher eventPublisher;
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Transactional
 	public void reassort(List<Reassort> reassorts) {
-		LOGGER.info("----- Début de réassort -----");
+		log.info("----- Début de réassort -----");
 
 		for (Reassort reassort : reassorts) {
 			if (reassort.getQuantity() != 0) {
@@ -44,11 +39,10 @@ public class ReassortService {
 
 				stockHistoryRepository.save(StockHistory.from(reassort, article));
 				eventPublisher.publishEvent(fromReassort(article, reassort.getQuantity()));
-				LOGGER.info("Réassort {} '{}' ", reassort.getQuantity(), article.getName());
+				log.info("Réassort {} '{}' ", reassort.getQuantity(), article.getName());
 			}
 		}
 
-		LOGGER.info("----- Fin de réassort -----");
+		log.info("----- Fin de réassort -----");
 	}
-
 }

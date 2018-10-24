@@ -38,7 +38,7 @@ public class UserResourceTest {
 
     @Before
     public void setup() {
-        UserResource userResource = new UserResource();
+        UserResource userResource = new UserResource(userRepository);
         ReflectionTestUtils.setField(userResource, "userRepository", userRepository);
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
     }

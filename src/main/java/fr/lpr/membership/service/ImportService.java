@@ -1,26 +1,26 @@
 package fr.lpr.membership.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
-
-import org.joda.time.LocalDate;
-import org.joda.time.format.ISODateTimeFormat;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.ImmutableSet;
 import com.opencsv.CSVReader;
-
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.Coordonnees;
 import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.repository.AdherentRepository;
+import lombok.RequiredArgsConstructor;
+import org.joda.time.LocalDate;
+import org.joda.time.format.ISODateTimeFormat;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ImportService {
 
 	private int id;
@@ -37,11 +37,10 @@ public class ImportService {
 
 	private int compteur;
 
-	@Autowired
-	private AdherentRepository adherentRepository;
+	private final AdherentRepository adherentRepository;
 
 	public void importCsv(InputStream inputStream) throws IOException {
-		final CSVReader reader = new CSVReader(new InputStreamReader(inputStream, "UTF-8"));
+		final CSVReader reader = new CSVReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 		parseHeader(Arrays.asList(reader.readNext()));
 		reader.forEach(this::readAdherent);
 		reader.close();

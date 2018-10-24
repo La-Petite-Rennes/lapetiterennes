@@ -1,46 +1,36 @@
 package fr.lpr.membership.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
+import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Adhesion;
+import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.repository.AdhesionRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.codahale.metrics.annotation.Timed;
-
-import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.Adhesion;
-import fr.lpr.membership.repository.AdherentRepository;
-import fr.lpr.membership.repository.AdhesionRepository;
-
 /**
  * REST controller for managing Adhesion.
  */
 @RestController
 @RequestMapping("/api")
+@Slf4j
+@RequiredArgsConstructor
 public class AdhesionResource {
 
-	private final Logger log = LoggerFactory.getLogger(AdhesionResource.class);
+	private final AdhesionRepository adhesionRepository;
 
-	@Inject
-	private AdhesionRepository adhesionRepository;
-
-	@Inject
-	private AdherentRepository adherentRepository;
+	private final AdherentRepository adherentRepository;
 
 	/**
 	 * POST /adhesions -&gt; Create a new adhesion.

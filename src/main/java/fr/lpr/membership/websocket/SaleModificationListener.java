@@ -1,25 +1,23 @@
 package fr.lpr.membership.websocket;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionalEventListener;
-
 import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.service.sale.event.AbstractSaleEvent;
 import fr.lpr.membership.service.sale.event.SaleCreatedEvent;
 import fr.lpr.membership.service.sale.event.SaleUpdatedEvent;
 import fr.lpr.membership.web.rest.dto.SaleDTO;
 import fr.lpr.membership.web.rest.dto.mapper.SaleMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
+@RequiredArgsConstructor
 public class SaleModificationListener {
 
-	@Autowired
-	private SimpMessagingTemplate template;
+	private final SimpMessagingTemplate template;
 
-	@Autowired
-	private SaleMapper saleMapper;
+	private final SaleMapper saleMapper;
 
 	@TransactionalEventListener
 	public void handleSaleEvent(SaleCreatedEvent event) {

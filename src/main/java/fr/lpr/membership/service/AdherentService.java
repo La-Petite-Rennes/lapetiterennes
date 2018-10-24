@@ -1,43 +1,39 @@
 package fr.lpr.membership.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.mail.MessagingException;
-
+import com.google.common.base.Strings;
+import fr.lpr.membership.domain.Adherent;
+import fr.lpr.membership.domain.Adhesion;
+import fr.lpr.membership.domain.StatutAdhesion;
+import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.repository.AdherentRepository;
+import fr.lpr.membership.web.rest.util.PaginationUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.base.Strings;
-
-import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.StatutAdhesion;
-import fr.lpr.membership.repository.AdherentRepository;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
+import javax.mail.MessagingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author glebreton
  */
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class AdherentService {
 
-	private final Logger log = LoggerFactory.getLogger(AdherentService.class);
+	private final AdherentRepository adherentRepository;
 
-	@Autowired
-	private AdherentRepository adherentRepository;
+	private final MailService mailService;
 
-	@Autowired
-	private MailService mailService;
-
-	@Scheduled(cron = "0 0 9 30 * *", zone = "GMT")
+	@Scheduled(cron = "0 0 9 * * *", zone = "GMT")
 	public void remindAdhesionExpiring() {
 		log.info("Démarrage du batch d'envoi d'email de rappel de cotisation");
 
@@ -48,15 +44,16 @@ public class AdherentService {
 		do {
 			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
 
-			adherents
-			.addAll(page.getContent().stream().filter(ad -> ad.getStatutAdhesion() == StatutAdhesion.ORANGE)
-					.filter(ad -> !Strings.isNullOrEmpty(ad.getCoordonnees().getEmail()))
-					.filter(ad -> ad.getReminderEmail() == null || ad.getReminderEmail().isBefore(LocalDate.now().minusMonths(1)))
-					.collect(Collectors.toList()));
+			adherents.addAll(page.getContent().stream()
+                .filter(ad -> ad.getStatutAdhesion() == StatutAdhesion.ORANGE)
+                .filter(ad -> ad.lastAdhesion().map(adhesion -> adhesion.getTypeAdhesion() != TypeAdhesion.Mensuelle).orElse(false))
+				.filter(ad -> !Strings.isNullOrEmpty(ad.getCoordonnees().getEmail()))
+				.filter(ad -> ad.getReminderEmail() == null || ad.getReminderEmail().isBefore(LocalDate.now().minusMonths(1)))
+				.collect(Collectors.toList()));
 		} while (page.hasNext());
 
 		// Send mail for each adherents
-		adherents.stream().forEach(ad -> {
+		adherents.forEach(ad -> {
 			try {
 				sendMail(ad);
 			} catch (final Exception ex) {
