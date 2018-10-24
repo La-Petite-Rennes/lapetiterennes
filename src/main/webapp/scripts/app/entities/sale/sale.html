@@ -75,7 +75,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-4" data-translate="membershipApp.sale.item.name">Article</label>
 						<div class="col-sm-7">
-							<select class="form-control placeholder" data-ng-model="newItem.article" data-ng-options="article as article.name for article in articles | orderBy: article.name">
+							<select class="form-control placeholder" data-ng-model="newItem.article" data-ng-options="article as article.name for article in articles">
 								<option value="" disabled selected>{{ 'membershipApp.sale.item.choose' | translate }}</option>
 							</select>
 						</div>

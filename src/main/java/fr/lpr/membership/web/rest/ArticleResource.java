@@ -5,6 +5,7 @@ import fr.lpr.membership.domain.Article;
 import fr.lpr.membership.domain.stock.Reassort;
 import fr.lpr.membership.domain.stock.StockHistory;
 import fr.lpr.membership.repository.ArticleRepository;
+import fr.lpr.membership.security.AuthoritiesConstants;
 import fr.lpr.membership.service.stock.ReassortService;
 import fr.lpr.membership.service.stock.StockService;
 import fr.lpr.membership.web.rest.dto.StockHistoryDTO;
@@ -45,7 +46,7 @@ public class ArticleResource {
 
 	private final StockMapper stockMapper;
 
-	@RequestMapping(value="/articles", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/articles", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public List<Article> getAll() {
 		return articleRepository.findAll(new Sort("name"));
@@ -104,4 +105,9 @@ public class ArticleResource {
 		return new ResponseEntity<>(page.getContent().stream().map(stockMapper::stockHistoryToDto).collect(Collectors.toList()), headers, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/articles/{articleId}", method = RequestMethod.DELETE)
+	@RolesAllowed({AuthoritiesConstants.ADMIN, AuthoritiesConstants.WORKSHOP_MANAGER})
+    public void delete(@PathVariable Long articleId) {
+        articleRepository.delete(articleId);
+    }
 }

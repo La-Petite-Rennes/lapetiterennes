@@ -88,12 +88,13 @@ public class SaleResource {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
-	@PostMapping(value = "/export", produces = APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/export/{year}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
 	@Timed
 	@RolesAllowed({ ADMIN, WORKSHOP_MANAGER })
-	public void exportStatistics(HttpServletResponse response) throws IOException {
+	public void exportStatistics(@PathVariable Integer year, HttpServletResponse response) throws IOException {
+        DateTime from = DateTime.now().withYear(year).withMonthOfYear(1).withDayOfMonth(1).withTimeAtStartOfDay();
 		response.setHeader(HttpHeaders.CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-		exportExcelService.export(response.getOutputStream());
+		exportExcelService.export(from, response.getOutputStream());
 	}
 
 	@DeleteMapping(value = "/{id}")

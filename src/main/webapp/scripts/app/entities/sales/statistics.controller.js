@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 angular.module('membershipApp')
 	.controller('SaleStatisticsController', function ($scope, $http, Sale) {
@@ -30,13 +30,13 @@ angular.module('membershipApp')
 
 		$scope.exportDetails = function () {
         	$http({
-                url: 'api/sales/export',
+                url: 'api/sales/export/' + $scope.year,
                 method: "POST",
                 headers: {'Content-type': 'application/json'},
                 responseType: 'arraybuffer'
                 })
-        		.then(function(result, status, headers) {
-        			downloadFile(new Blob([result], { type: headers('Content-Type')} ));
+        		.then(function(result) {
+        			downloadFile(new Blob([result.data], { type: result.headers('Content-Type')} ));
         		}
         	);
         };
