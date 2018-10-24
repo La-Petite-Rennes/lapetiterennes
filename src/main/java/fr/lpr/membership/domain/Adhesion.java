@@ -100,7 +100,11 @@ public class Adhesion implements Serializable {
 
 	@JsonSerialize(using = CustomLocalDateSerializer.class)
 	public LocalDate getDateFinAdhesion() {
-		return dateAdhesion.plusYears(1);
+	    if (typeAdhesion != TypeAdhesion.Mensuelle) {
+            return dateAdhesion.plusYears(1);
+        } else {
+            return dateAdhesion.plusMonths(1);
+        }
 	}
 
 	public void setDateAdhesion(LocalDate dateAdhesion) {
