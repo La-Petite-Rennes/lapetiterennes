@@ -68,6 +68,8 @@ public class Adhesion implements Serializable {
 	@Column(nullable = false)
 	private PaymentType paymentType;
 
+	private Integer price;
+
 	public Long getId() {
 		return id;
 	}
@@ -142,7 +144,15 @@ public class Adhesion implements Serializable {
 		return this;
 	}
 
-	@Override
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    @Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;

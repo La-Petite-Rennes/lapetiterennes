@@ -26,5 +26,8 @@
     <include file="classpath:config/liquibase/changelog/20170208_added_entity_Article_stockWarningLevel.xml" relativeToChangelogFile="false" />
     <include file="classpath:config/liquibase/changelog/20180605_added_Article_disabled.xml" relativeToChangelogFile="false" />
 
+    <!-- v2.2 -->
+    <include file="classpath:config/liquibase/changelog/20190418_added_Adhesion_price.xml" relativeToChangelogFile="false" />
+
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>
