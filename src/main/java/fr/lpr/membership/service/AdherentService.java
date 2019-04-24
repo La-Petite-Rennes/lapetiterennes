@@ -2,7 +2,6 @@ package fr.lpr.membership.service;
 
 import com.google.common.base.Strings;
 import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.StatutAdhesion;
 import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.repository.AdherentRepository;
@@ -20,10 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- *
- * @author glebreton
- */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -55,7 +50,7 @@ public class AdherentService {
 		// Send mail for each adherents
 		adherents.forEach(ad -> {
 			try {
-				sendMail(ad);
+				sendReminderMail(ad);
 			} catch (final Exception ex) {
 				log.error("E-mail could not be sent to adherent '{}', exception is: {}", ad.getPrenom() + " " + ad.getNom(), ex.getMessage());
 			}
@@ -65,9 +60,16 @@ public class AdherentService {
 	}
 
 	@Transactional
-	public void sendMail(Adherent adherent) throws MessagingException {
+	public void sendReminderMail(Adherent adherent) throws MessagingException {
 		mailService.sendAdhesionExpiringEmail(adherent);
 		adherent.setReminderEmail(LocalDate.now());
 		adherentRepository.save(adherent);
 	}
+
+	@Transactional
+    public Adherent createAdherent(Adherent adherent) throws MessagingException {
+        Adherent created = adherentRepository.save(adherent);
+        mailService.sendFirstAdhesionEmail(created);
+        return created;
+    }
 }
