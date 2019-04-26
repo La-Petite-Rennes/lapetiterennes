@@ -147,7 +147,13 @@ public class AdherentResource {
         @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder)
         throws URISyntaxException
     {
-		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
+		final Sort sort;
+		if ("id".equals(sortProperty)) {
+            sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
+        } else {
+		    sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty, "id");
+        }
+
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
 		Page<Adherent> page;
