@@ -12,7 +12,7 @@ angular.module('membershipApp')
 		};
 
 		$scope.loadAll = function() {
-			$scope.clearArticleModal()
+			$scope.clearArticleModal();
 
 			Article.query(function(result) {
 				$scope.articles = result;
@@ -51,7 +51,7 @@ angular.module('membershipApp')
 					quantity: 0
 				});
 			}
-		}
+		};
 
 		$scope.saveReassort = function() {
 			if (!$scope.reassort.waitingConfirmation) {
@@ -62,7 +62,7 @@ angular.module('membershipApp')
 					$scope.loadAll();
 				});
 			}
-		}
+		};
 
 		$scope.sortBy = function(propertyName) {
 			$scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
@@ -70,18 +70,24 @@ angular.module('membershipApp')
 		};
 
 		$scope.forRepairing = function(article) {
-			Article.forRepairing({articleId: article.id}, function(updatedArticle) {
-				article.quantity = updatedArticle.quantity;
+            $scope.forRepairingArticle = article;
+		    $('#forRepairingConfirmation').modal('show');
+        };
+
+		$scope.forRepairingConfirmed = function() {
+            Article.forRepairing({articleId: $scope.forRepairingArticle.id}, function(updatedArticle) {
+                $scope.forRepairingArticle.quantity = updatedArticle.quantity;
+                $('#forRepairingConfirmation').modal('hide');
 			});
-		};
+        };
 
 		$scope.update = function(article) {
 			$scope.newArticle = angular.copy(article);
 			$('#articleModal').modal('show');
-		}
+		};
 
 		$scope.createArticle = function() {
-			Article.save($scope.newArticle, function(result) {
+			Article.save($scope.newArticle, function() {
 				$('#articleModal').modal('hide');
 				$scope.loadAll();
 			});

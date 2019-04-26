@@ -22,6 +22,10 @@
 			},
             "delete": {
                 "question": "Etes-vous certain de vouloir supprimer l'article '{{ name }}' ?"
+            },
+            "forRepairing" : {
+                "title": "Article pour réparation : Confirmation",
+                "question": "Voulez-vous utiliser l'article '{{ name }}' pour réparation ?"
             }
 		}
 	}
