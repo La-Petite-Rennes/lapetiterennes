@@ -6,6 +6,8 @@ import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.sale.PaymentType;
 
+import java.util.Optional;
+
 public class AdhesionProxy implements SalableItem {
 
 	private final Adhesion adhesion;
@@ -36,7 +38,8 @@ public class AdhesionProxy implements SalableItem {
 
 	@Override
 	public int getUnitPrice() {
-		return adhesion.getTypeAdhesion().getPrice();
+        return Optional.ofNullable(adhesion.getTypeAdhesion().getPrice())
+            .orElse(adhesion.getPrice());
 	}
 
 	@Override

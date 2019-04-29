@@ -65,13 +65,14 @@ public class AdherentResource {
 	 */
 	@RequestMapping(value = "/adherents", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
-	public ResponseEntity<Void> create(@Valid @RequestBody Adherent adherent) throws URISyntaxException {
+	public ResponseEntity<Void> create(@Valid @RequestBody Adherent adherent) throws Exception {
 		log.debug("REST request to save Adherent : {}", adherent);
 		if (adherent.getId() != null) {
 			return ResponseEntity.badRequest().header("Failure", "A new adherent cannot already have an ID").build();
 		}
-		adherentRepository.save(adherent);
-		return ResponseEntity.created(new URI("/api/adherents/" + adherent.getId())).build();
+
+		Adherent created = adherentService.createAdherent(adherent);
+		return ResponseEntity.created(new URI("/api/adherents/" + created.getId())).build();
 	}
 
 	/**
@@ -85,7 +86,7 @@ public class AdherentResource {
 	 */
 	@RequestMapping(value = "/adherents", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
-	public ResponseEntity<Void> update(@Valid @RequestBody Adherent adherent) throws URISyntaxException {
+	public ResponseEntity<Void> update(@Valid @RequestBody Adherent adherent) throws Exception {
 		log.debug("REST request to update Adherent : {}", adherent);
 		if (adherent.getId() == null) {
 			return create(adherent);
@@ -108,8 +109,11 @@ public class AdherentResource {
 	 */
 	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
-	public ResponseEntity<List<Adherent>> getAll(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-			required = false) Integer limit) throws URISyntaxException {
+	public ResponseEntity<List<Adherent>> getAll(
+	    @RequestParam(value = "page", required = false) Integer offset,
+        @RequestParam(value = "per_page", required = false) Integer limit)
+        throws URISyntaxException
+    {
 		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
 		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
 
@@ -135,10 +139,21 @@ public class AdherentResource {
 	 */
 	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
-	public ResponseEntity<List<Adherent>> search(@RequestParam(value = "page", required = false) Integer offset, @RequestParam(value = "per_page",
-			required = false) Integer limit, @RequestParam(value = "criteria", required = false) String criteria, @RequestParam(value = "sort",
-			defaultValue = "id") String sortProperty, @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder) throws URISyntaxException {
-		final Sort sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
+	public ResponseEntity<List<Adherent>> search(
+	    @RequestParam(value = "page", required = false) Integer offset,
+        @RequestParam(value = "per_page", required = false) Integer limit,
+        @RequestParam(value = "criteria", required = false) String criteria,
+        @RequestParam(value = "sort", defaultValue = "id") String sortProperty,
+        @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder)
+        throws URISyntaxException
+    {
+		final Sort sort;
+		if ("id".equals(sortProperty)) {
+            sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
+        } else {
+		    sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty, "id");
+        }
+
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
 		Page<Adherent> page;
@@ -236,7 +251,7 @@ public class AdherentResource {
 		final Adherent adherent = adherentRepository.findOne(adherentId);
 
 		if (adherent != null) {
-			adherentService.sendMail(adherent);
+			adherentService.sendReminderMail(adherent);
 			return ResponseEntity.ok().build();
 		} else {
 			return ResponseEntity.notFound().build();

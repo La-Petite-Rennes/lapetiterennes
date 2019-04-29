@@ -14,8 +14,8 @@
             },
             "typeAdhesion": "Type d'adhesion",
             "dateAdhesion": "Date d'adhesion",
+            "price": "Tarif d'adhésion",
             "adherent": "adherent"
         }
     }
 }
-

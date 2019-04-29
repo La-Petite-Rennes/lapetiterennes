@@ -100,7 +100,7 @@ public class MailService {
 
 	@Async
 	public void sendAdhesionExpiringEmail(Adherent adherent) throws MessagingException {
-		log.debug("Sending adhesion expring e-mail to '{}'", adherent.getCoordonnees().getEmail());
+		log.debug("Sending adhesion expiring e-mail to '{}'", adherent.getCoordonnees().getEmail());
 		final Context context = new Context(Locale.FRENCH);
 		context.setVariable("adherent", adherent);
 		context.setVariable("survey", env.getProperty("survey"));
@@ -108,4 +108,22 @@ public class MailService {
 		final String subject = messageSource.getMessage("email.expiring.title", null, Locale.FRENCH);
 		sendEmail(adherent.getCoordonnees().getEmail(), subject, content, false, true);
 	}
+
+    @Async
+    public void sendAdhesionExpiredEmail(Adherent adherent) throws MessagingException {
+        log.debug("Sending adhesion expired e-mail to '{}'", adherent.getCoordonnees().getEmail());
+        final Context context = new Context(Locale.FRENCH);
+        final String content = templateEngine.process("adhesionExpiredEmail", context);
+        final String subject = messageSource.getMessage("email.expired.title", null, Locale.FRENCH);
+        sendEmail(adherent.getCoordonnees().getEmail(), subject, content, false, true);
+    }
+
+    @Async
+    public void sendFirstAdhesionEmail(Adherent adherent) throws MessagingException {
+        log.debug("Sending first adhesion e-mail to '{}'", adherent.getCoordonnees().getEmail());
+        final Context context = new Context(Locale.FRENCH);
+        final String content = templateEngine.process("firstAdhesionEmail", context);
+        final String subject = messageSource.getMessage("email.firstAdhesion.title", null, Locale.FRENCH);
+        sendEmail(adherent.getCoordonnees().getEmail(), subject, content, false, true);
+    }
 }

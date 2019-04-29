@@ -4,14 +4,16 @@ package fr.lpr.membership.domain;
 public enum TypeAdhesion {
 	Simple("Adhésion simple", 2000),
 	Famille("Adhésion famille", 4000),
-	Soutien("Adhésion soutien", 0),
-    Mensuelle("Adhésion mensuelle", 0);
+	Soutien("Adhésion soutien", null),
+    Mensuelle("Adhésion mensuelle", null),
+    TitreGracieux("Adhésion à titre gracieux", 0),
+    CarteSortir("Adhésion carte Sortir !", null);
 
 	private final String label;
 
-	private final int price;
+	private final Integer price;
 
-	TypeAdhesion(String label, int price) {
+	TypeAdhesion(String label, Integer price) {
 		this.label = label;
 		this.price = price;
 	}
@@ -20,8 +22,7 @@ public enum TypeAdhesion {
 		return label;
 	}
 
-	public int getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
-
 }
