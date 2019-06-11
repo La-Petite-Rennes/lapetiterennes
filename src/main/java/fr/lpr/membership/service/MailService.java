@@ -1,5 +1,6 @@
 package fr.lpr.membership.service;
 
+import com.google.common.base.Strings;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,10 @@ public class MailService {
 
 	@Async
 	public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) throws MessagingException {
+        if (Strings.isNullOrEmpty(to)) {
+            return;
+        }
+
 		log.debug("Send e-mail[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}", isMultipart, isHtml, to, subject, content);
 
 		// Prepare message using a Spring helper
