@@ -22,6 +22,7 @@ angular.module('membershipApp')
 	            			if (ad.dateAdhesion instanceof Date) {
 	            				ad.dateAdhesion = ad.dateAdhesion.getDate() + '/' + (ad.dateAdhesion.getMonth() + 1) + '/' + ad.dateAdhesion.getFullYear();
 	            			}
+	            			ad.price = ad.price * 100;
 	            		});
             		}
             		return angular.toJson(data);
