@@ -5,7 +5,7 @@ public enum TypeAdhesion {
 	Simple("Adhésion simple", 2000),
 	Famille("Adhésion famille", 4000),
 	Soutien("Adhésion soutien", null),
-    Mensuelle("Adhésion mensuelle", null),
+    Mensuelle("Adhésion mensuelle", 0),
     TitreGracieux("Adhésion à titre gracieux", 0),
     CarteSortir("Adhésion carte Sortir !", null);
 
