@@ -1,12 +1,18 @@
 package fr.lpr.membership.web.rest.dto;
 
-import org.hibernate.validator.constraints.Email;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class UserDTO {
 
     @Pattern(regexp = "^[a-z0-9]*$")
@@ -32,58 +38,4 @@ public class UserDTO {
     private String langKey;
 
     private List<String> roles;
-
-    public UserDTO() {
-    }
-
-    public UserDTO(String login, String password, String firstName, String lastName, String email, String langKey,
-                   List<String> roles) {
-        this.login = login;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.langKey = langKey;
-        this.roles = roles;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getLangKey() {
-        return langKey;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-        "login='" + login + '\'' +
-        ", firstName='" + firstName + '\'' +
-        ", lastName='" + lastName + '\'' +
-        ", email='" + email + '\'' +
-        ", langKey='" + langKey + '\'' +
-        ", roles=" + roles +
-        '}';
-    }
 }

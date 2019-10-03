@@ -9,16 +9,12 @@ import fr.lpr.membership.service.AdherentService;
 import fr.lpr.membership.service.ExportService;
 import fr.lpr.membership.service.ImportService;
 import fr.lpr.membership.web.rest.dto.ExportRequest;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +35,7 @@ import java.util.Optional;
  * REST controller for managing Adherent.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/adherents")
 @Slf4j
 @RequiredArgsConstructor
 public class AdherentResource {
@@ -63,7 +59,7 @@ public class AdherentResource {
 	 * @throws URISyntaxException
 	 *             if uri cannot be built
 	 */
-	@RequestMapping(value = "/adherents", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping
 	@Timed
 	public ResponseEntity<Void> create(@Valid @RequestBody Adherent adherent) throws Exception {
 		log.debug("REST request to save Adherent : {}", adherent);
@@ -84,88 +80,49 @@ public class AdherentResource {
 	 * @throws URISyntaxException
 	 *             if uri cannot be built
 	 */
-	@RequestMapping(value = "/adherents", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping
 	@Timed
 	public ResponseEntity<Void> update(@Valid @RequestBody Adherent adherent) throws Exception {
 		log.debug("REST request to update Adherent : {}", adherent);
 		if (adherent.getId() == null) {
 			return create(adherent);
 		}
-		adherent.setAdhesions(adherentRepository.findOne(adherent.getId()).getAdhesions());
+		adherent.setAdhesions(adherentRepository.getOne(adherent.getId()).getAdhesions());
 		adherentRepository.save(adherent);
 		return ResponseEntity.ok().build();
 	}
 
 	/**
 	 * GET /adherents -&gt; get all the adherents.
-	 *
-	 * @param offset
-	 *            the offset
-	 * @param limit
-	 *            max number of adherents
-	 * @return the adherents
-	 * @throws URISyntaxException
-	 *             if uris cannot be built
 	 */
-	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping
 	@Timed
-	public ResponseEntity<List<Adherent>> getAll(
-	    @RequestParam(value = "page", required = false) Integer offset,
-        @RequestParam(value = "per_page", required = false) Integer limit)
-        throws URISyntaxException
+	public Page<Adherent> getAll(@PageableDefault Pageable pageable)
     {
-		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
-		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
-
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+		return adherentRepository.findAll(pageable);
 	}
 
 	/**
 	 * Search /adherents -&gt; get the adherents filtered by name and sorted
 	 *
-	 * @param offset
-	 *            the offset
-	 * @param limit
-	 *            max number of adherents
 	 * @param criteria
 	 *            the criteria
-	 * @param sortProperty
-	 *            property to sort on
-	 * @param sortOrder
-	 *            the sort order
 	 * @return the adherents matching the search
-	 * @throws URISyntaxException
-	 *             if uris cannot be built
 	 */
-	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/search")
 	@Timed
-	public ResponseEntity<List<Adherent>> search(
-	    @RequestParam(value = "page", required = false) Integer offset,
-        @RequestParam(value = "per_page", required = false) Integer limit,
-        @RequestParam(value = "criteria", required = false) String criteria,
-        @RequestParam(value = "sort", defaultValue = "id") String sortProperty,
-        @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder)
-        throws URISyntaxException
+	public Page<Adherent> search(
+	    @PageableDefault Pageable pageable,
+        @RequestParam(value = "criteria", required = false) String criteria)
     {
-		final Sort sort;
-		if ("id".equals(sortProperty)) {
-            sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
-        } else {
-		    sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty, "id");
-        }
-
-		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
-
 		Page<Adherent> page;
 		if (criteria == null || criteria.isEmpty()) {
-			page = adherentRepository.findAll(pageRequest);
+			page = adherentRepository.findAll(pageable);
 		} else {
-			page = searchAdherentRepository.findAdherentByName(criteria, pageRequest);
+			page = searchAdherentRepository.findAdherentByName(criteria, pageable);
 		}
 
-		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
-
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+		return page;
 	}
 
 	/**
@@ -175,12 +132,13 @@ public class AdherentResource {
 	 *            the identifier
 	 * @return the adherent
 	 */
-	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/{id}")
 	@Timed
 	public ResponseEntity<Adherent> get(@PathVariable Long id) {
 		log.debug("REST request to get Adherent : {}", id);
-		return Optional.ofNullable(adherentRepository.findOne(id)).map(adherent -> new ResponseEntity<>(adherent, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return adherentRepository.findById(id)
+            .map(adherent -> new ResponseEntity<>(adherent, HttpStatus.OK))
+			.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	/**
@@ -189,12 +147,12 @@ public class AdherentResource {
 	 * @param id
 	 *            the identifier
 	 */
-	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(value = "/{id}")
 	@Timed
 	@RolesAllowed({AuthoritiesConstants.ADMIN, AuthoritiesConstants.WORKSHOP_MANAGER})
 	public void delete(@PathVariable Long id) {
 		log.debug("REST request to delete Adherent : {}", id);
-		adherentRepository.delete(id);
+		adherentRepository.deleteById(id);
 	}
 
 	/**
@@ -205,7 +163,7 @@ public class AdherentResource {
 	 * @param response
 	 *            the http response
 	 */
-	@RequestMapping(value = "/adherents/export", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/export")
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
 	public void exportAll(@RequestBody ExportRequest request, HttpServletResponse response) {
@@ -225,7 +183,7 @@ public class AdherentResource {
 	 * @param file
 	 *            the file to import
 	 */
-	@RequestMapping(value = "/adherents/import", method = RequestMethod.POST)
+	@PostMapping(value = "/import")
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
 	public void importAdherents(@RequestParam("file") MultipartFile file) throws IOException {
@@ -245,13 +203,13 @@ public class AdherentResource {
 	 * @throws Exception
 	 *             if an error occurs
 	 */
-	@RequestMapping(value = "/adherents/reminderEmail/{adherentId}", method = RequestMethod.POST)
+	@PostMapping(value = "/reminderEmail/{adherentId}")
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
 	public ResponseEntity<Void> remindesEmail(@PathVariable("adherentId") Long adherentId) throws Exception {
-		final Adherent adherent = adherentRepository.findOne(adherentId);
+		final Optional<Adherent> adherent = adherentRepository.findById(adherentId);
 
-		if (adherent != null) {
-			adherentService.sendReminderMail(adherent);
+		if (adherent.isPresent()) {
+			adherentService.sendReminderMail(adherent.get());
 			return ResponseEntity.ok().build();
 		} else {
 			return ResponseEntity.notFound().build();

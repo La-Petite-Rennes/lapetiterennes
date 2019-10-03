@@ -1,6 +1,7 @@
 package fr.lpr.membership.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Strings;
 import fr.lpr.membership.domain.Authority;
 import fr.lpr.membership.domain.PersistentToken;
 import fr.lpr.membership.domain.User;
@@ -13,7 +14,6 @@ import fr.lpr.membership.service.UserService;
 import fr.lpr.membership.web.rest.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public class AccountResource {
 	 *            the http request
 	 * @return result of the creation
 	 */
-	@RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@PostMapping(value = "/register", produces = MediaType.TEXT_PLAIN_VALUE)
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
 	public ResponseEntity<?> registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
@@ -88,7 +89,7 @@ public class AccountResource {
 	 *            the key
 	 * @return result of the account activation
 	 */
-	@RequestMapping(value = "/activate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/activate")
 	@Timed
 	public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
 		return Optional.ofNullable(userService.activateRegistration(key)).map(user -> new ResponseEntity<String>(HttpStatus.OK))
@@ -102,7 +103,7 @@ public class AccountResource {
 	 *            the http request
 	 * @return login of the user
 	 */
-	@RequestMapping(value = "/authenticate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/authenticate", produces = MediaType.APPLICATION_JSON_VALUE)
 	@Timed
 	public String isAuthenticated(HttpServletRequest request) {
 		log.debug("REST request to check if the current user is authenticated");
@@ -114,7 +115,7 @@ public class AccountResource {
 	 *
 	 * @return the current user
 	 */
-	@RequestMapping(value = "/account", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/account")
 	@Timed
 	public ResponseEntity<UserDTO> getAccount() {
 		return Optional
@@ -131,7 +132,7 @@ public class AccountResource {
 	 *            the user
 	 * @return result of the update
 	 */
-	@RequestMapping(value = "/account", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/account")
 	@Timed
 	public ResponseEntity<String> saveAccount(@RequestBody UserDTO userDTO) {
 		return userRepository.findOneByLogin(userDTO.getLogin()).filter(u -> u.getLogin().equals(SecurityUtils.getCurrentLogin())).map(u -> {
@@ -147,10 +148,10 @@ public class AccountResource {
 	 *            the new password
 	 * @return result of the update
 	 */
-	@RequestMapping(value = "/account/change_password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/account/change_password")
 	@Timed
 	public ResponseEntity<?> changePassword(@RequestBody String password) {
-		if (StringUtils.isEmpty(password) || password.length() < 5 || password.length() > 50) {
+		if (Strings.isNullOrEmpty(password) || password.length() < 5 || password.length() > 50) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		userService.changePassword(password);
@@ -162,7 +163,7 @@ public class AccountResource {
 	 *
 	 * @return the current open sessions
 	 */
-	@RequestMapping(value = "/account/sessions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/account/sessions")
 	@Timed
 	public ResponseEntity<List<PersistentToken>> getCurrentSessions() {
 		return userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
@@ -181,19 +182,18 @@ public class AccountResource {
 	 *
 	 * @param series
 	 *            the series
-	 * @throws UnsupportedEncodingException
-	 *             if parameters cannot be decoded
-	 */
-	@RequestMapping(value = "/account/sessions/{series}", method = RequestMethod.DELETE)
+     */
+	@DeleteMapping(value = "/account/sessions/{series}")
 	@Timed
-	public void invalidateSession(@PathVariable String series) throws UnsupportedEncodingException {
-		final String decodedSeries = URLDecoder.decode(series, "UTF-8");
-		userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).ifPresent(
-				u -> persistentTokenRepository.findByUser(u).stream().filter(persistentToken -> StringUtils.equals(persistentToken.getSeries(), decodedSeries))
-                .findAny().ifPresent(t -> persistentTokenRepository.delete(decodedSeries)));
+	public void invalidateSession(@PathVariable String series) {
+		final String decodedSeries = URLDecoder.decode(series, StandardCharsets.UTF_8);
+		userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
+            .flatMap(u -> persistentTokenRepository.findByUser(u).stream().filter(persistentToken -> Objects.equals(persistentToken.getSeries(), decodedSeries))
+            .findAny())
+            .ifPresent(persistentTokenRepository::delete);
 	}
 
-	@RequestMapping(value = "/account/reset_password/init", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
+	@PostMapping(value = "/account/reset_password/init", produces = MediaType.TEXT_PLAIN_VALUE)
 	@Timed
 	public ResponseEntity<?> requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
 
@@ -205,7 +205,7 @@ public class AccountResource {
 
 	}
 
-	@RequestMapping(value = "/account/reset_password/finish", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/account/reset_password/finish")
 	@Timed
 	public ResponseEntity<String> finishPasswordReset(@RequestParam(value = "key") String key, @RequestParam(value = "newPassword") String newPassword) {
 		return userService.completePasswordReset(newPassword, key).map(user -> new ResponseEntity<String>(HttpStatus.OK))

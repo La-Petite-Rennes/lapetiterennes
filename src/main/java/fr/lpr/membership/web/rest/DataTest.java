@@ -1,49 +1,40 @@
 package fr.lpr.membership.web.rest;
 
-import static com.google.common.collect.ImmutableList.of;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import javax.annotation.PostConstruct;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import fr.lpr.membership.config.Constants;
-import fr.lpr.membership.domain.Adherent;
-import fr.lpr.membership.domain.Adhesion;
-import fr.lpr.membership.domain.Article;
-import fr.lpr.membership.domain.Provider;
-import fr.lpr.membership.domain.TypeAdhesion;
+import fr.lpr.membership.domain.*;
 import fr.lpr.membership.domain.sale.PaymentType;
 import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.ArticleRepository;
 import fr.lpr.membership.repository.ProviderRepository;
 import fr.lpr.membership.repository.sale.SaleRepository;
+import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import static com.google.common.collect.ImmutableList.of;
 
 // FIXME A Supprimer
 @Component
 @Profile(Constants.SPRING_PROFILE_DEVELOPMENT)
+@RequiredArgsConstructor
 public class DataTest {
 
-	@Autowired
-	private ArticleRepository articleRepository;
+	private final ArticleRepository articleRepository;
 
-	@Autowired
-	private ProviderRepository providerRepository;
+	private final ProviderRepository providerRepository;
 
-	@Autowired
-	private SaleRepository saleRepository;
+	private final SaleRepository saleRepository;
 
-	@Autowired
-	private AdherentRepository adherentRepository;
+	private final AdherentRepository adherentRepository;
 
 	@PostConstruct
 	@Transactional
@@ -53,11 +44,11 @@ public class DataTest {
 		}
 
 		// Create an adherent and 2 Adhesions
-		Adherent adherent = new Adherent().prenom("Goulven").nom("Le Breton");
-		Adhesion firstAdhesion = new Adhesion().typeAdhesion(TypeAdhesion.Simple).paymentType(PaymentType.Cash)
-				.adherent(adherent).dateAdhesion(LocalDate.now().minusMonths(10));
-		Adhesion secondAdhesion = new Adhesion().typeAdhesion(TypeAdhesion.Simple).paymentType(PaymentType.Check)
-				.adherent(adherent).dateAdhesion(LocalDate.now().minusDays(5));
+		Adherent adherent = Adherent.builder().prenom("Goulven").nom("Le Breton").build();
+		Adhesion firstAdhesion = Adhesion.builder().typeAdhesion(TypeAdhesion.Simple).paymentType(PaymentType.Cash)
+				.adherent(adherent).dateAdhesion(LocalDate.now().minusMonths(10)).build();
+		Adhesion secondAdhesion = Adhesion.builder().typeAdhesion(TypeAdhesion.Simple).paymentType(PaymentType.Check)
+				.adherent(adherent).dateAdhesion(LocalDate.now().minusDays(5)).build();
 
 		adherent.addAdhesion(firstAdhesion);
 		adherent.addAdhesion(secondAdhesion);
@@ -68,28 +59,28 @@ public class DataTest {
 			return;
 		}
 
-		Provider p1 = new Provider().name("Chain Reaction Cycles");
-		Provider p2 = new Provider().name("Probike Shop");
-		providerRepository.save(of(p1, p2));
+		Provider p1 = Provider.builder().name("Chain Reaction Cycles").build();
+		Provider p2 = Provider.builder().name("Probike Shop").build();
+		providerRepository.saveAll(of(p1, p2));
 
 		List<Article> articles = new ArrayList<>(5);
-		articles.add(new Article().name("Dérailleur arrière Shimano Tiagra 4700 10v").salePrice(3199).quantity(15)
-				.provider(p1).unitPrice(2599).reference("11111").stockWarningLevel(5));
-		articles.add(new Article().name("Cassette Route Shimano Ultegra 6800 11 vitesses").salePrice(5399).quantity(8)
-				.provider(p1).unitPrice(4599).reference("22222").stockWarningLevel(5));
-		articles.add(new Article().name("Frein Shimano Dura-Ace 9000").salePrice(11799).quantity(3).provider(p2)
-				.unitPrice(11000).reference("3333").stockWarningLevel(5));
-		articles.add(new Article().name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").salePrice(6999)
-				.provider(p2).unitPrice(5150).quantity(25).reference("44444").stockWarningLevel(5));
-		articles.add(new Article().name("Cable de frein").quantity(47).stockWarningLevel(5));
-		articleRepository.save(articles);
+		articles.add(Article.builder().name("Dérailleur arrière Shimano Tiagra 4700 10v").salePrice(3199).quantity(15)
+				.provider(p1).unitPrice(2599).reference("11111").stockWarningLevel(5).build());
+		articles.add(Article.builder().name("Cassette Route Shimano Ultegra 6800 11 vitesses").salePrice(5399).quantity(8)
+				.provider(p1).unitPrice(4599).reference("22222").stockWarningLevel(5).build());
+		articles.add(Article.builder().name("Frein Shimano Dura-Ace 9000").salePrice(11799).quantity(3).provider(p2)
+				.unitPrice(11000).reference("3333").stockWarningLevel(5).build());
+		articles.add(Article.builder().name("Pneu Route Continental Grand Prix 4000S II - 23c PAIR").salePrice(6999)
+				.provider(p2).unitPrice(5150).quantity(25).reference("44444").stockWarningLevel(5).build());
+		articles.add(Article.builder().name("Cable de frein").quantity(47).stockWarningLevel(5).build());
+		articleRepository.saveAll(articles);
 
 		// Enregistrement des ventes
 		Random random = new Random();
 		int nbSales = 200;
 		for (int i = 0; i != nbSales; ++i) {
-			Sale sale = new Sale().adherent(adherent).paymentType(PaymentType.Cash)
-					.createdAt(DateTime.now().minusMonths(random.nextInt(15))).finished(true);
+			Sale sale = Sale.builder().adherent(adherent).paymentType(PaymentType.Cash)
+					.createdAt(DateTime.now().minusMonths(random.nextInt(15))).finished(true).build();
 			Article article = articles.get(random.nextInt(articles.size() - 1));
 			sale.addSoldItem(article, 1, article.getSalePrice());
 			saleRepository.save(sale);
