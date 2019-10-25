@@ -8,6 +8,7 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -24,9 +25,8 @@ import fr.lpr.membership.config.Constants;
 
 @ComponentScan
 @EnableAutoConfiguration(exclude = { MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class })
+@Slf4j
 public class Application {
-
-	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	@Inject
 	private Environment env;
@@ -52,12 +52,6 @@ public class Application {
 			final Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
 			if (activeProfiles.contains("dev") && activeProfiles.contains("prod")) {
 				log.error("You have misconfigured your application! " + "It should not run with both the 'dev' and 'prod' profiles at the same time.");
-			}
-			if (activeProfiles.contains("prod") && activeProfiles.contains("fast")) {
-				log.error("You have misconfigured your application! " + "It should not run with both the 'prod' and 'fast' profiles at the same time.");
-			}
-			if (activeProfiles.contains("dev") && activeProfiles.contains("cloud")) {
-				log.error("You have misconfigured your application! " + "It should not run with both the 'dev' and 'cloud' profiles at the same time.");
 			}
 		}
 	}

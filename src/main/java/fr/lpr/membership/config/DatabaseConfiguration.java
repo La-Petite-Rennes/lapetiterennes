@@ -1,43 +1,32 @@
 package fr.lpr.membership.config;
 
-import java.util.Arrays;
-
-import javax.sql.DataSource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import liquibase.integration.spring.SpringLiquibase;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 
-import com.codahale.metrics.MetricRegistry;
-import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-
-import liquibase.integration.spring.SpringLiquibase;
+import javax.sql.DataSource;
+import java.util.Arrays;
 
 @Configuration
 @EnableJpaRepositories("fr.lpr.membership.repository")
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @EnableTransactionManagement
+@Slf4j
 public class DatabaseConfiguration implements EnvironmentAware {
-
-    private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
-
-    private RelaxedPropertyResolver dataSourcePropertyResolver;
-
-    private RelaxedPropertyResolver liquiBasePropertyResolver;
 
     private Environment env;
 
@@ -47,16 +36,13 @@ public class DatabaseConfiguration implements EnvironmentAware {
     @Override
     public void setEnvironment(Environment env) {
         this.env = env;
-        this.dataSourcePropertyResolver = new RelaxedPropertyResolver(env, "spring.datasource.");
-        this.liquiBasePropertyResolver = new RelaxedPropertyResolver(env, "liquiBase.");
     }
 
-    @Bean(destroyMethod = "close")
+    @Bean
     @ConditionalOnMissingClass("fr.lpr.membership.config.HerokuDatabaseConfiguration")
-    @Profile("!" + Constants.SPRING_PROFILE_CLOUD)
     public DataSource dataSource() {
         log.debug("Configuring Datasource");
-        if (dataSourcePropertyResolver.getProperty("url") == null && dataSourcePropertyResolver.getProperty("databaseName") == null) {
+        if (env.getProperty("spring.datasource.url") == null && env.getProperty("spring.datasource.databaseName") == null) {
             log.error("Your database connection pool configuration is incorrect! The application" +
                     " cannot start. Please check your Spring profile, current profiles are: {}",
                     Arrays.toString(env.getActiveProfiles()));
@@ -64,15 +50,15 @@ public class DatabaseConfiguration implements EnvironmentAware {
             throw new ApplicationContextException("Database connection pool is not configured correctly");
         }
         HikariConfig config = new HikariConfig();
-        config.setDataSourceClassName(dataSourcePropertyResolver.getProperty("dataSourceClassName"));
-        if(StringUtils.isEmpty(dataSourcePropertyResolver.getProperty("url"))) {
-            config.addDataSourceProperty("databaseName", dataSourcePropertyResolver.getProperty("databaseName"));
-            config.addDataSourceProperty("serverName", dataSourcePropertyResolver.getProperty("serverName"));
+        config.setDataSourceClassName(env.getProperty("spring.datasource.dataSourceClassName"));
+        if(StringUtils.isEmpty(env.getProperty("spring.datasource.url"))) {
+            config.addDataSourceProperty("databaseName", env.getProperty("spring.datasource.databaseName"));
+            config.addDataSourceProperty("serverName", env.getProperty("spring.datasource.serverName"));
         } else {
-            config.addDataSourceProperty("url", dataSourcePropertyResolver.getProperty("url"));
+            config.addDataSourceProperty("url", env.getProperty("spring.datasource.url"));
         }
-        config.addDataSourceProperty("user", dataSourcePropertyResolver.getProperty("username"));
-        config.addDataSourceProperty("password", dataSourcePropertyResolver.getProperty("password"));
+        config.addDataSourceProperty("user", env.getProperty("spring.datasource.username"));
+        config.addDataSourceProperty("password", env.getProperty("spring.datasource.password"));
 
         if (metricRegistry != null) {
             config.setMetricRegistry(metricRegistry);
@@ -85,18 +71,8 @@ public class DatabaseConfiguration implements EnvironmentAware {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog("classpath:config/liquibase/master.xml");
-        liquibase.setContexts(liquiBasePropertyResolver.getProperty("context"));
-        if (env.acceptsProfiles(Constants.SPRING_PROFILE_FAST)) {
-            if ("org.h2.jdbcx.JdbcDataSource".equals(dataSourcePropertyResolver.getProperty("dataSourceClassName"))) {
-                liquibase.setShouldRun(true);
-                log.warn("Using '{}' profile with H2 database in memory is not optimal, you should consider switching to" +
-                    " MySQL or Postgresql to avoid rebuilding your database upon each start.", Constants.SPRING_PROFILE_FAST);
-            } else {
-                liquibase.setShouldRun(false);
-            }
-        } else {
-            log.debug("Configuring Liquibase");
-        }
+        liquibase.setContexts(env.getProperty("liquiBase.context"));
+        log.debug("Configuring Liquibase");
         return liquibase;
     }
 

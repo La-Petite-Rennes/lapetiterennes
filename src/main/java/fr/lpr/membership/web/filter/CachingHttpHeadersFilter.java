@@ -1,17 +1,11 @@
 package fr.lpr.membership.web.filter;
 
+import org.springframework.core.env.Environment;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.core.env.Environment;
 
 /**
  * <p>
@@ -32,7 +26,7 @@ public class CachingHttpHeadersFilter implements Filter {
 	}
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(FilterConfig filterConfig) {
 		CACHE_TIME_TO_LIVE = TimeUnit.DAYS.toMillis(env.getProperty("http.cache.timeToLiveInDays", Long.class, 31L));
 	}
 

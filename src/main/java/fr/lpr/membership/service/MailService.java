@@ -1,5 +1,6 @@
 package fr.lpr.membership.service;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.User;
@@ -61,7 +62,7 @@ public class MailService {
 
 		// Prepare message using a Spring helper
 		final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, CharEncoding.UTF_8);
+		final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, Charsets.UTF_8.displayName());
 		message.setTo(to);
 		message.setFrom(from);
 		message.setSubject(subject);

@@ -1,5 +1,10 @@
 package fr.lpr.membership.domain.stock;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum StockEvent {
 
 	REASSORT("Réassort"),
@@ -7,13 +12,4 @@ public enum StockEvent {
 	FOR_REPAIRING("Pour Réparation");
 
 	private final String label;
-
-	private StockEvent(String label) {
-		this.label = label;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
 }

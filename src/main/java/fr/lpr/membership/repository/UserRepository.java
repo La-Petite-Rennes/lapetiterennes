@@ -1,12 +1,11 @@
 package fr.lpr.membership.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.joda.time.DateTime;
+import fr.lpr.membership.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import fr.lpr.membership.domain.User;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Spring Data JPA repository for the User entity.
@@ -15,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findOneByActivationKey(String activationKey);
 
-	List<User> findAllByActivatedIsFalseAndCreatedDateBefore(DateTime dateTime);
+	List<User> findAllByActivatedIsFalseAndCreatedDateBefore(LocalDateTime dateTime);
 
 	Optional<User> findOneByResetKey(String resetKey);
 

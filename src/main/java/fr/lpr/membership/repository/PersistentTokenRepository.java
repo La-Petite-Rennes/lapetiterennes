@@ -2,9 +2,9 @@ package fr.lpr.membership.repository;
 
 import fr.lpr.membership.domain.PersistentToken;
 import fr.lpr.membership.domain.User;
-import org.joda.time.LocalDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**

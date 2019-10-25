@@ -1,25 +1,19 @@
 package fr.lpr.membership.domain.sale;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import fr.lpr.membership.domain.Article;
+import fr.lpr.membership.domain.stock.StockHistory;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import fr.lpr.membership.domain.Article;
-import fr.lpr.membership.domain.stock.StockHistory;
+import javax.persistence.*;
 
 @Entity
 @Table(name="SOLD_ITEM")
 @Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Getter
+@Setter
 public class SoldItem {
 
 	@Id
@@ -57,48 +51,6 @@ public class SoldItem {
 		this.price = price;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Sale getSale() {
-		return sale;
-	}
-
-	public void setSale(Sale sale) {
-		this.sale = sale;
-	}
-
-	public SoldItem sale(Sale sale) {
-		setSale(sale);
-		return this;
-	}
-
-	public StockHistory getStockHistory() {
-		return stockHistory;
-	}
-
-	protected void setStockHistory(StockHistory stockHistory) {
-		this.stockHistory = stockHistory;
-	}
-
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
-	public SoldItem price(int price) {
-		setPrice(price);
-		return this;
-	}
-
 	public Article getArticle() {
 		return stockHistory.getArticle();
 	}
@@ -112,5 +64,4 @@ public class SoldItem {
 		stockHistory.setQuantity(quantity);
 		return quantity - previousQuantity;
 	}
-
 }

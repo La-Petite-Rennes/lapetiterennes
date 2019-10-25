@@ -1,6 +1,11 @@
 package fr.lpr.membership.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 // FIXME Prix d'une adhésion soutien ??
+@Getter
+@AllArgsConstructor
 public enum TypeAdhesion {
 	Simple("Adhésion simple", 2000),
 	Famille("Adhésion famille", 4000),
@@ -12,17 +17,4 @@ public enum TypeAdhesion {
 	private final String label;
 
 	private final Integer price;
-
-	TypeAdhesion(String label, Integer price) {
-		this.label = label;
-		this.price = price;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public Integer getPrice() {
-		return price;
-	}
 }

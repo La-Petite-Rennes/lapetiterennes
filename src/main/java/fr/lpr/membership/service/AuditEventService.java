@@ -4,11 +4,11 @@ import fr.lpr.membership.config.audit.AuditEventConverter;
 import fr.lpr.membership.domain.PersistentAuditEvent;
 import fr.lpr.membership.repository.PersistenceAuditEventRepository;
 import lombok.RequiredArgsConstructor;
-import org.joda.time.LocalDateTime;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**

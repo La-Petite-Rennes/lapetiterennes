@@ -9,6 +9,7 @@ import fr.lpr.membership.web.rest.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +39,7 @@ public class AdherentService {
 
 		Page<Adherent> page = null;
 		do {
-			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
+			page = adherentRepository.findAll(page == null ? PageRequest.of(0, 100) : page.nextPageable());
 
 			adherents.addAll(page.getContent().stream()
                 .filter(ad -> ad.getStatutAdhesion() == StatutAdhesion.ORANGE)

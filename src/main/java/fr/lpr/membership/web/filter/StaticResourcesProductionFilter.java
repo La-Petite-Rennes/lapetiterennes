@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 public class StaticResourcesProductionFilter implements Filter {
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(FilterConfig filterConfig) {
 		// Nothing to initialize
 	}
 
