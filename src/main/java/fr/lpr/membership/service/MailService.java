@@ -5,19 +5,19 @@ import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.CharEncoding;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring4.SpringTemplateEngine;
 
-import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 /**
@@ -39,17 +39,10 @@ public class MailService {
 
 	private final MessageSource messageSource;
 
-	private final SpringTemplateEngine templateEngine;
+	private final TemplateEngine templateEngine;
 
-	/**
-	 * System default email address that sends the e-mails.
-	 */
+	@Value("${mail.from}")
 	private String from;
-
-	@PostConstruct
-	public void init() {
-		this.from = env.getProperty("mail.from");
-	}
 
 	@Async
 	public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) throws MessagingException {
@@ -61,7 +54,7 @@ public class MailService {
 
 		// Prepare message using a Spring helper
 		final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, CharEncoding.UTF_8);
+		final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.displayName());
 		message.setTo(to);
 		message.setFrom(from);
 		message.setSubject(subject);

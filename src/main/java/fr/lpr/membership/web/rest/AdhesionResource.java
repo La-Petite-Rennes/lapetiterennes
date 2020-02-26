@@ -1,29 +1,27 @@
 package fr.lpr.membership.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.AdhesionRepository;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
  * REST controller for managing Adhesion.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/adhesions")
 @Slf4j
 @RequiredArgsConstructor
 public class AdhesionResource {
@@ -41,15 +39,15 @@ public class AdhesionResource {
 	 * @throws URISyntaxException
 	 *             if uri cannot be built
 	 */
-	@RequestMapping(value = "/adhesions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping
 	@Timed
-	public ResponseEntity<Void> create(@Valid @RequestBody Adhesion adhesion) throws URISyntaxException {
+	public ResponseEntity<Void> create(@Validated @RequestBody Adhesion adhesion) throws URISyntaxException {
 		log.debug("REST request to save Adhesion : {}", adhesion);
 		if (adhesion.getId() != null) {
 			return ResponseEntity.badRequest().header("Failure", "A new adhesion cannot already have an ID").build();
 		}
 
-		final Adherent adherent = adherentRepository.findOne(adhesion.getAdherent().getId());
+		final Adherent adherent = adherentRepository.getOne(adhesion.getAdherent().getId());
 		adherent.addAdhesion(adhesion);
 		adhesion.setAdherent(adherent);
 
@@ -67,9 +65,9 @@ public class AdhesionResource {
 	 * @throws URISyntaxException
 	 *             if uri cannot be built
 	 */
-	@RequestMapping(value = "/adhesions", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping
 	@Timed
-	public ResponseEntity<Void> update(@Valid @RequestBody Adhesion adhesion) throws URISyntaxException {
+	public ResponseEntity<Void> update(@Validated @RequestBody Adhesion adhesion) throws URISyntaxException {
 		log.debug("REST request to update Adhesion : {}", adhesion);
 		if (adhesion.getId() == null) {
 			return create(adhesion);
@@ -83,7 +81,7 @@ public class AdhesionResource {
 	 *
 	 * @return all adhesions
 	 */
-	@RequestMapping(value = "/adhesions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping
 	@Timed
 	public List<Adhesion> getAll() {
 		log.debug("REST request to get all Adhesions");
@@ -97,12 +95,13 @@ public class AdhesionResource {
 	 *            the identifier of an adherent
 	 * @return the adhesions
 	 */
-	@RequestMapping(value = "/adhesions/adherent/{adherentId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping("/adherent/{adherentId}")
 	@Timed
 	public ResponseEntity<Set<Adhesion>> getAdherentAdhesions(@PathVariable Long adherentId) {
 		log.debug("REST request to get adhesions of Adherent : {}", adherentId);
-		return Optional.ofNullable(adherentRepository.findOne(adherentId)).map(adherent -> new ResponseEntity<>(adherent.getAdhesions(), HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return adherentRepository.findById(adherentId)
+            .map(adherent -> new ResponseEntity<>(adherent.getAdhesions(), HttpStatus.OK))
+			.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	/**
@@ -112,12 +111,13 @@ public class AdhesionResource {
 	 *            the identifier
 	 * @return the adhesion
 	 */
-	@RequestMapping(value = "/adhesions/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping("/{id}")
 	@Timed
 	public ResponseEntity<Adhesion> get(@PathVariable Long id) {
 		log.debug("REST request to get Adhesion : {}", id);
-		return Optional.ofNullable(adhesionRepository.findOne(id)).map(adhesion -> new ResponseEntity<>(adhesion, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return adhesionRepository.findById(id)
+            .map(adhesion -> new ResponseEntity<>(adhesion, HttpStatus.OK))
+			.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	/**
@@ -126,11 +126,11 @@ public class AdhesionResource {
 	 * @param id
 	 *            the identifier
 	 */
-	@RequestMapping(value = "/adhesions/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping("/{id}")
 	@Timed
 	public void delete(@PathVariable Long id) {
 		log.debug("REST request to delete Adhesion : {}", id);
-		final Adhesion adhesion = adhesionRepository.findOne(id);
+		final Adhesion adhesion = adhesionRepository.getOne(id);
 		adhesion.setAdherent(null);
 		adhesionRepository.delete(adhesion);
 	}

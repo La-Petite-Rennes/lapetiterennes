@@ -29,5 +29,8 @@
     <!-- v2.2 -->
     <include file="classpath:config/liquibase/changelog/20190418_added_Adhesion_price.xml" relativeToChangelogFile="false" />
 
+    <!-- v3.0 -->
+    <include file="classpath:config/liquibase/changelog/20200226_fix_constraints.xml" relativeToChangelogFile="false" />
+
     <!-- JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

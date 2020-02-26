@@ -9,13 +9,13 @@ import fr.lpr.membership.security.SecurityUtils;
 import fr.lpr.membership.service.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -55,8 +55,8 @@ public class UserService {
 		log.debug("Reset user password for reset key {}", key);
 
 		return userRepository.findOneByResetKey(key).filter(user -> {
-			final DateTime oneDayAgo = DateTime.now().minusHours(24);
-			return user.getResetDate().isAfter(oneDayAgo.toInstant().getMillis());
+			final LocalDateTime oneDayAgo = LocalDateTime.now().minusHours(24);
+			return user.getResetDate().isAfter(oneDayAgo);
 		}).map(user -> {
 			user.setActivated(true);
 			user.setPassword(passwordEncoder.encode(newPassword));
@@ -70,7 +70,7 @@ public class UserService {
 	public Optional<User> requestPasswordReset(String mail) {
 		return userRepository.findOneByEmail(mail).map(user -> {
 			user.setResetKey(RandomUtil.generateResetKey());
-			user.setResetDate(DateTime.now());
+			user.setResetDate(LocalDateTime.now());
 			userRepository.save(user);
 			return user;
 		});
@@ -79,7 +79,7 @@ public class UserService {
 	public User createUserInformation(String login, String password, String firstName, String lastName, String email, String langKey) {
 
 		final User newUser = new User();
-		final Authority authority = authorityRepository.findOne("ROLE_USER");
+		final Authority authority = authorityRepository.getOne("ROLE_USER");
 		final Set<Authority> authorities = new HashSet<>();
 		final String encryptedPassword = passwordEncoder.encode(password);
 		newUser.setLogin(login);
@@ -137,7 +137,7 @@ public class UserService {
 	 */
 	@Scheduled(cron = "0 0 0 * * ?")
 	public void removeOldPersistentTokens() {
-		final LocalDate now = new LocalDate();
+		final LocalDate now = LocalDate.now();
 		persistentTokenRepository.findByTokenDateBefore(now.minusMonths(1)).forEach(token -> {
 			log.debug("Deleting token {}", token.getSeries());
 			final User user = token.getUser();
@@ -156,7 +156,7 @@ public class UserService {
 	 */
 	@Scheduled(cron = "0 0 1 * * ?")
 	public void removeNotActivatedUsers() {
-		final DateTime now = new DateTime();
+		final LocalDateTime now = LocalDateTime.now();
 		final List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
 		for (final User user : users) {
 			log.debug("Deleting not activated user {}", user.getLogin());

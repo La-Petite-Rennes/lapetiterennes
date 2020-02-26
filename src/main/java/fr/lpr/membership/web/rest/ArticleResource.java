@@ -1,6 +1,5 @@
 package fr.lpr.membership.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import fr.lpr.membership.domain.Article;
 import fr.lpr.membership.domain.stock.Reassort;
 import fr.lpr.membership.domain.stock.StockHistory;
@@ -11,17 +10,17 @@ import fr.lpr.membership.service.stock.StockService;
 import fr.lpr.membership.web.rest.dto.StockHistoryDTO;
 import fr.lpr.membership.web.rest.dto.mapper.StockMapper;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -31,10 +30,9 @@ import java.util.stream.Collectors;
 import static fr.lpr.membership.security.AuthoritiesConstants.WORKSHOP_MANAGER;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/articles")
 @RequiredArgsConstructor
 public class ArticleResource {
 
@@ -46,29 +44,29 @@ public class ArticleResource {
 
 	private final StockMapper stockMapper;
 
-    @GetMapping(value="/articles", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
 	@Timed
 	public List<Article> getAll() {
-		return articleRepository.findAll(new Sort("name"));
+		return articleRepository.findAll(Sort.by("name"));
 	}
 
-	@GetMapping(value = "/articles/{id}", produces = APPLICATION_JSON_VALUE)
+	@GetMapping("/{id}")
 	@Timed
 	public ResponseEntity<Article> get(@PathVariable Long id) {
-		return Optional.ofNullable(articleRepository.findOne(id))
+		return articleRepository.findById(id)
 				.map(a -> new ResponseEntity<>(a, OK))
 				.orElse(new ResponseEntity<>(NOT_FOUND));
 	}
 
-	@PostMapping(value = "/articles", produces = APPLICATION_JSON_VALUE)
+	@PostMapping
 	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
-	public ResponseEntity<Void> create(@Valid @RequestBody Article article) throws URISyntaxException {
+	public ResponseEntity<Void> create(@Validated @RequestBody Article article) throws URISyntaxException {
 		Article savedArticle = articleRepository.save(article);
 		return ResponseEntity.created(new URI("/api/articles/" + savedArticle.getId())).build();
 	}
 
-	@PostMapping(value = "/articles/reassort", produces = APPLICATION_JSON_VALUE)
+	@PostMapping("/reassort")
 	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
 	public ResponseEntity<Void> reassort(@RequestBody List<Reassort> reassorts) {
@@ -76,36 +74,39 @@ public class ArticleResource {
 		return ResponseEntity.ok().build();
 	}
 
-	@PostMapping(value = "/articles/{id}/forRepairing", produces = APPLICATION_JSON_VALUE)
+	@PostMapping("/{id}/forRepairing")
 	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
 	public ResponseEntity<Article> forRepairing(@PathVariable(name = "id") Long articleId) {
-		Article article = articleRepository.findOne(articleId);
-		if (article != null) {
-			stockService.forRepairing(article);
-			return new ResponseEntity<>(articleRepository.findOne(articleId), OK);
+		Optional<Article> article = articleRepository.findById(articleId);
+		if (article.isPresent()) {
+			stockService.forRepairing(article.get());
+			return new ResponseEntity<>(article.get(), OK);
 		} else {
 			return new ResponseEntity<>(NOT_FOUND);
 		}
 	}
 
-	@GetMapping(value = "/articles/{id}/history", produces = APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<StockHistoryDTO>> stockHistory(@PathVariable(name = "id") Long articleId,
-			@RequestParam(value = "page", required = false) Integer offset,
-			@RequestParam(value = "per_page", required = false) Integer limit) throws URISyntaxException {
+	@GetMapping("/{id}/history")
+	public ResponseEntity<List<StockHistoryDTO>> stockHistory(
+	    @PathVariable(name = "id") Long articleId,
+		@RequestParam(value = "page", required = false) Integer offset,
+		@RequestParam(value = "per_page", required = false) Integer limit)
+        throws URISyntaxException
+    {
 		// Find article
-		Article article = articleRepository.findOne(articleId);
-		if (article == null) {
+		Optional<Article> article = articleRepository.findById(articleId);
+		if (article.isEmpty()) {
 			return new ResponseEntity<>(NOT_FOUND);
 		}
 
-		Page<StockHistory> page = stockService.history(article, offset, limit);
+		Page<StockHistory> page = stockService.history(article.get(), offset, limit);
 
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/articles/" + articleId + "/history", offset, limit);
 		return new ResponseEntity<>(page.getContent().stream().map(stockMapper::stockHistoryToDto).collect(Collectors.toList()), headers, HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "/articles/{articleId}")
+	@DeleteMapping("/{articleId}")
 	@RolesAllowed({AuthoritiesConstants.ADMIN, AuthoritiesConstants.WORKSHOP_MANAGER})
     public void delete(@PathVariable Long articleId) {
         articleRepository.delete(articleId);

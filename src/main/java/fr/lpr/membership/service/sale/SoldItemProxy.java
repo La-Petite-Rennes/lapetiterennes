@@ -1,10 +1,10 @@
 package fr.lpr.membership.service.sale;
 
-import org.joda.time.LocalDate;
-
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.sale.PaymentType;
 import fr.lpr.membership.domain.sale.SoldItem;
+
+import java.time.LocalDate;
 
 public class SoldItemProxy implements SalableItem {
 

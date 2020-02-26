@@ -1,5 +1,6 @@
 package fr.lpr.membership.web.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.Authority;
 import fr.lpr.membership.domain.User;
@@ -16,7 +17,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,8 +31,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,9 +44,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see UserService
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @WebAppConfiguration
 @SpringBootTest(classes = Application.class)
+@ActiveProfiles("test")
 public class AccountResourceTest {
 
     @Inject
@@ -62,6 +65,9 @@ public class AccountResourceTest {
     @Mock
     private MailService mockMailService;
 
+    @Inject
+    private ObjectMapper mapper;
+
     private MockMvc restUserMockMvc;
 
     private MockMvc restMvc;
@@ -69,7 +75,7 @@ public class AccountResourceTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        doNothing().when(mockMailService).sendActivationEmail(anyObject(), anyString());
+        doNothing().when(mockMailService).sendActivationEmail(any(), anyString());
 
         AccountResource accountResource = new AccountResource(userRepository, userService, null, mockMailService);
 
@@ -117,7 +123,7 @@ public class AccountResourceTest {
         restUserMockMvc.perform(get("/api/account")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.login").value("test"))
                 .andExpect(jsonPath("$.firstName").value("john"))
                 .andExpect(jsonPath("$.lastName").value("doe"))
@@ -150,7 +156,7 @@ public class AccountResourceTest {
         restMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(u)))
+                .content(mapper.writeValueAsBytes(u)))
             .andExpect(status().isCreated());
 
         Optional<User> user = userRepository.findOneByLogin("joe");
@@ -173,7 +179,7 @@ public class AccountResourceTest {
         restUserMockMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(u)))
+                .content(mapper.writeValueAsBytes(u)))
             .andExpect(status().isBadRequest());
 
         Optional<User> user = userRepository.findOneByEmail("funky@example.com");
@@ -196,7 +202,7 @@ public class AccountResourceTest {
         restUserMockMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(u)))
+                .content(mapper.writeValueAsBytes(u)))
             .andExpect(status().isBadRequest());
 
         Optional<User> user = userRepository.findOneByLogin("bob");
@@ -225,14 +231,14 @@ public class AccountResourceTest {
         restMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(u)))
+                .content(mapper.writeValueAsBytes(u)))
             .andExpect(status().isCreated());
 
         // Duplicate login
         restMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(dup)))
+                .content(mapper.writeValueAsBytes(dup)))
             .andExpect(status().is4xxClientError());
 
         Optional<User> userDup = userRepository.findOneByEmail("alicejr@example.com");
@@ -261,14 +267,14 @@ public class AccountResourceTest {
         restMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(u)))
+                .content(mapper.writeValueAsBytes(u)))
             .andExpect(status().isCreated());
 
         // Duplicate e-mail
         restMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(dup)))
+                .content(mapper.writeValueAsBytes(dup)))
             .andExpect(status().is4xxClientError());
 
         Optional<User> userDup = userRepository.findOneByLogin("johnjr");
@@ -291,12 +297,12 @@ public class AccountResourceTest {
         restMvc.perform(
             post("/api/register")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(u)))
+                .content(mapper.writeValueAsBytes(u)))
             .andExpect(status().isCreated());
 
         Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup.isPresent()).isTrue();
         assertThat(userDup.get().getAuthorities()).hasSize(1)
-            .containsExactly(authorityRepository.findOne(AuthoritiesConstants.USER));
+            .containsExactly(authorityRepository.getOne(AuthoritiesConstants.USER));
     }
 }

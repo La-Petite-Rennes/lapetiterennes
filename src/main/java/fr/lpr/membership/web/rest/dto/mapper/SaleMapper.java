@@ -52,19 +52,11 @@ public abstract class SaleMapper {
 	}
 
 	public Adherent adherentFromId(Long adherentId) {
-		Adherent adherent = adherentRepository.findOne(adherentId);
-		if (adherent == null) {
-			// FIXME Throws Exception
-		}
-		return adherent;
+        return adherentRepository.getOne(adherentId);
 	}
 
 	public Article articleFromId(Long articleId) {
-		Article article = articleRepository.findOne(articleId);
-		if (article == null) {
-			// FIXME Throws Exception
-		}
-		return article;
+        return articleRepository.getOne(articleId);
 	}
 
 }

@@ -1,11 +1,10 @@
 package fr.lpr.membership.service.sale;
 
-import org.joda.time.LocalDate;
-
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
 import fr.lpr.membership.domain.sale.PaymentType;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public class AdhesionProxy implements SalableItem {

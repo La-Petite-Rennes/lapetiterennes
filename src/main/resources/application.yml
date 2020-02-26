@@ -1,0 +1,35 @@
+# Disable the spring security default configuration from spring-boot-actuator
+management.security.enabled: true
+
+# security configuration (this key should be unique for your application, and kept secret)
+jhipster.security.rememberme.key: 0967e4154fe22d114184fba3e9e1691c79045949
+
+spring:
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+  liquibase:
+    change-log: classpath:/config/liquibase/master.xml
+
+# service timeout configured to 4 hours.
+server:
+  servlet:
+    session:
+      timeout: 4h
+
+async:
+  corePoolSize: 2
+  maxPoolSize: 50
+  queueCapacity: 10000
+
+mail:
+  host: localhost
+  port: 25
+  username:
+  password:
+  protocol: smtp
+  tls: false
+  auth: false
+  from: membership@localhost
+
+survey: https://docs.google.com/forms/d/1W2ZiV0TbJlfZ_WCQkGnGQPy-RX8nGsVLrhpIQvDEDGA/viewform

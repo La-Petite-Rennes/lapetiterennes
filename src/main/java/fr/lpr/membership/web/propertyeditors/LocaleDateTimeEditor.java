@@ -1,12 +1,11 @@
 package fr.lpr.membership.web.propertyeditors;
 
-import java.beans.PropertyEditorSupport;
-import java.util.Date;
-
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.util.StringUtils;
+
+import java.beans.PropertyEditorSupport;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * Custom PropertyEditorSupport to convert from String to Date using JodaTime (http://www.joda.org/joda-time/).
@@ -30,7 +29,7 @@ public class LocaleDateTimeEditor extends PropertyEditorSupport {
 	 *            if empty strings should be allowed
 	 */
 	public LocaleDateTimeEditor(String dateFormat, boolean allowEmpty) {
-		this.formatter = DateTimeFormat.forPattern(dateFormat);
+		this.formatter = DateTimeFormatter.ofPattern(dateFormat);
 		this.allowEmpty = allowEmpty;
 	}
 
@@ -42,7 +41,7 @@ public class LocaleDateTimeEditor extends PropertyEditorSupport {
 	@Override
 	public String getAsText() {
 		final Date value = (Date) getValue();
-		return value != null ? new LocalDateTime(value).toString(formatter) : "";
+		return value != null ? formatter.format(value.toInstant()) : "";
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class LocaleDateTimeEditor extends PropertyEditorSupport {
 			// Treat empty String as null value.
 			setValue(null);
 		} else {
-			setValue(new LocalDateTime(formatter.parseDateTime(text)));
+			setValue(LocalDateTime.parse(text, formatter));
 		}
 	}
 }

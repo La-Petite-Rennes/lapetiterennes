@@ -1,10 +1,9 @@
 package fr.lpr.membership.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fr.lpr.membership.async.ExceptionHandlingAsyncTaskExecutor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,21 +16,18 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
-import fr.lpr.membership.async.ExceptionHandlingAsyncTaskExecutor;
-
 @Configuration
 @EnableAsync
 @EnableScheduling
 @Profile("!" + Constants.SPRING_PROFILE_FAST)
+@Slf4j
 public class AsyncConfiguration implements AsyncConfigurer, EnvironmentAware {
 
-    private final Logger log = LoggerFactory.getLogger(AsyncConfiguration.class);
-
-    private RelaxedPropertyResolver propertyResolver;
+    private Environment environment;
 
     @Override
     public void setEnvironment(Environment environment) {
-        this.propertyResolver = new RelaxedPropertyResolver(environment, "async.");
+        this.environment = environment;
     }
 
     @Override
@@ -39,9 +35,9 @@ public class AsyncConfiguration implements AsyncConfigurer, EnvironmentAware {
     public Executor getAsyncExecutor() {
         log.debug("Creating Async Task Executor");
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(propertyResolver.getProperty("corePoolSize", Integer.class, 2));
-        executor.setMaxPoolSize(propertyResolver.getProperty("maxPoolSize", Integer.class, 50));
-        executor.setQueueCapacity(propertyResolver.getProperty("queueCapacity", Integer.class, 10000));
+        executor.setCorePoolSize(environment.getProperty("async.corePoolSize", Integer.class, 2));
+        executor.setMaxPoolSize(environment.getProperty("async.maxPoolSize", Integer.class, 50));
+        executor.setQueueCapacity(environment.getProperty("async.queueCapacity", Integer.class, 10000));
         executor.setThreadNamePrefix("membership-Executor-");
         return new ExceptionHandlingAsyncTaskExecutor(executor);
     }

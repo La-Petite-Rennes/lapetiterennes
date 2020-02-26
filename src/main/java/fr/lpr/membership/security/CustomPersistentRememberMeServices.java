@@ -1,15 +1,9 @@
 package fr.lpr.membership.security;
 
-import java.security.SecureRandom;
-import java.util.Arrays;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fr.lpr.membership.domain.PersistentToken;
+import fr.lpr.membership.repository.PersistentTokenRepository;
+import fr.lpr.membership.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
@@ -23,9 +17,13 @@ import org.springframework.security.web.authentication.rememberme.RememberMeAuth
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fr.lpr.membership.domain.PersistentToken;
-import fr.lpr.membership.repository.PersistentTokenRepository;
-import fr.lpr.membership.repository.UserRepository;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * <p>
@@ -52,9 +50,8 @@ import fr.lpr.membership.repository.UserRepository;
  * </p>
  */
 @Service
+@Slf4j
 public class CustomPersistentRememberMeServices extends AbstractRememberMeServices {
-
-	private final Logger log = LoggerFactory.getLogger(CustomPersistentRememberMeServices.class);
 
 	// Token is valid for one month
 	private static final int TOKEN_VALIDITY_DAYS = 31;
@@ -88,7 +85,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
 		// Token also matches, so login is valid. Update the token value, keeping the *same* series number.
 		log.debug("Refreshing persistent login token for user '{}', series '{}'", login, token.getSeries());
-		token.setTokenDate(new LocalDate());
+		token.setTokenDate(LocalDate.now());
 		token.setTokenValue(generateTokenData());
 		token.setIpAddress(request.getRemoteAddr());
 		token.setUserAgent(request.getHeader("User-Agent"));
@@ -112,7 +109,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 			t.setSeries(generateSeriesData());
 			t.setUser(u);
 			t.setTokenValue(generateTokenData());
-			t.setTokenDate(new LocalDate());
+			t.setTokenDate(LocalDate.now());
 			t.setIpAddress(request.getRemoteAddr());
 			t.setUserAgent(request.getHeader("User-Agent"));
 			return t;
@@ -166,12 +163,14 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 		}
 		final String presentedSeries = cookieTokens[0];
 		final String presentedToken = cookieTokens[1];
-		final PersistentToken token = persistentTokenRepository.findOne(presentedSeries);
+		final Optional<PersistentToken> optToken = persistentTokenRepository.findById(presentedSeries);
 
-		if (token == null) {
+		if (optToken.isEmpty()) {
 			// No series match, so we can't authenticate using this cookie
 			throw new RememberMeAuthenticationException("No persistent token found for series id: " + presentedSeries);
 		}
+
+        PersistentToken token = optToken.get();
 
 		// We have a match for this user/series combination
 		log.info("presentedToken={} / tokenValue={}", presentedToken, token.getTokenValue());

@@ -1,16 +1,15 @@
 package fr.lpr.membership.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import fr.lpr.membership.domain.User;
 import fr.lpr.membership.repository.UserRepository;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
  * REST controller for managing users.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @Slf4j
 @RequiredArgsConstructor
 public class UserResource {
@@ -31,7 +30,7 @@ public class UserResource {
 	 *
 	 * @return all users
 	 */
-	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping
 	@Timed
 	public List<User> getAll() {
 		log.debug("REST request to get all Users");
@@ -45,10 +44,12 @@ public class UserResource {
 	 *            the login
 	 * @return the user
 	 */
-	@RequestMapping(value = "/users/{login}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping("/{login}")
 	@Timed
-	ResponseEntity<User> getUser(@PathVariable String login) {
+	public ResponseEntity<User> getUser(@PathVariable String login) {
 		log.debug("REST request to get User : {}", login);
-		return userRepository.findOneByLogin(login).map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return userRepository.findOneByLogin(login)
+            .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 }

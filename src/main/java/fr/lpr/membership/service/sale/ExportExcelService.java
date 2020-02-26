@@ -10,12 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.joda.time.DateTime;
-import org.joda.time.YearMonth;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,10 +29,11 @@ public class ExportExcelService {
 
 	private final SaleStatisticsService saleStatisticsService;
 
-	public void export(DateTime from, OutputStream outputStream) {
+	public void export(LocalDateTime from, OutputStream outputStream) {
 		// Create the Excel file (format XSLX)
 		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 			Sheet sheet = workbook.createSheet("Statistiques");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
 
 			// Get statistics by month
 			SaleStatistics<YearMonth> itemsByMonth = saleStatisticsService.statsByMonths(from);
@@ -52,7 +54,7 @@ public class ExportExcelService {
 				Multimap<String, SalableItem> statsByItem = monthlyStatByItem(itemsByMonth.getItemsByPeriod().get(month));
 
 				Row row = sheet.createRow(currentSheetRow);
-				row.createCell(0).setCellValue(month.toString("MMMM yyyy"));
+                row.createCell(0).setCellValue(month.format(formatter));
 
 				for (int index = 0; index != columnNames.size(); ++index) {
 					String column = columnNames.get(index);

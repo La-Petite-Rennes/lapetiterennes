@@ -1,29 +1,24 @@
 package fr.lpr.membership.domain.sale;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import fr.lpr.membership.domain.Article;
+import fr.lpr.membership.domain.stock.StockHistory;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import fr.lpr.membership.domain.Article;
-import fr.lpr.membership.domain.stock.StockHistory;
+import javax.persistence.*;
 
 @Entity
 @Table(name="SOLD_ITEM")
 @Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SoldItem {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne(optional = false)
@@ -34,10 +29,6 @@ public class SoldItem {
 
 	@Column(nullable = false)
 	private int price;
-
-	protected SoldItem() {
-		// Do nothing
-	}
 
 	public SoldItem(Article article, int quantity) {
 		if (article.getSalePrice() == null) {
@@ -112,5 +103,4 @@ public class SoldItem {
 		stockHistory.setQuantity(quantity);
 		return quantity - previousQuantity;
 	}
-
 }

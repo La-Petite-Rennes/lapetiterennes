@@ -1,10 +1,10 @@
 package fr.lpr.membership.service.sale;
 
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
+
+import java.util.List;
+import java.util.Map;
 
 public class SaleStatistics<T extends Comparable<?>> {
 
@@ -19,7 +19,7 @@ public class SaleStatistics<T extends Comparable<?>> {
 	}
 
 	public void addItems(Map<T, List<SalableItem>> soldItemsByMonth) {
-		soldItemsByMonth.entrySet().stream().forEach(e -> itemsByPeriod.putAll(e.getKey(), e.getValue()));
+		soldItemsByMonth.entrySet().forEach(e -> itemsByPeriod.putAll(e.getKey(), e.getValue()));
 	}
 
 }

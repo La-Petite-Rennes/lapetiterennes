@@ -1,11 +1,10 @@
 package fr.lpr.membership.service.sale;
 
-import org.joda.time.LocalDate;
-
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.sale.PaymentType;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 public interface SalableItem extends Comparable<SalableItem> {
 
@@ -35,5 +34,4 @@ public interface SalableItem extends Comparable<SalableItem> {
 			return getClass().getName().compareTo(o.getClass().getName());
 		}
 	}
-
 }

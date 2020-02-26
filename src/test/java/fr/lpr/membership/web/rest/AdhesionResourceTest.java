@@ -1,5 +1,6 @@
 package fr.lpr.membership.web.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
@@ -7,14 +8,14 @@ import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.domain.sale.PaymentType;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.AdhesionRepository;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,16 +37,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see AdhesionResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration
+@ActiveProfiles("test")
 public class AdhesionResourceTest {
 
 	private static final TypeAdhesion DEFAULT_TYPE_ADHESION = TypeAdhesion.Simple;
 	private static final TypeAdhesion UPDATED_TYPE_ADHESION = TypeAdhesion.Soutien;
 
-	private static final LocalDate DEFAULT_DATE_ADHESION = new LocalDate(0L);
-	private static final LocalDate UPDATED_DATE_ADHESION = new LocalDate();
+	private static final LocalDate DEFAULT_DATE_ADHESION = LocalDate.now().minusYears(2);
+	private static final LocalDate UPDATED_DATE_ADHESION = LocalDate.now();
 
 	private static final PaymentType DEFAUlT_PAYMENT_TYPE = PaymentType.Cash;
 
@@ -53,12 +57,14 @@ public class AdhesionResourceTest {
 	@Inject
 	private AdherentRepository adherentRepository;
 
+	@Inject
+    private ObjectMapper mapper;
+
 	private MockMvc restAdhesionMockMvc;
 
 	private Adhesion adhesion;
-	private Adherent adherent;
 
-	@PostConstruct
+    @PostConstruct
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		final AdhesionResource adhesionResource = new AdhesionResource(adhesionRepository, adherentRepository);
@@ -72,7 +78,7 @@ public class AdhesionResourceTest {
 		adhesion.setDateAdhesion(DEFAULT_DATE_ADHESION);
 		adhesion.setPaymentType(DEFAUlT_PAYMENT_TYPE);
 
-		adherent = new Adherent();
+        Adherent adherent = new Adherent();
 		adherent.setPrenom("firstName");
 		adherent.setNom("lastName");
 
@@ -86,7 +92,7 @@ public class AdhesionResourceTest {
 		final int databaseSizeBeforeCreate = adhesionRepository.findAll().size();
 
 		// Create the Adhesion
-		restAdhesionMockMvc.perform(post("/api/adhesions").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adhesion)))
+		restAdhesionMockMvc.perform(post("/api/adhesions").contentType(TestUtil.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(adhesion)))
 				.andExpect(status().isCreated());
 
 		// Validate the Adhesion in the database
@@ -106,7 +112,7 @@ public class AdhesionResourceTest {
 		adhesion.setTypeAdhesion(null);
 
 		// Create the Adhesion, which fails.
-		restAdhesionMockMvc.perform(post("/api/adhesions").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adhesion)))
+		restAdhesionMockMvc.perform(post("/api/adhesions").contentType(TestUtil.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(adhesion)))
 				.andExpect(status().isBadRequest());
 
 		// Validate the database is still empty
@@ -121,10 +127,10 @@ public class AdhesionResourceTest {
 		adhesionRepository.saveAndFlush(adhesion);
 
 		// Get all the adhesions
-		restAdhesionMockMvc.perform(get("/api/adhesions")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		restAdhesionMockMvc.perform(get("/api/adhesions")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(jsonPath("$.[*].id").value(hasItem(adhesion.getId().intValue())))
 				.andExpect(jsonPath("$.[*].typeAdhesion").value(hasItem(DEFAULT_TYPE_ADHESION.toString())))
-				.andExpect(jsonPath("$.[*].dateAdhesion").value(hasItem(DEFAULT_DATE_ADHESION.toString("dd/MM/yyyy"))));
+				.andExpect(jsonPath("$.[*].dateAdhesion").value(hasItem(DEFAULT_DATE_ADHESION.format(DateTimeFormatter.ISO_LOCAL_DATE))));
 	}
 
 	@Test
@@ -135,9 +141,9 @@ public class AdhesionResourceTest {
 
 		// Get the adhesion
 		restAdhesionMockMvc.perform(get("/api/adhesions/{id}", adhesion.getId())).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$.id").value(adhesion.getId().intValue()))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$.id").value(adhesion.getId().intValue()))
 				.andExpect(jsonPath("$.typeAdhesion").value(DEFAULT_TYPE_ADHESION.toString()))
-				.andExpect(jsonPath("$.dateAdhesion").value(DEFAULT_DATE_ADHESION.toString("dd/MM/yyyy")));
+				.andExpect(jsonPath("$.dateAdhesion").value(DEFAULT_DATE_ADHESION.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 	}
 
 	@Test
@@ -158,7 +164,7 @@ public class AdhesionResourceTest {
 		// Update the adhesion
 		adhesion.setTypeAdhesion(UPDATED_TYPE_ADHESION);
 		adhesion.setDateAdhesion(UPDATED_DATE_ADHESION);
-		restAdhesionMockMvc.perform(put("/api/adhesions").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adhesion)))
+		restAdhesionMockMvc.perform(put("/api/adhesions").contentType(TestUtil.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(adhesion)))
 				.andExpect(status().isOk());
 
 		// Validate the Adhesion in the database

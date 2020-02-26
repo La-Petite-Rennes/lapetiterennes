@@ -1,11 +1,15 @@
 package fr.lpr.membership.service.sale;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
-import org.joda.time.DateTime;
+import com.google.common.collect.Lists;
+import fr.lpr.membership.domain.sale.QSale;
+import fr.lpr.membership.domain.sale.Sale;
+import fr.lpr.membership.domain.sale.SoldItem;
+import fr.lpr.membership.repository.sale.SaleRepository;
+import fr.lpr.membership.service.sale.event.SaleCreatedEvent;
+import fr.lpr.membership.service.sale.event.SaleDeletedEvent;
+import fr.lpr.membership.service.sale.event.SaleUpdatedEvent;
+import fr.lpr.membership.service.stock.StockQuantityChangedEvent;
+import fr.lpr.membership.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +20,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
-
-import fr.lpr.membership.domain.sale.QSale;
-import fr.lpr.membership.domain.sale.Sale;
-import fr.lpr.membership.domain.sale.SoldItem;
-import fr.lpr.membership.repository.sale.SaleRepository;
-import fr.lpr.membership.service.sale.event.SaleCreatedEvent;
-import fr.lpr.membership.service.sale.event.SaleDeletedEvent;
-import fr.lpr.membership.service.sale.event.SaleUpdatedEvent;
-import fr.lpr.membership.service.stock.StockQuantityChangedEvent;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -42,12 +38,8 @@ public class SaleService {
 
 	/**
 	 * Save a new sale.
-	 *
-	 * @param sale
-	 * @return
 	 */
 	public Sale newSale(Sale sale) {
-		sale.updatedAt(sale.getCreatedAt());
 		Sale savedSale = save(sale);
 
 		LOGGER.info("Enregistrement d'une vente pour {} : \n\t\t{}", sale.getAdherent().getFullName(),
@@ -58,16 +50,9 @@ public class SaleService {
 
 	/**
 	 * Update a sale.
-	 *
-	 * @param sale
-	 * @return
 	 */
 	public Sale update(Sale sale) {
-		Sale existingSale = saleRepository.findOne(sale.getId());
-		if (existingSale == null) {
-			// FIXME Exception
-			return null;
-		}
+		Sale existingSale = saleRepository.getOne(sale.getId());
 
 		// TODO Code à placer dans l'entité Sale ?
 		for (SoldItem item : sale.getSoldItems()) {
@@ -80,7 +65,7 @@ public class SaleService {
 				SoldItem existingItem = existingSale.getSoldItems().stream()
 						.filter(i -> i.getId().equals(item.getId()))
 						.findFirst()
-						.orElseThrow(() -> new RuntimeException());
+						.orElseThrow(RuntimeException::new);
 
 				if (existingItem.getPrice() != item.getPrice()) {
 					existingSale.addSoldItem(item.getArticle(), item.getQuantity(), item.getPrice());
@@ -92,7 +77,6 @@ public class SaleService {
 			}
 		}
 
-		existingSale.updatedAt(DateTime.now());
 		existingSale.setAdherent(sale.getAdherent());
 		existingSale.setFinished(sale.isFinished());
 		existingSale.setPaymentType(sale.getPaymentType());
@@ -108,7 +92,7 @@ public class SaleService {
 	}
 
 	public Page<Sale> history(Integer offset, Integer limit) {
-		final Sort sort = new Sort(Direction.DESC, "createdAt");
+		final Sort sort = Sort.by(Direction.DESC, "createdAt");
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
 		return saleRepository.findAll(QSale.sale.finished.isTrue(), pageRequest);
@@ -119,9 +103,8 @@ public class SaleService {
 	}
 
 	public void delete(Long saleId) {
-		Sale sale = saleRepository.findOne(saleId);
+		Sale sale = saleRepository.getOne(saleId);
 		saleRepository.delete(sale);
 		eventPublisher.publishEvent(new SaleDeletedEvent(sale));
 	}
-
 }

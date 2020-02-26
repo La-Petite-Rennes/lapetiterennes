@@ -1,8 +1,6 @@
 package fr.lpr.membership.config;
 
-import org.apache.commons.lang.CharEncoding;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +8,11 @@ import org.springframework.context.annotation.Description;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-@Configuration
-public class ThymeleafConfiguration {
+import java.nio.charset.StandardCharsets;
 
-    private final Logger log = LoggerFactory.getLogger(ThymeleafConfiguration.class);
+@Configuration
+@Slf4j
+public class ThymeleafConfiguration {
 
     @Bean
     @Description("Thymeleaf template resolver serving HTML 5 emails")
@@ -22,7 +21,7 @@ public class ThymeleafConfiguration {
         emailTemplateResolver.setPrefix("mails/");
         emailTemplateResolver.setSuffix(".html");
         emailTemplateResolver.setTemplateMode("HTML5");
-        emailTemplateResolver.setCharacterEncoding(CharEncoding.UTF_8);
+        emailTemplateResolver.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
         emailTemplateResolver.setOrder(1);
         return emailTemplateResolver;
     }
@@ -33,7 +32,7 @@ public class ThymeleafConfiguration {
         log.info("loading non-reloadable mail messages resources");
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:/mails/messages/messages");
-        messageSource.setDefaultEncoding(CharEncoding.UTF_8);
+        messageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
         return messageSource;
     }
 }

@@ -35,7 +35,7 @@ public class ReassortService {
 
 		for (Reassort reassort : reassorts) {
 			if (reassort.getQuantity() != 0) {
-				Article article = articleRepository.findOne(reassort.getId());
+				Article article = articleRepository.getOne(reassort.getId());
 
 				stockHistoryRepository.save(StockHistory.from(reassort, article));
 				eventPublisher.publishEvent(fromReassort(article, reassort.getQuantity()));

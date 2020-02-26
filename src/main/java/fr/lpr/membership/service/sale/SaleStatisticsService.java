@@ -6,11 +6,11 @@ import fr.lpr.membership.domain.sale.QSale;
 import fr.lpr.membership.repository.AdhesionRepository;
 import fr.lpr.membership.repository.sale.SaleRepository;
 import lombok.RequiredArgsConstructor;
-import org.joda.time.DateTime;
-import org.joda.time.YearMonth;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,8 +25,8 @@ public class SaleStatisticsService {
 
 	private final AdhesionRepository adhesionRepository;
 
-	public SaleStatistics<YearMonth> statsByMonths(DateTime from) {
-        DateTime to = from.plusYears(1);
+	public SaleStatistics<YearMonth> statsByMonths(LocalDateTime from) {
+        LocalDateTime to = from.plusYears(1);
 
 		// Search finished sales created after 'from' date
 		BooleanBuilder salePredicate = new BooleanBuilder();
@@ -38,7 +38,7 @@ public class SaleStatisticsService {
 						.stream(saleRepository.findAll(salePredicate).spliterator(), false)
 						.flatMap(s -> s.getSoldItems().stream())
 						.map(SoldItemProxy::new)
-						.collect(Collectors.groupingBy(item -> new YearMonth(item.getSaleDate())));
+						.collect(Collectors.groupingBy(item -> YearMonth.from(item.getSaleDate())));
 
 		// Search adhesions created after 'from' date
 		Map<YearMonth, List<SalableItem>> adhesionsByMonth =
@@ -47,7 +47,7 @@ public class SaleStatisticsService {
 								QAdhesion.adhesion.dateAdhesion.between(from.toLocalDate(), to.toLocalDate()))
 								.spliterator(), false)
 						.map(AdhesionProxy::new)
-						.collect(Collectors.groupingBy(a -> new YearMonth(a.getSaleDate())));
+						.collect(Collectors.groupingBy(a -> YearMonth.from(a.getSaleDate())));
 
 		SaleStatistics<YearMonth> itemsByMonth = new SaleStatistics<>();
 		itemsByMonth.addItems(soldItemsByMonth);

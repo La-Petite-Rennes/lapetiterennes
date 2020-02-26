@@ -1,25 +1,23 @@
 package fr.lpr.membership.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import fr.lpr.membership.domain.Coordonnees;
 import fr.lpr.membership.repository.CoordonneesRepository;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing Coordonnees.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/coordonneess")
 @Slf4j
 @RequiredArgsConstructor
 public class CoordonneesResource {
@@ -35,7 +33,7 @@ public class CoordonneesResource {
 	 * @throws URISyntaxException
 	 *             if uri cannot be build
 	 */
-	@RequestMapping(value = "/coordonneess", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping
 	@Timed
 	public ResponseEntity<Void> create(@RequestBody Coordonnees coordonnees) throws URISyntaxException {
 		log.debug("REST request to save Coordonnees : {}", coordonnees);
@@ -55,7 +53,7 @@ public class CoordonneesResource {
 	 * @throws URISyntaxException
 	 *             if coordinated cannot be build
 	 */
-	@RequestMapping(value = "/coordonneess", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping
 	@Timed
 	public ResponseEntity<Void> update(@RequestBody Coordonnees coordonnees) throws URISyntaxException {
 		log.debug("REST request to update Coordonnees : {}", coordonnees);
@@ -71,7 +69,7 @@ public class CoordonneesResource {
 	 *
 	 * @return the coordinates
 	 */
-	@RequestMapping(value = "/coordonneess", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping
 	@Timed
 	public List<Coordonnees> getAll() {
 		log.debug("REST request to get all Coordonneess");
@@ -85,12 +83,13 @@ public class CoordonneesResource {
 	 *            identifier of coordinates
 	 * @return the coordinates
 	 */
-	@RequestMapping(value = "/coordonneess/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping("/{id}")
 	@Timed
 	public ResponseEntity<Coordonnees> get(@PathVariable Long id) {
 		log.debug("REST request to get Coordonnees : {}", id);
-		return Optional.ofNullable(coordonneesRepository.findOne(id)).map(coordonnees -> new ResponseEntity<>(coordonnees, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return coordonneesRepository.findById(id)
+            .map(coordonnees -> new ResponseEntity<>(coordonnees, HttpStatus.OK))
+			.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	/**
@@ -99,10 +98,10 @@ public class CoordonneesResource {
 	 * @param id
 	 *            the identifier
 	 */
-	@RequestMapping(value = "/coordonneess/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping("/{id}")
 	@Timed
 	public void delete(@PathVariable Long id) {
 		log.debug("REST request to delete Coordonnees : {}", id);
-		coordonneesRepository.delete(id);
+		coordonneesRepository.deleteById(id);
 	}
 }

@@ -1,45 +1,41 @@
 package fr.lpr.membership.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.lpr.membership.Application;
+import fr.lpr.membership.domain.Coordonnees;
+import fr.lpr.membership.repository.CoordonneesRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import fr.lpr.membership.Application;
-import fr.lpr.membership.domain.Coordonnees;
-import fr.lpr.membership.repository.CoordonneesRepository;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the CoordonneesResource REST controller.
  *
  * @see CoordonneesResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration
+@ActiveProfiles("test")
 public class CoordonneesResourceTest {
 
     private static final String DEFAULT_ADRESSE1 = "SAMPLE_TEXT";
@@ -57,6 +53,9 @@ public class CoordonneesResourceTest {
 
     @Inject
     private CoordonneesRepository coordonneesRepository;
+
+	@Inject
+    private ObjectMapper mapper;
 
     private MockMvc restCoordonneesMockMvc;
 
@@ -89,7 +88,7 @@ public class CoordonneesResourceTest {
         // Create the Coordonnees
         restCoordonneesMockMvc.perform(post("/api/coordonneess")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(coordonnees)))
+                .content(mapper.writeValueAsBytes(coordonnees)))
                 .andExpect(status().isCreated());
 
         // Validate the Coordonnees in the database
@@ -113,14 +112,14 @@ public class CoordonneesResourceTest {
         // Get all the coordonneess
         restCoordonneesMockMvc.perform(get("/api/coordonneess"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(coordonnees.getId().intValue())))
-                .andExpect(jsonPath("$.[*].adresse1").value(hasItem(DEFAULT_ADRESSE1.toString())))
-                .andExpect(jsonPath("$.[*].adresse2").value(hasItem(DEFAULT_ADRESSE2.toString())))
-                .andExpect(jsonPath("$.[*].codePostal").value(hasItem(DEFAULT_CODE_POSTAL.toString())))
-                .andExpect(jsonPath("$.[*].ville").value(hasItem(DEFAULT_VILLE.toString())))
-                .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())))
-                .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE.toString())));
+                .andExpect(jsonPath("$.[*].adresse1").value(hasItem(DEFAULT_ADRESSE1)))
+                .andExpect(jsonPath("$.[*].adresse2").value(hasItem(DEFAULT_ADRESSE2)))
+                .andExpect(jsonPath("$.[*].codePostal").value(hasItem(DEFAULT_CODE_POSTAL)))
+                .andExpect(jsonPath("$.[*].ville").value(hasItem(DEFAULT_VILLE)))
+                .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
+                .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)));
     }
 
     @Test
@@ -132,14 +131,14 @@ public class CoordonneesResourceTest {
         // Get the coordonnees
         restCoordonneesMockMvc.perform(get("/api/coordonneess/{id}", coordonnees.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(coordonnees.getId().intValue()))
-            .andExpect(jsonPath("$.adresse1").value(DEFAULT_ADRESSE1.toString()))
-            .andExpect(jsonPath("$.adresse2").value(DEFAULT_ADRESSE2.toString()))
-            .andExpect(jsonPath("$.codePostal").value(DEFAULT_CODE_POSTAL.toString()))
-            .andExpect(jsonPath("$.ville").value(DEFAULT_VILLE.toString()))
-            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()))
-            .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE.toString()));
+            .andExpect(jsonPath("$.adresse1").value(DEFAULT_ADRESSE1))
+            .andExpect(jsonPath("$.adresse2").value(DEFAULT_ADRESSE2))
+            .andExpect(jsonPath("$.codePostal").value(DEFAULT_CODE_POSTAL))
+            .andExpect(jsonPath("$.ville").value(DEFAULT_VILLE))
+            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
+            .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE));
     }
 
     @Test
@@ -167,7 +166,7 @@ public class CoordonneesResourceTest {
         coordonnees.setTelephone(UPDATED_TELEPHONE);
         restCoordonneesMockMvc.perform(put("/api/coordonneess")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(coordonnees)))
+                .content(mapper.writeValueAsBytes(coordonnees)))
                 .andExpect(status().isOk());
 
         // Validate the Coordonnees in the database

@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: prod
+  datasource:
+    url: <PROD_URL>
+    username: postgres
+    password: Curyinpot7
+  jpa:
+    properties:
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+      hibernate.search.default.directory_provider: filesystem
+      hibernate.search.default.indexBase: /usr/lucene/indexes
+  thymeleaf:
+    mode: XHTML
+    cache: true
+
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: lapetiterennes@gmail.com
+  password: gsV4H,S+/3M?uW
+  protocol: smtp
+  tls: true
+  auth: true
+  from: lapetiterennes@gmail.com
+
+http:
+  cache:
+    timeToLiveInDays: 31
+
+cache:
+  timeToLiveSeconds: 3600
+  ehcache:
+    maxBytesLocalHeap: 256M

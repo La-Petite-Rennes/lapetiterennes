@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.joda.time.LocalDate.now;
+import static java.time.LocalDate.now;
 
 @Service
 @Slf4j

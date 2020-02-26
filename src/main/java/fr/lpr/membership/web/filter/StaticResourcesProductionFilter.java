@@ -1,16 +1,10 @@
 package fr.lpr.membership.web.filter;
 
-import java.io.IOException;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
+import java.io.IOException;
 
 /**
  * <p>
@@ -23,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
 public class StaticResourcesProductionFilter implements Filter {
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(FilterConfig filterConfig) {
 		// Nothing to initialize
 	}
 

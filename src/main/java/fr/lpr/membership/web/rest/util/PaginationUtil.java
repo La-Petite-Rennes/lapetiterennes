@@ -1,13 +1,13 @@
 package fr.lpr.membership.web.rest.util;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Utility class for handling pagination.
@@ -44,7 +44,7 @@ public class PaginationUtil {
 		if (limit == null || limit > MAX_LIMIT) {
 			limit = DEFAULT_LIMIT;
 		}
-		return new PageRequest(offset - 1, limit, sort);
+		return PageRequest.of(offset - 1, limit, sort);
 	}
 
 	/**

@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ImmutableMap;
 import com.opencsv.CSVWriter;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.StatutAdhesion;
 import fr.lpr.membership.domain.TypeAdhesion;
-import fr.lpr.membership.domain.util.CustomLocalDateSerializer;
-import fr.lpr.membership.domain.util.LocalDateAdapter;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.service.exception.ExportException;
 import fr.lpr.membership.web.rest.dto.ExportRequest.AdhesionState;
@@ -19,7 +16,6 @@ import fr.lpr.membership.web.rest.util.PaginationUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.joda.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +25,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +69,6 @@ public class ExportService {
      * @param properties    the properties to export
      * @param adhesionState export adherents with this specified adhesion state
      * @param response      the http response
-     * @throws Exception if an error occurs
      */
     public void export(final String format, final List<String> properties, final AdhesionState adhesionState, final HttpServletResponse response) {
         try {
@@ -87,9 +83,6 @@ public class ExportService {
             } while (page.hasNext());
 
             switch (format) {
-                case CSV:
-                    exportCsv(adherents, properties, response);
-                    break;
                 case XML:
                     exportXml(adherents, response);
                     break;
@@ -97,7 +90,7 @@ public class ExportService {
                     exportJson(adherents, response);
                     break;
                 default:
-                    exportCsv(adherents, properties, response);
+                    exportCsv(adherents, response);
             }
         } catch (IOException | JAXBException ex) {
             throw new ExportException("Export failed", ex);
@@ -130,7 +123,7 @@ public class ExportService {
         return true;
     }
 
-    private void exportCsv(List<AdherentDto> dtos, List<String> properties, HttpServletResponse response) throws IOException {
+    private void exportCsv(List<AdherentDto> dtos, HttpServletResponse response) throws IOException {
         response.setHeader(CONTENT_TYPE_HEADER, "text/csv");
 
         try (CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(response.getOutputStream()), ';')) {
@@ -177,11 +170,10 @@ public class ExportService {
 
         public String formatLastAdhesion() {
             if (lastAdhesion != null) {
-                return lastAdhesion.toString("dd/MM/yyyy");
+                return lastAdhesion.format(DateTimeFormatter.ISO_LOCAL_DATE);
             }
             return null;
         }
-
     }
 
     @Getter
@@ -190,8 +182,6 @@ public class ExportService {
 
         private TypeAdhesion typeAdhesion;
 
-        @JsonSerialize(using = CustomLocalDateSerializer.class)
-        @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate dateAdhesion;
 
         public AdhesionDto(TypeAdhesion typeAdhesion, LocalDate dateAdhesion) {
@@ -199,7 +189,6 @@ public class ExportService {
             this.typeAdhesion = typeAdhesion;
             this.dateAdhesion = dateAdhesion;
         }
-
     }
 
     @XmlRootElement
@@ -208,9 +197,6 @@ public class ExportService {
         private static final long serialVersionUID = 1L;
 
         private List<AdherentDto> adherent;
-
-        public Adherents() {
-        }
 
         public Adherents(List<AdherentDto> adherent) {
             super();
@@ -224,7 +210,5 @@ public class ExportService {
         public void setAdherent(List<AdherentDto> adherent) {
             this.adherent = adherent;
         }
-
     }
-
 }

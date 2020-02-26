@@ -1,35 +1,35 @@
 package fr.lpr.membership.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-import java.util.Optional;
-
-import javax.inject.Inject;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
-
 import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.PersistentToken;
 import fr.lpr.membership.domain.User;
 import fr.lpr.membership.repository.PersistentTokenRepository;
 import fr.lpr.membership.repository.UserRepository;
 import fr.lpr.membership.service.util.RandomUtil;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class for the UserResource REST controller.
  *
  * @see UserService
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @Transactional
+@ActiveProfiles("test")
 public class UserServiceTest {
 
     @Inject
@@ -45,8 +45,8 @@ public class UserServiceTest {
     public void testRemoveOldPersistentTokens() {
         User admin = userRepository.findOneByLogin("admin").get();
         int existingCount = persistentTokenRepository.findByUser(admin).size();
-        generateUserToken(admin, "1111-1111", new LocalDate());
-        LocalDate now = new LocalDate();
+        generateUserToken(admin, "1111-1111", LocalDate.now());
+        LocalDate now = LocalDate.now();
         generateUserToken(admin, "2222-2222", now.minusDays(32));
         assertThat(persistentTokenRepository.findByUser(admin)).hasSize(existingCount + 2);
         userService.removeOldPersistentTokens();
@@ -73,7 +73,7 @@ public class UserServiceTest {
 
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
 
-        DateTime daysAgo = DateTime.now().minusHours(25);
+        LocalDateTime daysAgo = LocalDateTime.now().minusHours(25);
         String resetKey = RandomUtil.generateResetKey();
         user.setActivated(true);
         user.setResetDate(daysAgo);
@@ -94,7 +94,7 @@ public class UserServiceTest {
 
         User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
 
-        DateTime daysAgo = DateTime.now().minusHours(25);
+        LocalDateTime daysAgo = LocalDateTime.now().minusHours(25);
         user.setActivated(true);
         user.setResetDate(daysAgo);
         user.setResetKey("1234");
@@ -116,7 +116,7 @@ public class UserServiceTest {
 
         String oldPassword = user.getPassword();
 
-        DateTime daysAgo = DateTime.now().minusHours(2);
+        LocalDateTime daysAgo = LocalDateTime.now().minusHours(2);
         String resetKey = RandomUtil.generateResetKey();
         user.setActivated(true);
         user.setResetDate(daysAgo);
@@ -138,8 +138,7 @@ public class UserServiceTest {
     @Test
     public void testFindNotActivatedUsersByCreationDateBefore() {
         userService.removeNotActivatedUsers();
-        DateTime now = new DateTime();
-        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
+        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(LocalDateTime.now().minusDays(3));
         assertThat(users).isEmpty();
     }
 

@@ -1,6 +1,5 @@
 package fr.lpr.membership.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.SearchAdherentRepository;
@@ -10,6 +9,7 @@ import fr.lpr.membership.service.ExportService;
 import fr.lpr.membership.service.ImportService;
 import fr.lpr.membership.web.rest.dto.ExportRequest;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,12 +20,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -39,7 +39,7 @@ import java.util.Optional;
  * REST controller for managing Adherent.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/adherents")
 @Slf4j
 @RequiredArgsConstructor
 public class AdherentResource {
@@ -63,9 +63,9 @@ public class AdherentResource {
 	 * @throws URISyntaxException
 	 *             if uri cannot be built
 	 */
-	@RequestMapping(value = "/adherents", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping
 	@Timed
-	public ResponseEntity<Void> create(@Valid @RequestBody Adherent adherent) throws Exception {
+	public ResponseEntity<Void> create(@Validated @RequestBody Adherent adherent) throws Exception {
 		log.debug("REST request to save Adherent : {}", adherent);
 		if (adherent.getId() != null) {
 			return ResponseEntity.badRequest().header("Failure", "A new adherent cannot already have an ID").build();
@@ -84,14 +84,14 @@ public class AdherentResource {
 	 * @throws URISyntaxException
 	 *             if uri cannot be built
 	 */
-	@RequestMapping(value = "/adherents", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping
 	@Timed
-	public ResponseEntity<Void> update(@Valid @RequestBody Adherent adherent) throws Exception {
+	public ResponseEntity<Void> update(@Validated @RequestBody Adherent adherent) throws Exception {
 		log.debug("REST request to update Adherent : {}", adherent);
 		if (adherent.getId() == null) {
 			return create(adherent);
 		}
-		adherent.setAdhesions(adherentRepository.findOne(adherent.getId()).getAdhesions());
+		adherent.setAdhesions(adherentRepository.getOne(adherent.getId()).getAdhesions());
 		adherentRepository.save(adherent);
 		return ResponseEntity.ok().build();
 	}
@@ -107,7 +107,7 @@ public class AdherentResource {
 	 * @throws URISyntaxException
 	 *             if uris cannot be built
 	 */
-	@RequestMapping(value = "/adherents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping
 	@Timed
 	public ResponseEntity<List<Adherent>> getAll(
 	    @RequestParam(value = "page", required = false) Integer offset,
@@ -137,7 +137,7 @@ public class AdherentResource {
 	 * @throws URISyntaxException
 	 *             if uris cannot be built
 	 */
-	@RequestMapping(value = "/adherents/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping("/search")
 	@Timed
 	public ResponseEntity<List<Adherent>> search(
 	    @RequestParam(value = "page", required = false) Integer offset,
@@ -149,9 +149,9 @@ public class AdherentResource {
     {
 		final Sort sort;
 		if ("id".equals(sortProperty)) {
-            sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty);
+            sort = Sort.by(Direction.fromString(sortOrder), sortProperty);
         } else {
-		    sort = new Sort(Direction.fromStringOrNull(sortOrder), sortProperty, "id");
+		    sort = Sort.by(Direction.fromString(sortOrder), sortProperty, "id");
         }
 
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
@@ -175,12 +175,13 @@ public class AdherentResource {
 	 *            the identifier
 	 * @return the adherent
 	 */
-	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping("/{id}")
 	@Timed
 	public ResponseEntity<Adherent> get(@PathVariable Long id) {
 		log.debug("REST request to get Adherent : {}", id);
-		return Optional.ofNullable(adherentRepository.findOne(id)).map(adherent -> new ResponseEntity<>(adherent, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return adherentRepository.findById(id)
+            .map(adherent -> new ResponseEntity<>(adherent, HttpStatus.OK))
+			.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	/**
@@ -189,12 +190,12 @@ public class AdherentResource {
 	 * @param id
 	 *            the identifier
 	 */
-	@RequestMapping(value = "/adherents/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping("/{id}")
 	@Timed
 	@RolesAllowed({AuthoritiesConstants.ADMIN, AuthoritiesConstants.WORKSHOP_MANAGER})
 	public void delete(@PathVariable Long id) {
 		log.debug("REST request to delete Adherent : {}", id);
-		adherentRepository.delete(id);
+		adherentRepository.deleteById(id);
 	}
 
 	/**
@@ -225,7 +226,7 @@ public class AdherentResource {
 	 * @param file
 	 *            the file to import
 	 */
-	@RequestMapping(value = "/adherents/import", method = RequestMethod.POST)
+	@PostMapping("/import")
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
 	public void importAdherents(@RequestParam("file") MultipartFile file) throws IOException {
@@ -245,17 +246,16 @@ public class AdherentResource {
 	 * @throws Exception
 	 *             if an error occurs
 	 */
-	@RequestMapping(value = "/adherents/reminderEmail/{adherentId}", method = RequestMethod.POST)
+	@PostMapping("/reminderEmail/{adherentId}")
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
 	public ResponseEntity<Void> remindesEmail(@PathVariable("adherentId") Long adherentId) throws Exception {
-		final Adherent adherent = adherentRepository.findOne(adherentId);
+		final Optional<Adherent> adherent = adherentRepository.findById(adherentId);
 
-		if (adherent != null) {
-			adherentService.sendReminderMail(adherent);
+		if (adherent.isPresent()) {
+			adherentService.sendReminderMail(adherent.get());
 			return ResponseEntity.ok().build();
 		} else {
 			return ResponseEntity.notFound().build();
 		}
 	}
-
 }

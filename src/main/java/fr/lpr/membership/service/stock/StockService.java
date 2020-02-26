@@ -34,7 +34,7 @@ public class StockService {
 	 * Recherche de l'historique d'un article.
 	 */
 	public Page<StockHistory> history(Article article, Integer offset, Integer limit) {
-		final Sort sort = new Sort(Direction.DESC, "createdAt");
+		final Sort sort = Sort.by(Direction.DESC, "createdAt");
 		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
 		return stockHistoryRepository.findByArticle(article, pageRequest);

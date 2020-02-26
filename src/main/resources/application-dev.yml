@@ -1,0 +1,28 @@
+server:
+  port: 8070
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:h2:mem:jhipster;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    show-sql: true
+
+mail:
+  host: 10.6.8.5
+  port: 25
+  username: gaia@sii-ouest.fr
+  password: 5YXm0pTRYm
+  protocol: smtp
+#    tls: true
+  auth: true
+  from: lapetiterennes@gmail.com
+
+
+cache:
+  timeToLiveSeconds: 3600
+  ehcache:
+    maxBytesLocalHeap: 16M

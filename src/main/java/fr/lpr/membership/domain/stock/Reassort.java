@@ -1,7 +1,16 @@
 package fr.lpr.membership.domain.stock;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotNull;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reassort {
 
 	@NotNull
@@ -9,31 +18,4 @@ public class Reassort {
 
 	@NotNull
 	private Integer quantity;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Reassort id(Long id) {
-		setId(id);
-		return this;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-
-	public Reassort quantity(Integer quantity) {
-		setQuantity(quantity);
-		return this;
-	}
-
 }

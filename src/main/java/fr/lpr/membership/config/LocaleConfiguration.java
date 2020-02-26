@@ -1,7 +1,6 @@
 package fr.lpr.membership.config;
 
 import fr.lpr.membership.config.locale.AngularCookieLocaleResolver;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +15,11 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 @Configuration
 public class LocaleConfiguration extends WebMvcConfigurerAdapter implements EnvironmentAware {
 
-    private RelaxedPropertyResolver propertyResolver;
+    private Environment environment;
 
     @Override
     public void setEnvironment(Environment environment) {
-        this.propertyResolver = new RelaxedPropertyResolver(environment, "spring.messageSource.");
+        this.environment = environment;
     }
 
     @Bean(name = "localeResolver")
@@ -35,7 +34,7 @@ public class LocaleConfiguration extends WebMvcConfigurerAdapter implements Envi
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:/i18n/messages");
         messageSource.setDefaultEncoding("UTF-8");
-        messageSource.setCacheSeconds(propertyResolver.getProperty("cacheSeconds", Integer.class, 1));
+        messageSource.setCacheSeconds(environment.getProperty("spring.messageSource.cacheSeconds", Integer.class, 1));
         return messageSource;
     }
 

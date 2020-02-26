@@ -1,5 +1,6 @@
 package fr.lpr.membership.web.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import fr.lpr.membership.Application;
 import fr.lpr.membership.domain.Adherent;
@@ -11,14 +12,14 @@ import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.SearchAdherentRepository;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,9 +42,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see AdherentResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration
+@ActiveProfiles("test")
 public class AdherentResourceTest {
 
 	private static final String DEFAULT_PRENOM = "SAMPLE_TEXT";
@@ -65,6 +68,9 @@ public class AdherentResourceTest {
 
 	@Inject
 	private EntityManager entityManager;
+
+	@Inject
+    private ObjectMapper mapper;
 
 	private MockMvc restAdherentMockMvc;
 
@@ -93,7 +99,7 @@ public class AdherentResourceTest {
 		final int databaseSizeBeforeCreate = adherentRepository.findAll().size();
 
 		// Create the Adherent
-		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(adherent)))
 		.andExpect(status().isCreated());
 
 		// Validate the Adherent in the database
@@ -119,7 +125,7 @@ public class AdherentResourceTest {
 		adherent.setCoordonnees(coordonnees);
 
 		// When
-		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(adherent)))
 		.andExpect(status().isCreated());
 
 		// Then
@@ -138,7 +144,7 @@ public class AdherentResourceTest {
 		adherent.setPrenom(null);
 
 		// Create the Adherent, which fails.
-		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(adherent)))
 		.andExpect(status().isBadRequest());
 
 		// Validate the database is still empty
@@ -155,7 +161,7 @@ public class AdherentResourceTest {
 		adherent.setNom(null);
 
 		// Create the Adherent, which fails.
-		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		restAdherentMockMvc.perform(post("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(adherent)))
 		.andExpect(status().isBadRequest());
 
 		// Validate the database is still empty
@@ -170,7 +176,7 @@ public class AdherentResourceTest {
 		adherentRepository.saveAndFlush(adherent);
 
 		// Get all the adherents
-		restAdherentMockMvc.perform(get("/api/adherents")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+		restAdherentMockMvc.perform(get("/api/adherents")).andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 		.andExpect(jsonPath("$.[*].id").value(hasItem(adherent.getId().intValue())))
 		.andExpect(jsonPath("$.[*].prenom").value(hasItem(DEFAULT_PRENOM)))
 		.andExpect(jsonPath("$.[*].nom").value(hasItem(DEFAULT_NOM)))
@@ -187,7 +193,7 @@ public class AdherentResourceTest {
 
 		// Get the adherent
 		restAdherentMockMvc.perform(get("/api/adherents/{id}", adherent.getId())).andExpect(status().isOk())
-		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(jsonPath("$.id").value(adherent.getId().intValue()))
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$.id").value(adherent.getId().intValue()))
 		.andExpect(jsonPath("$.prenom").value(DEFAULT_PRENOM)).andExpect(jsonPath("$.nom").value(DEFAULT_NOM))
 		.andExpect(jsonPath("$.benevole").value(DEFAULT_BENEVOLE))
 		.andExpect(jsonPath("$.remarqueBenevolat").value(DEFAULT_REMARQUE_BENEVOLAT))
@@ -205,8 +211,8 @@ public class AdherentResourceTest {
 	@Transactional
 	public void updateAdherent() throws Exception {
 		// Initialize the database
-		final Adhesion uneAdhesion = new Adhesion().typeAdhesion(TypeAdhesion.Simple)
-				.dateAdhesion(LocalDate.now()).paymentType(PaymentType.Cash);
+		final Adhesion uneAdhesion = Adhesion.builder().typeAdhesion(TypeAdhesion.Simple)
+				.dateAdhesion(LocalDate.now()).paymentType(PaymentType.Cash).build();
 		adherent.setAdhesions(Sets.newHashSet(uneAdhesion));
 		adherentRepository.saveAndFlush(adherent);
 
@@ -218,7 +224,7 @@ public class AdherentResourceTest {
 		adherent.setBenevole(UPDATED_BENEVOLE);
 		adherent.setRemarqueBenevolat(UPDATED_REMARQUE_BENEVOLAT);
 		adherent.setAutreRemarque(UPDATED_AUTRE_REMARQUE);
-		restAdherentMockMvc.perform(put("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(TestUtil.convertObjectToJsonBytes(adherent)))
+		restAdherentMockMvc.perform(put("/api/adherents").contentType(TestUtil.APPLICATION_JSON_UTF8).content(mapper.writeValueAsBytes(adherent)))
 		.andExpect(status().isOk());
 
 		// Validate the Adherent in the database
