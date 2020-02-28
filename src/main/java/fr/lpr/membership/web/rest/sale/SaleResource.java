@@ -1,4 +1,4 @@
-package fr.lpr.membership.web.rest;
+package fr.lpr.membership.web.rest.sale;
 
 import fr.lpr.membership.domain.sale.Sale;
 import fr.lpr.membership.repository.sale.SaleRepository;
@@ -8,11 +8,13 @@ import fr.lpr.membership.service.sale.SaleStatistics;
 import fr.lpr.membership.service.sale.SaleStatisticsService;
 import fr.lpr.membership.web.rest.dto.SaleDTO;
 import fr.lpr.membership.web.rest.dto.mapper.SaleMapper;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ import static fr.lpr.membership.security.AuthoritiesConstants.WORKSHOP_MANAGER;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/sales")
+@RequestMapping("/sales")
 @Timed
 @Slf4j
 @RequiredArgsConstructor
@@ -58,7 +60,7 @@ public class SaleResource {
 		}
 
 		Sale newSale = saleService.newSale(saleMapper.saleDtoToSale(saleDTO));
-		return ResponseEntity.created(new URI("/api/sales/" + newSale.getId())).build();
+		return ResponseEntity.created(new URI("/sales/" + newSale.getId())).build();
 	}
 
 	@PutMapping
@@ -105,15 +107,11 @@ public class SaleResource {
 
 	@GetMapping("/history")
 	@Timed
-	public ResponseEntity<List<SaleDTO>> history(
-	    @RequestParam(value = "page", required = false) Integer offset,
-		@RequestParam(value = "per_page", required = false) Integer limit)
-        throws URISyntaxException
+    // FIXME Retourner un objet Page
+	public ResponseEntity<List<SaleDTO>> history(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable)
     {
-		Page<Sale> page = saleService.history(offset, limit);
-
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/sales/history", offset, limit);
-		return new ResponseEntity<>(page.getContent().stream().map(saleMapper::saleToSaleDto).collect(Collectors.toList()), headers, OK);
+		Page<Sale> page = saleService.history(pageable);
+		return new ResponseEntity<>(page.getContent().stream().map(saleMapper::saleToSaleDto).collect(Collectors.toList()), OK);
 	}
 
 	@GetMapping("/temporary")
@@ -121,5 +119,4 @@ public class SaleResource {
 	public List<SaleDTO> getTemporarySales() {
 		return saleService.getTemporarySales().stream().map(saleMapper::saleToSaleDto).collect(Collectors.toList());
 	}
-
 }

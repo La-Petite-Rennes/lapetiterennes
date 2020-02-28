@@ -16,7 +16,7 @@ import java.util.List;
  * REST controller for getting the audit events.
  */
 @RestController
-@RequestMapping("/api/audits")
+@RequestMapping("/audits")
 @RequiredArgsConstructor
 public class AuditResource {
 

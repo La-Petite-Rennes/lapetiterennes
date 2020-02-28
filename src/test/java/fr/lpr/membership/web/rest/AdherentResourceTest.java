@@ -10,6 +10,7 @@ import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.domain.sale.PaymentType;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.SearchAdherentRepository;
+import fr.lpr.membership.web.rest.adhesion.AdherentResource;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.junit.Before;

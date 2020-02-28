@@ -1,4 +1,4 @@
-package fr.lpr.membership.web.rest;
+package fr.lpr.membership.web.rest.adhesion;
 
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.Adhesion;
@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Set;
 
 /**
  * REST controller for managing Adhesion.
  */
 @RestController
-@RequestMapping("/api/adhesions")
+@RequestMapping("/adhesions")
 @Slf4j
 @RequiredArgsConstructor
 public class AdhesionResource {
@@ -53,7 +52,7 @@ public class AdhesionResource {
 
 		adherentRepository.save(adherent);
 
-		return ResponseEntity.created(new URI("/api/adhesions/" + adhesion.getId())).build();
+		return ResponseEntity.created(new URI("/adhesions/" + adhesion.getId())).build();
 	}
 
 	/**
@@ -74,18 +73,6 @@ public class AdhesionResource {
 		}
 		adhesionRepository.save(adhesion);
 		return ResponseEntity.ok().build();
-	}
-
-	/**
-	 * GET /adhesions -&gt; get all the adhesions.
-	 *
-	 * @return all adhesions
-	 */
-	@GetMapping
-	@Timed
-	public List<Adhesion> getAll() {
-		log.debug("REST request to get all Adhesions");
-		return adhesionRepository.findAll();
 	}
 
 	/**

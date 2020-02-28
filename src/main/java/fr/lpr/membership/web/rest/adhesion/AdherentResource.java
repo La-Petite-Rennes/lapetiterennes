@@ -1,22 +1,19 @@
-package fr.lpr.membership.web.rest;
+package fr.lpr.membership.web.rest.adhesion;
 
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.SearchAdherentRepository;
 import fr.lpr.membership.security.AuthoritiesConstants;
-import fr.lpr.membership.service.AdherentService;
 import fr.lpr.membership.service.ExportService;
 import fr.lpr.membership.service.ImportService;
+import fr.lpr.membership.service.adhesion.AdherentService;
 import fr.lpr.membership.web.rest.dto.ExportRequest;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +36,7 @@ import java.util.Optional;
  * REST controller for managing Adherent.
  */
 @RestController
-@RequestMapping("/api/adherents")
+@RequestMapping("/adherents")
 @Slf4j
 @RequiredArgsConstructor
 public class AdherentResource {
@@ -72,7 +69,7 @@ public class AdherentResource {
 		}
 
 		Adherent created = adherentService.createAdherent(adherent);
-		return ResponseEntity.created(new URI("/api/adherents/" + created.getId())).build();
+		return ResponseEntity.created(new URI("/adherents/" + created.getId())).build();
 	}
 
 	/**
@@ -104,69 +101,33 @@ public class AdherentResource {
 	 * @param limit
 	 *            max number of adherents
 	 * @return the adherents
-	 * @throws URISyntaxException
-	 *             if uris cannot be built
 	 */
 	@GetMapping
 	@Timed
-	public ResponseEntity<List<Adherent>> getAll(
-	    @RequestParam(value = "page", required = false) Integer offset,
-        @RequestParam(value = "per_page", required = false) Integer limit)
-        throws URISyntaxException
+	public Page<Adherent> getAll(@PageableDefault Pageable pageable)
     {
-		final Page<Adherent> page = adherentRepository.findAll(PaginationUtil.generatePageRequest(offset, limit));
-		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
-
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+		return adherentRepository.findAll(pageable);
 	}
 
 	/**
 	 * Search /adherents -&gt; get the adherents filtered by name and sorted
 	 *
-	 * @param offset
-	 *            the offset
-	 * @param limit
-	 *            max number of adherents
 	 * @param criteria
 	 *            the criteria
-	 * @param sortProperty
-	 *            property to sort on
-	 * @param sortOrder
-	 *            the sort order
 	 * @return the adherents matching the search
-	 * @throws URISyntaxException
-	 *             if uris cannot be built
 	 */
 	@GetMapping("/search")
 	@Timed
-	public ResponseEntity<List<Adherent>> search(
-	    @RequestParam(value = "page", required = false) Integer offset,
-        @RequestParam(value = "per_page", required = false) Integer limit,
+	public Page<Adherent> search(
         @RequestParam(value = "criteria", required = false) String criteria,
-        @RequestParam(value = "sort", defaultValue = "id") String sortProperty,
-        @RequestParam(value = "sortOrder", defaultValue = "ASC") String sortOrder)
-        throws URISyntaxException
+        @PageableDefault(sort = "id") Pageable pageable)
     {
-		final Sort sort;
-		if ("id".equals(sortProperty)) {
-            sort = Sort.by(Direction.fromString(sortOrder), sortProperty);
-        } else {
-		    sort = Sort.by(Direction.fromString(sortOrder), sortProperty, "id");
-        }
-
-		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
-
-		Page<Adherent> page;
-		if (criteria == null || criteria.isEmpty()) {
-			page = adherentRepository.findAll(pageRequest);
+        if (criteria == null || criteria.isEmpty()) {
+            return adherentRepository.findAll(pageable);
 		} else {
-			page = searchAdherentRepository.findAdherentByName(criteria, pageRequest);
+            return searchAdherentRepository.findAdherentByName(criteria, pageable);
 		}
-
-		final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adherents", offset, limit);
-
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-	}
+    }
 
 	/**
 	 * GET /adherents/:id -&gt; get the "id" adherent.

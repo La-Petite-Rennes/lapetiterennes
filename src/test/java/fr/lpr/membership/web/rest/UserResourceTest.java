@@ -2,6 +2,7 @@ package fr.lpr.membership.web.rest;
 
 import fr.lpr.membership.Application;
 import fr.lpr.membership.repository.UserRepository;
+import fr.lpr.membership.web.rest.user.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

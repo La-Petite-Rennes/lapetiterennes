@@ -12,11 +12,12 @@ import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.service.exception.ExportException;
 import fr.lpr.membership.web.rest.dto.ExportRequest.AdhesionState;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -76,7 +77,7 @@ public class ExportService {
 
             Page<Adherent> page = null;
             do {
-                page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
+                page = adherentRepository.findAll(page == null ? PageRequest.of(0, 100, Sort.by("id")) : page.nextPageable());
 
                 adherents.addAll(page.getContent().stream().filter(ad -> filterAdhesionState(ad, adhesionState)).map(ad -> mapDto(ad, properties))
                     .collect(Collectors.toList()));

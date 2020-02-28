@@ -1,4 +1,4 @@
-package fr.lpr.membership.web.rest;
+package fr.lpr.membership.web.rest.user;
 
 import com.google.common.base.Strings;
 import fr.lpr.membership.domain.Authority;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * REST controller for managing the current user's account.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/account")
 @Slf4j
 @RequiredArgsConstructor
 public class AccountResource {
@@ -56,7 +56,7 @@ public class AccountResource {
 	 *            the http request
 	 * @return result of the creation
 	 */
-	@PostMapping(value = "/register", produces = MediaType.TEXT_PLAIN_VALUE)
+	@PostMapping(value = "/account/register", produces = MediaType.TEXT_PLAIN_VALUE)
 	@Timed
 	@RolesAllowed(AuthoritiesConstants.ADMIN)
 	public ResponseEntity<?> registerAccount(@Validated @RequestBody UserDTO userDTO, HttpServletRequest request) {
@@ -89,7 +89,7 @@ public class AccountResource {
 	 *            the key
 	 * @return result of the account activation
 	 */
-	@GetMapping("/activate")
+	@GetMapping("/account/activate")
 	@Timed
 	public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
 		return Optional.ofNullable(userService.activateRegistration(key)).map(user -> new ResponseEntity<String>(HttpStatus.OK))
@@ -103,7 +103,7 @@ public class AccountResource {
 	 *            the http request
 	 * @return login of the user
 	 */
-	@GetMapping("/authenticate")
+	@GetMapping("/account/authenticate")
 	@Timed
 	public String isAuthenticated(HttpServletRequest request) {
 		log.debug("REST request to check if the current user is authenticated");
@@ -115,7 +115,7 @@ public class AccountResource {
 	 *
 	 * @return the current user
 	 */
-	@GetMapping("/account")
+	@GetMapping
 	@Timed
 	public ResponseEntity<UserDTO> getAccount() {
 		return Optional
@@ -132,7 +132,7 @@ public class AccountResource {
 	 *            the user
 	 * @return result of the update
 	 */
-	@PostMapping("/account")
+	@PostMapping
 	@Timed
 	public ResponseEntity<String> saveAccount(@RequestBody UserDTO userDTO) {
 		return userRepository.findOneByLogin(userDTO.getLogin()).filter(u -> u.getLogin().equals(SecurityUtils.getCurrentLogin())).map(u -> {
@@ -148,7 +148,7 @@ public class AccountResource {
 	 *            the new password
 	 * @return result of the update
 	 */
-	@PostMapping("/account/change_password")
+	@PostMapping("/change_password")
 	@Timed
 	public ResponseEntity<?> changePassword(@RequestBody String password) {
 		if (Strings.isNullOrEmpty(password) || password.length() < 5 || password.length() > 50) {
@@ -163,7 +163,7 @@ public class AccountResource {
 	 *
 	 * @return the current open sessions
 	 */
-	@GetMapping("/account/sessions")
+	@GetMapping("/sessions")
 	@Timed
 	public ResponseEntity<List<PersistentToken>> getCurrentSessions() {
 		return userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
@@ -183,7 +183,7 @@ public class AccountResource {
 	 * @param series
 	 *            the series
      */
-	@DeleteMapping("/account/sessions/{series}")
+	@DeleteMapping("/sessions/{series}")
 	@Timed
 	public void invalidateSession(@PathVariable String series) {
 		final String decodedSeries = URLDecoder.decode(series, StandardCharsets.UTF_8);
@@ -193,7 +193,7 @@ public class AccountResource {
             .ifPresent(t -> persistentTokenRepository.deleteById(decodedSeries));
 	}
 
-	@PostMapping(value = "/account/reset_password/init", produces = MediaType.TEXT_PLAIN_VALUE)
+	@PostMapping(value = "/reset_password/init", produces = MediaType.TEXT_PLAIN_VALUE)
 	@Timed
 	public ResponseEntity<?> requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
 
@@ -205,7 +205,7 @@ public class AccountResource {
 
 	}
 
-	@PostMapping("/account/reset_password/finish")
+	@PostMapping("/reset_password/finish")
 	@Timed
 	public ResponseEntity<String> finishPasswordReset(@RequestParam(value = "key") String key, @RequestParam(value = "newPassword") String newPassword) {
 		return userService.completePasswordReset(newPassword, key).map(user -> new ResponseEntity<String>(HttpStatus.OK))

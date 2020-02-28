@@ -1,4 +1,4 @@
-package fr.lpr.membership.web.rest;
+package fr.lpr.membership.web.rest.user;
 
 import fr.lpr.membership.domain.User;
 import fr.lpr.membership.repository.UserRepository;
@@ -18,7 +18,7 @@ import java.util.List;
  * REST controller for managing users.
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @Slf4j
 @RequiredArgsConstructor
 public class UserResource {

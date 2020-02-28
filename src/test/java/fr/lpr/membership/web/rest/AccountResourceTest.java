@@ -10,6 +10,7 @@ import fr.lpr.membership.security.AuthoritiesConstants;
 import fr.lpr.membership.service.MailService;
 import fr.lpr.membership.service.UserService;
 import fr.lpr.membership.web.rest.dto.UserDTO;
+import fr.lpr.membership.web.rest.user.AccountResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -9,7 +9,6 @@ import fr.lpr.membership.service.sale.event.SaleCreatedEvent;
 import fr.lpr.membership.service.sale.event.SaleDeletedEvent;
 import fr.lpr.membership.service.sale.event.SaleUpdatedEvent;
 import fr.lpr.membership.service.stock.StockQuantityChangedEvent;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,11 +90,10 @@ public class SaleService {
 		return savedSale;
 	}
 
-	public Page<Sale> history(Integer offset, Integer limit) {
+	public Page<Sale> history(Pageable pageable) {
 		final Sort sort = Sort.by(Direction.DESC, "createdAt");
-		final Pageable pageRequest = PaginationUtil.generatePageRequest(offset, limit, sort);
 
-		return saleRepository.findAll(QSale.sale.finished.isTrue(), pageRequest);
+		return saleRepository.findAll(QSale.sale.finished.isTrue(), pageable);
 	}
 
 	public List<Sale> getTemporarySales() {

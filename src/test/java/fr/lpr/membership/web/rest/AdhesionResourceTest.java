@@ -8,6 +8,7 @@ import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.domain.sale.PaymentType;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.repository.AdhesionRepository;
+import fr.lpr.membership.web.rest.adhesion.AdhesionResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

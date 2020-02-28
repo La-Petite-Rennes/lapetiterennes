@@ -1,4 +1,4 @@
-package fr.lpr.membership.web.rest;
+package fr.lpr.membership.web.rest.stock;
 
 import fr.lpr.membership.domain.Provider;
 import fr.lpr.membership.repository.ProviderRepository;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/providers")
+@RequestMapping("/providers")
 @RequiredArgsConstructor
 public class ProviderResource {
 

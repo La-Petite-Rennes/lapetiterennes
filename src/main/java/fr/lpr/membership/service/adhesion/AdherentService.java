@@ -1,14 +1,16 @@
-package fr.lpr.membership.service;
+package fr.lpr.membership.service.adhesion;
 
 import com.google.common.base.Strings;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.StatutAdhesion;
 import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.repository.AdherentRepository;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
+import fr.lpr.membership.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ import static java.time.LocalDate.now;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class AdherentService {
 
 	private final AdherentRepository adherentRepository;
@@ -38,7 +41,7 @@ public class AdherentService {
 
 		Page<Adherent> page = null;
 		do {
-			page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
+			page = adherentRepository.findAll(page == null ? PageRequest.of(0, 100, Sort.by("id")) : page.nextPageable());
 
 			adherents.addAll(page.getContent().stream()
                 .filter(ad -> ad.getStatutAdhesion() == StatutAdhesion.ORANGE)
@@ -69,7 +72,7 @@ public class AdherentService {
 
         Page<Adherent> page = null;
         do {
-            page = adherentRepository.findAll(page == null ? PaginationUtil.generatePageRequest(0, 100) : page.nextPageable());
+            page = adherentRepository.findAll(page == null ? PageRequest.of(0, 100, Sort.by("id")) : page.nextPageable());
 
             adherents.addAll(page.getContent().stream()
                 .filter(ad -> ad.getStatutAdhesion() == StatutAdhesion.RED)
@@ -90,14 +93,12 @@ public class AdherentService {
         log.info("{} emails de fin d'adhésion envoyés", adherents.size());
     }
 
-	@Transactional
 	public void sendReminderMail(Adherent adherent) throws MessagingException {
 		mailService.sendAdhesionExpiringEmail(adherent);
 		adherent.setReminderEmail(now());
 		adherentRepository.save(adherent);
 	}
 
-	@Transactional
     public Adherent createAdherent(Adherent adherent) throws MessagingException {
         Adherent created = adherentRepository.save(adherent);
         mailService.sendFirstAdhesionEmail(created);

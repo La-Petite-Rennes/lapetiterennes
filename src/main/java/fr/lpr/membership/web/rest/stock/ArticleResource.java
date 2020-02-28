@@ -1,4 +1,4 @@
-package fr.lpr.membership.web.rest;
+package fr.lpr.membership.web.rest.stock;
 
 import fr.lpr.membership.domain.Article;
 import fr.lpr.membership.domain.stock.Reassort;
@@ -9,12 +9,12 @@ import fr.lpr.membership.service.stock.ReassortService;
 import fr.lpr.membership.service.stock.StockService;
 import fr.lpr.membership.web.rest.dto.StockHistoryDTO;
 import fr.lpr.membership.web.rest.dto.mapper.StockMapper;
-import fr.lpr.membership.web.rest.util.PaginationUtil;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +32,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/articles")
+@RequestMapping("/articles")
 @RequiredArgsConstructor
 public class ArticleResource {
 
@@ -63,15 +63,14 @@ public class ArticleResource {
 	@Timed
 	public ResponseEntity<Void> create(@Validated @RequestBody Article article) throws URISyntaxException {
 		Article savedArticle = articleRepository.save(article);
-		return ResponseEntity.created(new URI("/api/articles/" + savedArticle.getId())).build();
+		return ResponseEntity.created(new URI("/articles/" + savedArticle.getId())).build();
 	}
 
 	@PostMapping("/reassort")
 	@RolesAllowed(WORKSHOP_MANAGER)
 	@Timed
-	public ResponseEntity<Void> reassort(@RequestBody List<Reassort> reassorts) {
+	public void reassort(@RequestBody List<Reassort> reassorts) {
 		reassortService.reassort(reassorts);
-		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/{id}/forRepairing")
@@ -88,11 +87,10 @@ public class ArticleResource {
 	}
 
 	@GetMapping("/{id}/history")
+    // FIXME Retourner un objet Page
 	public ResponseEntity<List<StockHistoryDTO>> stockHistory(
 	    @PathVariable(name = "id") Long articleId,
-		@RequestParam(value = "page", required = false) Integer offset,
-		@RequestParam(value = "per_page", required = false) Integer limit)
-        throws URISyntaxException
+		@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable)
     {
 		// Find article
 		Optional<Article> article = articleRepository.findById(articleId);
@@ -100,10 +98,12 @@ public class ArticleResource {
 			return new ResponseEntity<>(NOT_FOUND);
 		}
 
-		Page<StockHistory> page = stockService.history(article.get(), offset, limit);
+		Page<StockHistory> page = stockService.history(article.get(), pageable);
 
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/articles/" + articleId + "/history", offset, limit);
-		return new ResponseEntity<>(page.getContent().stream().map(stockMapper::stockHistoryToDto).collect(Collectors.toList()), headers, HttpStatus.OK);
+		return new ResponseEntity<>(
+		    page.getContent().stream().map(stockMapper::stockHistoryToDto).collect(Collectors.toList()),
+            HttpStatus.OK
+        );
 	}
 
 	@DeleteMapping("/{articleId}")
