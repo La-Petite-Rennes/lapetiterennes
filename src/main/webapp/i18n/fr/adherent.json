@@ -2,19 +2,19 @@
     "membershipApp": {
         "adherent" : {
             "home": {
-                "title": "Adhérents",
-                "createLabel": "Créer un nouvel adhérent",
-                "createOrEditLabel": "Créer ou éditer un adhérent",
+                "title": "Adhérent·e·s",
+                "createLabel": "Créer un·e nouvel·le adhérent·e",
+                "createOrEditLabel": "Créer ou éditer un·e adhérent·e",
                 "renewAdhesion": "Renouveler une adhésion"
             },
             "delete": {
-                "question": "Etes-vous certain de vouloir supprimer l'adherent {{ id }} ?"
+                "question": "Etes-vous certain de vouloir supprimer l'adherent·e {{ id }} ?"
             },
             "detail": {
-                "title": "Adhérent"
+                "title": "Adhérent·e"
             },
             "export": {
-            	"title": "Exporter les adhérents"
+            	"title": "Exporter les adhérent·e·s"
             },
             "prenom": "Prénom",
             "nom": "Nom",
