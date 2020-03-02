@@ -40,7 +40,7 @@
                                 <option value="TitreGracieux" data-has-role="ROLE_ADMIN">A titre gracieux</option>
                             </select>
 
-                            <div class="form-group required" data-ng-if="['Simple', 'Famille', 'TitreGracieux', 'Mensuelle'].indexOf(adhesion.typeAdhesion) == -1">
+                            <div class="form-group required" data-ng-if="['Simple', 'Famille', 'TitreGracieux', 'TroisMois', 'SixMoisVSE'].indexOf(adhesion.typeAdhesion) == -1">
                                 <label class="control-label col-sm-2" data-translate="membershipApp.adhesion.price">PriceAdhesion</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" name="priceAdhesion" data-ng-model="adhesion.price" required>
