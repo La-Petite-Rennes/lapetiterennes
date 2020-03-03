@@ -34,12 +34,13 @@
                             	<option selected="selected" value="Simple">Simple</option>
                             	<option value="Famille">Famille</option>
                             	<option value="Soutien">Soutien</option>
-                                <option value="Mensuelle">Mensuelle</option>
+                                <option value="TroisMois">Vélo 3 mois</option>
+                                <option value="SixMoisVSE">VSE 6 mois</option>
                                 <option value="CarteSortir">Carte Sortir !</option>
                                 <option value="TitreGracieux" data-has-role="ROLE_ADMIN">A titre gracieux</option>
                             </select>
 
-                            <div class="form-group required" data-ng-if="['Simple', 'Famille', 'TitreGracieux', 'Mensuelle'].indexOf(adhesion.typeAdhesion) == -1">
+                            <div class="form-group required" data-ng-if="['Simple', 'Famille', 'TitreGracieux', 'TroisMois', 'SixMoisVSE'].indexOf(adhesion.typeAdhesion) == -1">
                                 <label class="control-label col-sm-2" data-translate="membershipApp.adhesion.price">PriceAdhesion</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" name="priceAdhesion" data-ng-model="adhesion.price" required>
@@ -52,7 +53,7 @@
                                 </p>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label data-translate="membershipApp.adhesion.dateAdhesion">DateAdhesion</label>
                             <input type="date" class="form-control" name="dateAdhesion"  data-ng-model="adhesion.dateAdhesion">

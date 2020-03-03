@@ -8,24 +8,25 @@
 	    <p th:text="#{email.expiring.greeting(${adherent.prenom})}">
 		Bonjour,
 		</p>
-		
+
 		<p>
-		Il y a bientôt un an, vous avez adhéré (ou renouvelé votre adhésion) à la Petite Rennes, et nous vous en remercions. Cette adhésion, toutefois, s'achève dans quelques jours (le <span th:text="${adherent.lastAdhesion.plusYears(1).toString('dd/MM/yyyy')}"></span>). Si vous souhaitez continuer à venir bricoler dans notre atelier associatif d'auto-réparation, il vous faut la renouveler. Le tarif est toujours de 20 euros pour un an. Cet engagement est indispensable, pour des questions d'assurance, mais aussi et surtout pour permettre à l'association de se pérenniser.
+		Il y a bientôt un an, vous avez adhéré (ou renouvelé votre adhésion) à la Petite Rennes, et nous vous en remercions. Cette adhésion, toutefois, s'achève dans quelques jours (le <span th:text="${adherent.lastAdhesion().get().getDateFinAdhesion().toString('dd/MM/yyyy')}"></span>).
+            Si vous souhaitez continuer à venir bricoler dans notre atelier associatif d'auto-réparation, il vous faut la renouveler. Le tarif est toujours de 20 euros pour un an. Cet engagement est indispensable, pour des questions d'assurance, mais aussi et surtout pour permettre à l'association de se pérenniser.
 		</p>
 		<p>
 		Pour mener à bien ce renouvellement, il vous suffit de passer à l'atelier, 20 rue Chicogné à Rennes, du mercredi au samedi de 14h à 19h. Nicolas, notre mécano, ou les bénévoles de permanence, se feront une joie de vous indiquer la marche à suivre.
 		</p>
 		<p>
-		En attendant, merci de prendre quelques minutes pour remplir <a th:href="${survey}">ce petit questionnaire</a>. 
+		En attendant, merci de prendre quelques minutes pour remplir <a th:href="${survey}">ce petit questionnaire</a>.
 		<br/>
 		Nous avons besoin de mieux connaître vos besoins et attente pour faire encore progresser notre association.
 		</p>
-	
-		<p>	
+
+		<p>
 		Cordialement,
 		</p>
 		<p>
-		L'équipe de La Petite Rennes.
+            L’équipe de La Petite Rennes, ses bénévoles et ses salarié·e·s.
 		</p>
 	</body>
 </html>

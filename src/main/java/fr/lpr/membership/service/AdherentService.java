@@ -3,7 +3,6 @@ package fr.lpr.membership.service;
 import com.google.common.base.Strings;
 import fr.lpr.membership.domain.Adherent;
 import fr.lpr.membership.domain.StatutAdhesion;
-import fr.lpr.membership.domain.TypeAdhesion;
 import fr.lpr.membership.repository.AdherentRepository;
 import fr.lpr.membership.web.rest.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,6 @@ public class AdherentService {
 
 			adherents.addAll(page.getContent().stream()
                 .filter(ad -> ad.getStatutAdhesion() == StatutAdhesion.ORANGE)
-                .filter(ad -> ad.lastAdhesion().map(adhesion -> adhesion.getTypeAdhesion() != TypeAdhesion.Mensuelle).orElse(false))
 				.filter(ad -> !Strings.isNullOrEmpty(ad.getCoordonnees().getEmail()))
 				.filter(ad -> ad.getReminderEmail() == null || ad.getReminderEmail().isBefore(now().minusMonths(1)))
 				.collect(Collectors.toList()));
