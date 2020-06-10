@@ -146,7 +146,7 @@ ul#strength {
 }
 /* end Password strength bar style */
 
-.statut-NON {	
+.statut-NON {
 }
 .statut-GREEN {
 	color: green;
@@ -210,4 +210,10 @@ ul#strength {
 	content:"*";
 	color:red;
 	padding-left: 3px;
+}
+
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 650px;
+    }
 }

@@ -6,6 +6,7 @@
 				"cash": "Espèces",
 				"cheque": "Chèque",
 				"galleco": "Galléco",
+                "online": "En ligne",
 				"waiting": "Non réglé"
 			}
 		}
