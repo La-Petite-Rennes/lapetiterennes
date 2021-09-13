@@ -6,7 +6,8 @@ public enum PaymentType {
 	Check,
 	Galleco,
     Online,
+    CreditCard,
+    CrowdFunding,
 	Waiting,
 	NotSpecified // Used only to map old membership
-
 }

@@ -7,7 +7,7 @@ angular.module('membershipApp')
 		    scope: {
 		    	labelSize: '=labelSize',
 		    	payment: '=model',
-		    	waiting: '=waiting'
+		    	sale: '=sale'
 		    },
 		    controller: function($scope){
 		    	$scope.payment = $scope.payment != null ? $scope.payment : 'Cash';

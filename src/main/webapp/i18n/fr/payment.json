@@ -5,8 +5,10 @@
 				"label": "Règlement",
 				"cash": "Espèces",
 				"cheque": "Chèque",
+                "creditCard": "Carte Bancaire",
                 "online": "En ligne",
-				"waiting": "Non réglé"
+				"waiting": "Non réglé",
+                "crowdFunding" : "Crowdfunding"
 			}
 		}
 	}
