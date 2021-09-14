@@ -20,7 +20,8 @@
 			"paymentType": {
 				"label": "Règlement",
 				"cash": "Espèces",
-				"cheque": "Chèque"
+				"cheque": "Chèque",
+                "creditCard": "Carte Bancaire"
 			},
 			"date": "Date de la vente",
 			"save": "Terminer la vente",
